@@ -78,19 +78,15 @@ struct TodayCard: View {
                     .background(HX.accent)
                     .clipShape(RoundedRectangle(cornerRadius: 4))
 
-                // Headline number with gradient text
-                ZStack(alignment: .bottomTrailing) {
-                    Text(headline)
-                        .font(.display(96))
-                        .tracking(-4)
-                        .lineSpacing(-8)
-                        .foregroundStyle(HX.headlineGradient)
-                        .padding(.trailing, 12)
-
-                    // Felt-emoji sticker — rotated chip
-                    FeltSticker(felt: felt)
-                        .offset(x: 4, y: 8)
-                }
+                // Headline number — shrinks to fit, sticker overlays separately
+                Text(headline)
+                    .font(.display(112))
+                    .tracking(-5)
+                    .foregroundStyle(HX.headlineGradient)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.45)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.trailing, 56)   // reserve space for the sticker
 
                 Text(caption)
                     .font(.system(size: 10, weight: .semibold))
@@ -101,6 +97,12 @@ struct TodayCard: View {
             .padding(.top, 32)
             .padding(.horizontal, 20)
             .padding(.bottom, 24)
+
+            // Felt sticker — true overlay anchored to bottom-right of the card
+            FeltSticker(felt: felt)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
+                .padding(.trailing, 12)
+                .padding(.bottom, 28)
         }
         .background(HX.panel)
         .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
