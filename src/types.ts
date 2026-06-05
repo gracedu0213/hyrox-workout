@@ -2,7 +2,8 @@
 
 export type Phase = 'BASE' | 'PACE' | 'ACCELERATE' | 'PRIME' | 'RACE';
 export type Category = 'FOUNDATION' | 'AEROBIC' | 'ENGINE' | 'POWER' | 'COMPLETE';
-export type DayOfWeek = 'mon' | 'tue' | 'wed' | 'thu' | 'fri';
+// The curated 12-week plan only uses mon–fri; user-built plans use the full week.
+export type DayOfWeek = 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun';
 
 // --- Workout setup variants ---
 
@@ -138,6 +139,113 @@ export interface Plan {
   days: Day[];
 }
 
+// --- Custom workouts (user-authored, IndexedDB) ---
+
+export type Intensity = 'easy' | 'moderate' | 'hard';
+export type WeightUnit = 'kg' | 'lb';
+export interface SingleWeight {
+  value: number;
+  unit: WeightUnit;
+}
+
+// One exercise inside a custom workout block. Simpler than the library `Exercise`:
+// a single personal weight instead of the gendered M/F × lb/kg matrix.
+export interface ExSpec {
+  kind?: 'exercise'; // discriminator; absent = exercise (see BlockRow)
+  name: string;
+  qty?: number;
+  unit?: TargetUnit;
+  weight?: SingleWeight;
+  note?: string;
+}
+
+// A timed rest, modeled as a row inside a block so it repeats with the round
+// (e.g. "800m run → rest 2:00" ×6). A rest in its own repeat-1 block is the
+// "rest once between work blocks" case.
+export interface RestSpec {
+  kind: 'rest';
+  restSec: number;
+}
+
+// A block's contents are an ordered list of work and rest rows.
+export type BlockRow = ExSpec | RestSpec;
+
+// A block is a repeated group of rows (one "round set"). Multiple blocks let a
+// workout mix repeated rounds with different-per-round content. Rest rows are
+// time-only and never counted as rounds when logging.
+export interface Block {
+  label?: string;
+  repeat: number; // rounds for THIS block (default 1)
+  rows: BlockRow[];
+}
+
+// Format governs timing + which result sections appear when logging.
+export type WorkoutFormat =
+  | { type: 'rounds' } // just do the blocks (untimed / for quality)
+  | { type: 'for_time' }
+  | { type: 'amrap'; durationSec: number }
+  | { type: 'emom'; everySec: number; totalRounds: number }
+  | { type: 'intervals'; rounds: number; workSec?: number; restSec?: number };
+
+export interface CustomWorkout {
+  id: string; // uuid
+  source: 'custom';
+  name: string;
+  format: WorkoutFormat;
+  blocks: Block[];
+  intensity?: Intensity;
+  notes: string[];
+  createdAt: number;
+  archived?: boolean;
+}
+
+// --- Plans (committable programs, IndexedDB) ---
+
+// One item in a user-built week. `dayOfWeek` is OPTIONAL: pin it to a weekday
+// for day-by-day plans, or leave it off for "do this anytime this week" plans.
+export type PlanSlot =
+  | { kind: 'workout'; workoutId: string; dayOfWeek?: DayOfWeek } // refs CustomWorkout.id
+  | { kind: 'rest'; dayOfWeek?: DayOfWeek };
+
+// A user-built week is an ordered list of slots. Slots with a `dayOfWeek` form
+// a day-of-week grid; slots without one are unscheduled ("any day this week").
+export interface PlanWeek {
+  slots: PlanSlot[];
+}
+
+// Curated reference (content lives in src/plan.ts PLAN), user-built weeks, or a
+// flat "go-to" pool for cadence plans (no weeks, no days — just a menu).
+export type PlanContent =
+  | { type: 'curated' }
+  | { type: 'sequenced'; weeks: PlanWeek[] }
+  | { type: 'pool'; slots: PlanSlot[] };
+
+// A Plan is "a thing you commit to": optional structured content AND/OR a
+// per-week cadence goal, always tracking active state + progress.
+export interface UserPlan {
+  id: string;                 // uuid; the curated plan uses the fixed CURATED_PLAN_ID
+  name: string;
+  color: string;              // hex; rendered via inline styles (not bg-${x})
+  icon?: string;              // optional emoji
+  content?: PlanContent;      // omitted => goal-only plan (e.g. "Run 5×/week")
+  goalPerWeek?: number;       // weekly cadence target
+  durationWeeks?: number;     // cadence plans: how long the block runs (omitted => ongoing)
+  startDate?: string;         // ISO; if set, weeks pin to real dates (rare)
+  active: boolean;
+  createdAt: number;
+  archived?: boolean;
+}
+
+// Self-contained copy of a custom workout, stored on the log so it renders and
+// edits independently of the (possibly later-changed or deleted) template.
+export interface WorkoutSnapshot {
+  name: string;
+  setup: WorkoutSetup; // derived from format, for LogPage reuse
+  exercises: Exercise[]; // flattened from blocks, for LogPage reuse
+  blocks: Block[]; // original structure for nice display
+  notes: string[];
+}
+
 // --- Logs (IndexedDB) ---
 
 export interface RoundSplit {
@@ -169,9 +277,13 @@ export interface IntervalResult {
 
 export interface WorkoutLog {
   id: string;                       // uuid
-  dayId?: string;                   // refs Day.id (omitted for custom/rest)
+  dayId?: string;                   // refs Day.id (library workouts)
+  workoutId?: string;               // refs CustomWorkout.id (custom workouts)
   customName?: string;              // for kind='custom', e.g. "Basketball", "Long run"
   kind?: 'plan' | 'custom' | 'rest'; // default 'plan' when dayId is present
+  intensity?: Intensity;            // per-session effort tag
+  planId?: string;                  // attributes this session to a committed UserPlan
+  workoutSnapshot?: WorkoutSnapshot; // self-contained copy for custom workouts
   date: string;                     // ISO yyyy-mm-dd (date of training)
   createdAt: number;                // epoch ms
   // Optional structured results based on setup:

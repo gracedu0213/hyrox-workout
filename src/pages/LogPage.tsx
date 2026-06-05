@@ -1,32 +1,66 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { byId, DAY_LABEL, CATEGORY_COLOR } from '../plan';
-import { newId, saveLog, getLog } from '../db';
+import { newId, saveLog, getLog, getWorkout, getActivePlans, CURATED_PLAN_ID } from '../db';
 import { formatWeight } from '../format';
+import { buildSnapshot, customToSetup } from '../workouts';
 import { useProfile } from '../profile';
-import type { ExerciseLogEntry, IntervalResult, WorkoutLog } from '../types';
+import type {
+  Category,
+  DayOfWeek,
+  Exercise,
+  ExerciseLogEntry,
+  Intensity,
+  IntervalResult,
+  UserPlan,
+  WorkoutLog,
+  WorkoutSetup,
+  WorkoutSnapshot,
+} from '../types';
 import TimeInput from '../components/TimeInput';
 import FeltPicker, { type Felt } from '../components/FeltPicker';
+import { todayISO } from '../dateUtils';
 
-function todayISO() {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+const INTENSITIES: { value: Intensity; label: string }[] = [
+  { value: 'easy', label: 'Easy' },
+  { value: 'moderate', label: 'Moderate' },
+  { value: 'hard', label: 'Hard' },
+];
+
+// Normalized view over a library Day or a custom workout.
+interface Target {
+  id: string;
+  isCustom: boolean;
+  name: string;
+  setup: WorkoutSetup;
+  exercises: Exercise[];
+  week?: number;
+  dayOfWeek?: DayOfWeek;
+  category?: Category;
 }
 
 export default function LogPage() {
-  const { dayId } = useParams<{ dayId: string }>();
+  const { dayId, workoutId } = useParams<{ dayId?: string; workoutId?: string }>();
   const [searchParams] = useSearchParams();
   const editingId = searchParams.get('id') ?? undefined;
-  const day = dayId ? byId(dayId) : undefined;
+  const presetDate = searchParams.get('date') ?? undefined;
+  const presetPlanId = searchParams.get('planId') ?? undefined;
   const nav = useNavigate();
   const { profile } = useProfile();
   const gender = profile?.gender;
 
+  const [target, setTarget] = useState<Target | null>(null);
+  const [snapshot, setSnapshot] = useState<WorkoutSnapshot | null>(null);
+  const [resolving, setResolving] = useState(true);
+
   const [logId, setLogId] = useState<string>(() => editingId ?? newId());
-  const [date, setDate] = useState(todayISO());
+  const [date, setDate] = useState(presetDate ?? todayISO());
+  const [planId, setPlanId] = useState<string | undefined>(presetPlanId);
+  const [activePlans, setActivePlans] = useState<UserPlan[]>([]);
   const [createdAt, setCreatedAt] = useState<number>(() => Date.now());
   const [totalTimeSec, setTotalTimeSec] = useState<number | undefined>();
   const [felt, setFelt] = useState<Felt | undefined>();
+  const [intensity, setIntensity] = useState<Intensity | undefined>();
   const [notes, setNotes] = useState('');
   const [modifications, setModifications] = useState('');
   const [roundSplits, setRoundSplits] = useState<Record<number, number | undefined>>({});
@@ -37,90 +71,139 @@ export default function LogPage() {
   const [intervalResults, setIntervalResults] = useState<Record<number, { reps?: number; cal?: number; valueSec?: number; note?: string }>>({});
   const [exerciseLogs, setExerciseLogs] = useState<Record<number, ExerciseLogEntry>>({});
 
-  // Initialize per-exercise weight defaults from the plan
+  // Resolve the target (library day or custom workout) and, when editing, load
+  // the existing log. Done in one async pass so exercise/result mapping uses the
+  // resolved exercise list.
   useEffect(() => {
-    if (!day) return;
-    setExerciseLogs((prev) => {
-      // Only set defaults for entries that don't exist yet
-      const next: Record<number, ExerciseLogEntry> = { ...prev };
-      day.exercises.forEach((ex, i) => {
-        if (ex.name.startsWith('—')) return;
-        if (next[i]) return;
-        const def = ex.weight ? formatWeight(ex.weight, { gender }) : '';
-        if (def) next[i] = { exerciseName: ex.name, weightUsed: def };
-      });
-      return next;
-    });
-  }, [day, gender]);
+    let cancelled = false;
+    async function run() {
+      setResolving(true);
+      const loaded = editingId ? await getLog(editingId) : null;
 
-  // Load existing log if editing
-  useEffect(() => {
-    if (!editingId) return;
-    getLog(editingId).then((l) => {
-      if (!l) return;
-      setLogId(l.id);
-      setDate(l.date);
-      setCreatedAt(l.createdAt);
-      setTotalTimeSec(l.totalTimeSec);
-      setFelt(l.feltLike);
-      setNotes(l.notes ?? '');
-      setModifications(l.modifications ?? '');
-      if (l.roundSplits) {
-        const o: Record<number, number | undefined> = {};
-        l.roundSplits.forEach((r) => { o[r.roundIndex] = r.splitSec; });
-        setRoundSplits(o);
-      }
-      if (l.amrap) {
-        setAmrapFullRounds(l.amrap.fullRounds);
-        setAmrapPartialReps(l.amrap.partialReps);
-        setAmrapCals(l.amrap.totalCalories);
-        if (l.amrap.perWindow) {
-          const o: Record<number, { fullRounds?: number; partialReps?: number; note?: string }> = {};
-          l.amrap.perWindow.forEach((w, i) => { o[i] = { fullRounds: w.fullRounds, partialReps: w.partialReps, note: w.note }; });
-          setPerWindow(o);
+      // Resolve target. Prefer a custom log's snapshot so it works even if the
+      // template was later edited or deleted.
+      let t: Target | null = null;
+      let snap: WorkoutSnapshot | null = null;
+      if (loaded?.workoutSnapshot) {
+        snap = loaded.workoutSnapshot;
+        t = { id: loaded.workoutId ?? '', isCustom: true, name: snap.name, setup: snap.setup, exercises: snap.exercises };
+      } else if (dayId || loaded?.dayId) {
+        const d = byId(dayId ?? loaded!.dayId!);
+        if (d) t = { id: d.id, isCustom: false, name: d.workoutLabel, setup: d.setup, exercises: d.exercises, week: d.week, dayOfWeek: d.dayOfWeek, category: d.category };
+      } else if (workoutId) {
+        const w = await getWorkout(workoutId);
+        if (w) {
+          const { setup, exercises } = customToSetup(w);
+          t = { id: w.id, isCustom: true, name: w.name, setup, exercises };
+          snap = buildSnapshot(w);
+          if (!loaded) setIntensity(w.intensity);
         }
       }
-      if (l.intervals?.splits) {
-        const o: Record<number, { reps?: number; cal?: number; valueSec?: number; note?: string }> = {};
-        l.intervals.splits.forEach((s) => { o[s.roundIndex] = { reps: s.reps, cal: s.cal, valueSec: s.valueSec, note: s.note }; });
-        setIntervalResults(o);
-      }
-      if (l.exercises && day) {
-        // Match by exerciseName back to plan index
-        const o: Record<number, ExerciseLogEntry> = {};
-        l.exercises.forEach((e) => {
-          const idx = day.exercises.findIndex((ex) => ex.name === e.exerciseName);
-          if (idx >= 0) o[idx] = e;
-        });
-        setExerciseLogs((prev) => ({ ...prev, ...o }));
-      }
-    });
-  }, [editingId, day]);
+      if (cancelled) return;
 
-  if (!day) {
+      const plans = await getActivePlans();
+      if (cancelled) return;
+      setActivePlans(plans);
+      // Initial attribution: an existing log's plan, an explicit ?planId, or —
+      // for a curated day with the 12-week committed — the curated plan.
+      let initialPlan = loaded?.planId ?? presetPlanId;
+      if (!initialPlan && t && !t.isCustom && plans.some((p) => p.id === CURATED_PLAN_ID)) {
+        initialPlan = CURATED_PLAN_ID;
+      }
+      setPlanId(initialPlan);
+
+      const wgender = t?.isCustom ? undefined : gender;
+      const exLogs: Record<number, ExerciseLogEntry> = {};
+      t?.exercises.forEach((ex, i) => {
+        if (ex.name.startsWith('—')) return;
+        const def = ex.weight ? formatWeight(ex.weight, { gender: wgender }) : '';
+        if (def) exLogs[i] = { exerciseName: ex.name, weightUsed: def };
+      });
+
+      if (loaded) {
+        setLogId(loaded.id);
+        setDate(loaded.date);
+        setCreatedAt(loaded.createdAt);
+        setTotalTimeSec(loaded.totalTimeSec);
+        setFelt(loaded.feltLike);
+        setIntensity(loaded.intensity);
+        setNotes(loaded.notes ?? '');
+        setModifications(loaded.modifications ?? '');
+        if (loaded.roundSplits) {
+          const o: Record<number, number | undefined> = {};
+          loaded.roundSplits.forEach((r) => { o[r.roundIndex] = r.splitSec; });
+          setRoundSplits(o);
+        }
+        if (loaded.amrap) {
+          setAmrapFullRounds(loaded.amrap.fullRounds);
+          setAmrapPartialReps(loaded.amrap.partialReps);
+          setAmrapCals(loaded.amrap.totalCalories);
+          if (loaded.amrap.perWindow) {
+            const o: Record<number, { fullRounds?: number; partialReps?: number; note?: string }> = {};
+            loaded.amrap.perWindow.forEach((w, i) => { o[i] = { fullRounds: w.fullRounds, partialReps: w.partialReps, note: w.note }; });
+            setPerWindow(o);
+          }
+        }
+        if (loaded.intervals?.splits) {
+          const o: Record<number, { reps?: number; cal?: number; valueSec?: number; note?: string }> = {};
+          loaded.intervals.splits.forEach((s) => { o[s.roundIndex] = { reps: s.reps, cal: s.cal, valueSec: s.valueSec, note: s.note }; });
+          setIntervalResults(o);
+        }
+        if (loaded.exercises && t) {
+          loaded.exercises.forEach((e) => {
+            const idx = t!.exercises.findIndex((ex) => ex.name === e.exerciseName);
+            if (idx >= 0) exLogs[idx] = e;
+          });
+        }
+      }
+
+      setExerciseLogs(exLogs);
+      setTarget(t);
+      setSnapshot(snap);
+      setResolving(false);
+    }
+    run();
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dayId, workoutId, editingId]);
+
+  if (resolving) {
+    return <div className="p-4 text-muted text-sm">Loading…</div>;
+  }
+
+  if (!target) {
     return (
       <div className="p-4">
-        <p>Day not found.</p>
-        <Link to="/plan" className="text-accent underline">Back to plan</Link>
+        <p>Workout not found.</p>
+        <Link to="/" className="text-accent underline">Back home</Link>
       </div>
     );
   }
 
   async function save() {
-    if (!day) return;
+    if (!target) return;
     const log: WorkoutLog = {
       id: logId,
-      dayId: day.id,
       date,
       createdAt,
       status: 'logged',
       totalTimeSec,
       feltLike: felt,
+      intensity,
+      planId: planId || undefined,
       notes: notes || undefined,
       modifications: modifications || undefined,
     };
+    if (target.isCustom) {
+      log.workoutId = target.id || undefined;
+      log.kind = 'custom';
+      log.customName = target.name;
+      if (snapshot) log.workoutSnapshot = snapshot;
+    } else {
+      log.dayId = target.id;
+    }
 
-    const setup = day.setup;
+    const setup = target.setup;
     if (setup.type === 'rft' || setup.type === 'descending_rounds' || setup.type === 'rounds') {
       const splits = Object.entries(roundSplits)
         .filter(([, v]) => v != null)
@@ -151,11 +234,10 @@ export default function LogPage() {
     }
     const exerciseArr = Object.entries(exerciseLogs)
       .filter(([, v]) => v.weightUsed || v.repsCompleted != null || v.result)
-      .map(([k, v]) => ({ ...v, exerciseName: day.exercises[parseInt(k, 10)].name }));
+      .map(([k, v]) => ({ ...v, exerciseName: target.exercises[parseInt(k, 10)].name }));
     if (exerciseArr.length) log.exercises = exerciseArr;
 
     await saveLog(log);
-    // If we just transitioned from no-results to has-results, celebrate.
     const becameLogged =
       log.totalTimeSec != null ||
       !!log.roundSplits?.length ||
@@ -167,7 +249,7 @@ export default function LogPage() {
     nav(`/log/${log.id}${becameLogged ? '?celebrate=1' : ''}`);
   }
 
-  const setup = day.setup;
+  const setup = target.setup;
   const roundCount =
     setup.type === 'rft' || setup.type === 'descending_rounds' || setup.type === 'rounds'
       ? setup.rounds
@@ -178,14 +260,24 @@ export default function LogPage() {
   return (
     <div className="pb-32">
       <div className="px-4 pt-3 pb-3 border-b border-line">
-        <Link to={`/plan/${day.id}`} className="text-muted text-xs">← Back</Link>
+        {target.isCustom ? (
+          <button onClick={() => nav(-1)} className="text-muted text-xs">← Back</button>
+        ) : (
+          <Link to={`/plan/${target.id}`} className="text-muted text-xs">← Back</Link>
+        )}
         <div className="mt-2 font-display text-xl">
           {editingId ? 'Edit log' : 'Log workout'}
         </div>
         <div className="mt-1 text-sm text-white/80 truncate">
-          W{day.week} {DAY_LABEL[day.dayOfWeek]} ·{' '}
-          <span className={`text-${CATEGORY_COLOR[day.category]}`}>{day.category}</span>
-          {' · '}{day.workoutLabel}
+          {target.isCustom ? (
+            <>{target.name}</>
+          ) : (
+            <>
+              W{target.week} {target.dayOfWeek && DAY_LABEL[target.dayOfWeek]} ·{' '}
+              {target.category && <span className={`text-${CATEGORY_COLOR[target.category]}`}>{target.category}</span>}
+              {' · '}{target.name}
+            </>
+          )}
         </div>
       </div>
 
@@ -206,6 +298,39 @@ export default function LogPage() {
             <TimeInput valueSec={totalTimeSec} onChange={setTotalTimeSec} placeholder />
           </div>
         </div>
+
+        <div>
+          <label className="text-xs uppercase tracking-widest text-muted">Intensity</label>
+          <div className="mt-1 flex gap-2">
+            {INTENSITIES.map((it) => (
+              <button
+                key={it.value}
+                onClick={() => setIntensity(intensity === it.value ? undefined : it.value)}
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider border ${
+                  intensity === it.value ? 'bg-accent text-bg border-accent' : 'bg-transparent text-muted border-line'
+                }`}
+              >
+                {it.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {activePlans.length > 0 && (
+          <div>
+            <label className="text-xs uppercase tracking-widest text-muted">Part of a plan?</label>
+            <select
+              value={planId ?? ''}
+              onChange={(e) => setPlanId(e.target.value || undefined)}
+              className="block mt-1 bg-panel rounded px-3 py-2 w-full text-sm"
+            >
+              <option value="">Not part of a plan</option>
+              {activePlans.map((p) => (
+                <option key={p.id} value={p.id}>{p.icon ? `${p.icon} ` : ''}{p.name}</option>
+              ))}
+            </select>
+          </div>
+        )}
 
         <FeltPicker value={felt} onChange={setFelt} />
       </section>
@@ -313,19 +438,19 @@ export default function LogPage() {
         </section>
       )}
 
-      {/* Per-exercise weights (pre-filled from plan) */}
+      {/* Per-exercise weights (pre-filled from the workout) */}
       <section className="px-4 pt-6">
         <div className="text-xs uppercase tracking-widest text-accent">Weights used</div>
-        <div className="text-xs text-muted mt-1">Pre-filled with the plan's prescribed weight — edit if you used something else</div>
+        <div className="text-xs text-muted mt-1">Pre-filled with the prescribed weight — edit if you used something else</div>
         <div className="mt-2 space-y-2">
-          {day.exercises.map((ex, i) => {
+          {target.exercises.map((ex, i) => {
             if (ex.name.startsWith('—')) return null;
             return (
               <div key={i} className="bg-panel rounded p-2">
                 <div className="text-sm">{ex.name}</div>
                 <input
                   className="mt-1 w-full bg-panel2 rounded px-2 py-1.5 text-sm"
-                  placeholder={ex.weight ? formatWeight(ex.weight, { gender }) : 'Bodyweight / N/A'}
+                  placeholder={ex.weight ? formatWeight(ex.weight, { gender: target.isCustom ? undefined : gender }) : 'Bodyweight / N/A'}
                   value={exerciseLogs[i]?.weightUsed ?? ''}
                   onChange={(e) =>
                     setExerciseLogs((p) => ({

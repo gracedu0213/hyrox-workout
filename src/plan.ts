@@ -772,10 +772,12 @@ export const PLAN: Plan = {
 export const PHASE_OF_WEEK = (week: number): Day['phase'] =>
   week <= 4 ? 'BASE' : week <= 8 ? 'PACE' : week <= 10 ? 'ACCELERATE' : week === 11 ? 'PRIME' : 'RACE';
 
+// Curated plan days (mon–fri). User-built plans use WEEKDAYS_7 (full week).
 export const DAYS_OF_WEEK: Day['dayOfWeek'][] = ['mon', 'tue', 'wed', 'thu', 'fri'];
+export const WEEKDAYS_7: Day['dayOfWeek'][] = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 
 export const DAY_LABEL: Record<Day['dayOfWeek'], string> = {
-  mon: 'MON', tue: 'TUE', wed: 'WED', thu: 'THU', fri: 'FRI',
+  mon: 'MON', tue: 'TUE', wed: 'WED', thu: 'THU', fri: 'FRI', sat: 'SAT', sun: 'SUN',
 };
 
 export const CATEGORY_COLOR: Record<Day['category'], string> = {

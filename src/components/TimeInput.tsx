@@ -15,24 +15,33 @@ interface Props {
 //   type "3" → 0:53
 //   type "0" → 5:30
 //   type "0" → 53:00
+//   type "0" → 5:30:00   (workouts longer than an hour roll into hh:mm:ss)
 
-const MAX_DIGITS = 4;
+const MAX_DIGITS = 6;
 
 function digitsToSec(d: string): number | undefined {
   if (!d) return undefined;
   if (d.length <= 2) return parseInt(d, 10);
-  return parseInt(d.slice(0, -2), 10) * 60 + parseInt(d.slice(-2), 10);
+  if (d.length <= 4) return parseInt(d.slice(0, -2), 10) * 60 + parseInt(d.slice(-2), 10);
+  return (
+    parseInt(d.slice(0, -4), 10) * 3600 +
+    parseInt(d.slice(-4, -2), 10) * 60 +
+    parseInt(d.slice(-2), 10)
+  );
 }
 
 function digitsToDisplay(d: string): string {
   if (!d) return '';
   if (d.length <= 2) return `0:${d.padStart(2, '0')}`;
-  return `${d.slice(0, -2)}:${d.slice(-2)}`;
+  if (d.length <= 4) return `${d.slice(0, -2)}:${d.slice(-2)}`;
+  return `${d.slice(0, -4)}:${d.slice(-4, -2)}:${d.slice(-2)}`;
 }
 
 function secToDigits(sec: number): string {
-  const m = Math.floor(sec / 60);
+  const h = Math.floor(sec / 3600);
+  const m = Math.floor((sec % 3600) / 60);
   const s = sec % 60;
+  if (h > 0) return `${h}${String(m).padStart(2, '0')}${String(s).padStart(2, '0')}`;
   if (m === 0) return s === 0 ? '' : String(s);
   return `${m}${String(s).padStart(2, '0')}`;
 }
@@ -58,8 +67,8 @@ export default function TimeInput({ valueSec, onChange, placeholder, compact }: 
   }, [digits, focused]);
 
   const cls = compact
-    ? 'w-20 bg-panel2 rounded px-2 py-1 text-center font-mono tabular-nums'
-    : 'w-28 bg-panel2 rounded px-3 py-2 text-center text-lg font-mono tabular-nums';
+    ? 'w-24 bg-panel2 rounded px-2 py-1 text-center font-mono tabular-nums'
+    : 'w-32 bg-panel2 rounded px-3 py-2 text-center text-lg font-mono tabular-nums';
 
   return (
     <input
@@ -68,7 +77,7 @@ export default function TimeInput({ valueSec, onChange, placeholder, compact }: 
       inputMode="numeric"
       pattern="[0-9]*"
       className={cls}
-      placeholder={placeholder ? 'm:ss' : ''}
+      placeholder={placeholder ? 'h:mm:ss' : ''}
       value={digitsToDisplay(digits)}
       onFocus={() => setFocused(true)}
       onBlur={() => {

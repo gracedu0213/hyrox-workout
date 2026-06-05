@@ -1,0 +1,15 @@
+# XcodeGen generates this
+*.xcodeproj
+
+# Xcode build output
+build/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+
+# Swift Package Manager
+.swiftpm/
+.build/
+
+# CocoaPods
+Pods/

@@ -47,7 +47,7 @@ export default function LogDetailPage() {
   if (!log) return (
     <div className="p-4">
       <p>Log not found.</p>
-      <Link to="/history" className="text-accent underline">Back to history</Link>
+      <Link to="/" className="text-accent underline">Back to overview</Link>
     </div>
   );
 
@@ -57,7 +57,9 @@ export default function LogDetailPage() {
     kind === 'plan' && planDay
       ? `/plan/${planDay.id}/log?id=${log.id}`
       : kind === 'custom'
-        ? `/custom/log?id=${log.id}`
+        ? log.workoutId
+          ? `/workout/${log.workoutId}/log?id=${log.id}`
+          : `/custom/log?id=${log.id}`
         : null;
 
 
@@ -65,7 +67,7 @@ export default function LogDetailPage() {
     if (!log) return;
     if (!confirm('Delete this log? Cannot be undone.')) return;
     await deleteLog(log.id);
-    nav('/history');
+    nav('/');
   }
 
   return (
@@ -74,7 +76,7 @@ export default function LogDetailPage() {
         <CelebrationScreen log={log} onDismiss={() => { setCelebrated(false); nav('/'); }} />
       )}
       <div className="px-4 pt-3 pb-4 border-b border-line">
-        <Link to="/history" className="text-muted text-xs">← History</Link>
+        <button onClick={() => nav(-1)} className="text-muted text-xs">← Back</button>
         <div className="mt-2">
           <div className="text-[10px] uppercase tracking-[0.25em] text-muted font-semibold">{log.date}</div>
           {kind === 'rest' && <div className="font-display text-3xl mt-1.5 tracking-[-0.02em]">🛌 Rest day</div>}
@@ -183,6 +185,26 @@ export default function LogDetailPage() {
           {log.modifications && (
             <p className="text-sm text-muted italic mt-2 whitespace-pre-wrap">Mod: {log.modifications}</p>
           )}
+        </Section>
+      )}
+
+      {/* Custom workout structure (from the self-contained snapshot) */}
+      {kind === 'custom' && log.workoutSnapshot && (
+        <Section title="Workout">
+          <div className="text-sm text-muted mb-2">{setupSummary(log.workoutSnapshot.setup)}</div>
+          <ul className="space-y-1.5 text-sm">
+            {log.workoutSnapshot.exercises.map((ex, i) => {
+              const isSep = ex.name.startsWith('—');
+              return (
+                <li
+                  key={i}
+                  className={isSep ? 'text-xs uppercase tracking-wider text-muted pt-1' : 'text-white/90'}
+                >
+                  {isSep ? ex.name : `• ${formatExercise(ex)}`}
+                </li>
+              );
+            })}
+          </ul>
         </Section>
       )}
 

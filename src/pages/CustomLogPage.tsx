@@ -1,19 +1,16 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { getLog, newId, saveLog } from '../db';
-import type { WorkoutLog } from '../types';
+import { getActivePlans, getLog, newId, saveLog } from '../db';
+import { todayISO } from '../dateUtils';
+import type { UserPlan, WorkoutLog } from '../types';
 import TimeInput from '../components/TimeInput';
 import FeltPicker, { type Felt } from '../components/FeltPicker';
-
-function todayISO() {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-}
 
 export default function CustomLogPage() {
   const [searchParams] = useSearchParams();
   const editingId = searchParams.get('id') ?? undefined;
   const presetDate = searchParams.get('date') ?? todayISO();
+  const presetPlanId = searchParams.get('planId') ?? undefined;
   const nav = useNavigate();
 
   const [logId, setLogId] = useState<string>(() => editingId ?? newId());
@@ -23,6 +20,10 @@ export default function CustomLogPage() {
   const [totalTimeSec, setTotalTimeSec] = useState<number | undefined>();
   const [felt, setFelt] = useState<Felt | undefined>();
   const [notes, setNotes] = useState('');
+  const [planId, setPlanId] = useState<string | undefined>(presetPlanId);
+  const [activePlans, setActivePlans] = useState<UserPlan[]>([]);
+
+  useEffect(() => { getActivePlans().then(setActivePlans); }, []);
 
   useEffect(() => {
     if (!editingId) return;
@@ -35,6 +36,7 @@ export default function CustomLogPage() {
       setTotalTimeSec(l.totalTimeSec);
       setFelt(l.feltLike);
       setNotes(l.notes ?? '');
+      setPlanId(l.planId);
     });
   }, [editingId]);
 
@@ -48,6 +50,7 @@ export default function CustomLogPage() {
       status: 'logged',
       totalTimeSec,
       feltLike: felt,
+      planId: planId || undefined,
       notes: notes || undefined,
     };
     await saveLog(log);
@@ -91,6 +94,22 @@ export default function CustomLogPage() {
             <TimeInput valueSec={totalTimeSec} onChange={setTotalTimeSec} placeholder />
           </div>
         </div>
+
+        {activePlans.length > 0 && (
+          <div>
+            <label className="text-xs uppercase tracking-widest text-muted">Part of a plan?</label>
+            <select
+              value={planId ?? ''}
+              onChange={(e) => setPlanId(e.target.value || undefined)}
+              className="block mt-1 bg-panel rounded px-3 py-2 w-full text-sm"
+            >
+              <option value="">Not part of a plan</option>
+              {activePlans.map((p) => (
+                <option key={p.id} value={p.id}>{p.icon ? `${p.icon} ` : ''}{p.name}</option>
+              ))}
+            </select>
+          </div>
+        )}
 
         <FeltPicker value={felt} onChange={setFelt} />
 
