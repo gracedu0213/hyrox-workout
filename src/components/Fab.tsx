@@ -56,9 +56,11 @@ export default function Fab({ todayISO, onRest }: Props) {
       </button>
 
       {open && (
-        <div className="absolute right-0 bottom-full mb-3 flex flex-col items-stretch gap-2 w-44">
-          <ActionPill icon="🏋️" label="From plan" onClick={() => { setOpen(false); nav('/plan'); }} />
-          <ActionPill icon="🏀" label="Custom workout" onClick={() => { setOpen(false); nav('/custom/log'); }} />
+        <div className="absolute right-0 bottom-full mb-3 flex flex-col items-stretch gap-2 w-48">
+          <ActionPill icon="📋" label="Plans & workouts" onClick={() => { setOpen(false); nav('/plan'); }} />
+          <ActionPill icon="🗓️" label="Build a plan" onClick={() => { setOpen(false); nav('/plan/new'); }} />
+          <ActionPill icon="🛠️" label="Build a workout" onClick={() => { setOpen(false); nav('/workout/new'); }} />
+          <ActionPill icon="🏀" label="Quick custom" onClick={() => { setOpen(false); nav('/custom/log'); }} />
           <ActionPill icon="🛌" label="Rest day" onClick={addRest} />
         </div>
       )}

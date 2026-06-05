@@ -27,7 +27,7 @@ export function formatWeight(w?: Weight, opts: FormatOpts = {}): string {
 }
 
 function unitSuffix(u: TargetUnit | undefined, valueStr: string, plural = true): string {
-  if (u === 'reps') return `${valueStr} reps`;
+  if (u === 'reps') return `${valueStr} rep${plural ? 's' : ''}`;
   if (u === 'meters') return `${valueStr}m`;
   if (u === 'feet') return `${valueStr}ft`;
   if (u === 'calories') return `${valueStr} cal`;
@@ -77,7 +77,8 @@ export function setupSummary(s: WorkoutSetup): string {
     case 'intervals': {
       const work = s.workSec ? formatSec(s.workSec) : s.workDescription;
       const rest = s.restSec ? `${formatSec(s.restSec)} rest` : '';
-      return `${s.rounds} × ${work}${rest ? ` / ${rest}` : ''}`;
+      const label = work ? `${s.rounds} × ${work}` : `${s.rounds} intervals`;
+      return `${label}${rest ? ` / ${rest}` : ''}`;
     }
     case 'for_quality': return 'For Quality';
     case 'ladder': return `Ladder ${s.sequence.join('-')}${s.openEnded ? '-etc' : ''}`;
@@ -87,7 +88,11 @@ export function setupSummary(s: WorkoutSetup): string {
 
 export function formatSec(sec: number): string {
   if (sec < 60) return `${sec}s`;
-  const m = Math.floor(sec / 60);
+  const h = Math.floor(sec / 3600);
+  const m = Math.floor((sec % 3600) / 60);
   const s = sec % 60;
+  if (h > 0) {
+    return `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+  }
   return s === 0 ? `${m}:00` : `${m}:${String(s).padStart(2, '0')}`;
 }

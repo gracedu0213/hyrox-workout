@@ -2,15 +2,11 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { byId, CATEGORY_COLOR, DAY_LABEL } from '../plan';
 import { formatExercise, setupSummary } from '../format';
-import { getLogsForDate, getLogsForDay, newId, saveLog } from '../db';
+import { deleteLog, getLogsForDate, getLogsForDay, newId, saveLog, CURATED_PLAN_ID } from '../db';
 import { hasResults, logKind, logSummary } from '../logSummary';
+import { todayISO } from '../dateUtils';
 import { useProfile } from '../profile';
 import type { WorkoutLog } from '../types';
-
-function todayISO() {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-}
 
 export default function DayPage() {
   const { dayId } = useParams<{ dayId: string }>();
@@ -47,7 +43,13 @@ export default function DayPage() {
       status: 'planned',
     };
     await saveLog(log);
-    nav(scheduleDate === todayISO() ? '/' : '/plan');
+    nav(scheduleDate === todayISO() ? '/' : `/plan/program/${CURATED_PLAN_ID}?week=${day.week}`);
+  }
+
+  async function removeLog(id: string) {
+    if (!window.confirm('Delete this planned workout?')) return;
+    await deleteLog(id);
+    refresh();
   }
 
   if (!day) {
@@ -62,7 +64,7 @@ export default function DayPage() {
   return (
     <div>
       <div className="px-4 pt-3 pb-5 border-b border-line">
-        <Link to="/plan" className="text-muted text-xs">← Plan</Link>
+        <Link to={`/plan/program/${CURATED_PLAN_ID}?week=${day.week}`} className="text-muted text-xs">← Plan</Link>
         <div className="mt-2 flex items-baseline gap-2 flex-wrap">
           <span className="font-display text-3xl tracking-[-0.02em]">W{String(day.week).padStart(2, '0')} · {DAY_LABEL[day.dayOfWeek]}</span>
           <span className={`text-[10px] font-black uppercase tracking-widest text-${CATEGORY_COLOR[day.category]}`}>
@@ -173,6 +175,14 @@ export default function DayPage() {
                     >
                       {planned ? 'Add results' : 'Edit'}
                     </Link>
+                    {planned && (
+                      <button
+                        onClick={() => removeLog(l.id)}
+                        className="text-xs px-2 py-1 rounded bg-panel2 text-red-400"
+                      >
+                        Delete
+                      </button>
+                    )}
                   </div>
                 </li>
               );

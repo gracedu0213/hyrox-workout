@@ -1,12 +1,17 @@
 import { NavLink, Route, Routes, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import HomePage from './pages/HomePage';
-import PlanPage from './pages/PlanPage';
+import LibraryPage from './pages/LibraryPage';
+import ProgramPage from './pages/ProgramPage';
+import PlanBuilderPage from './pages/PlanBuilderPage';
 import DayPage from './pages/DayPage';
-import HistoryPage from './pages/HistoryPage';
+import ProgressPage from './pages/ProgressPage';
 import LogPage from './pages/LogPage';
 import CustomLogPage from './pages/CustomLogPage';
 import LogDetailPage from './pages/LogDetailPage';
+import WorkoutBuilderPage from './pages/WorkoutBuilderPage';
+import WorkoutDetailPage from './pages/WorkoutDetailPage';
+import WorkoutLibraryPage from './pages/WorkoutLibraryPage';
 import { ProfileProvider, useProfile } from './profile';
 import ProfileDialog from './components/ProfileDialog';
 import UpdatePrompt from './components/UpdatePrompt';
@@ -21,12 +26,20 @@ export default function App() {
         <main className="flex-1 pb-24">
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/plan" element={<PlanPage />} />
+            <Route path="/plan" element={<LibraryPage />} />
+            <Route path="/plan/new" element={<PlanBuilderPage />} />
+            <Route path="/plan/program/:planId" element={<ProgramPage />} />
+            <Route path="/plan/:planId/edit" element={<PlanBuilderPage />} />
             <Route path="/plan/:dayId" element={<DayPage />} />
             <Route path="/plan/:dayId/log" element={<LogPage />} />
             <Route path="/custom/log" element={<CustomLogPage />} />
+            <Route path="/workout/library" element={<WorkoutLibraryPage />} />
+            <Route path="/workout/new" element={<WorkoutBuilderPage />} />
+            <Route path="/workout/:id/edit" element={<WorkoutBuilderPage />} />
+            <Route path="/workout/:id" element={<WorkoutDetailPage />} />
+            <Route path="/workout/:workoutId/log" element={<LogPage />} />
             <Route path="/log/:logId" element={<LogDetailPage />} />
-            <Route path="/history" element={<HistoryPage />} />
+            <Route path="/progress" element={<ProgressPage />} />
           </Routes>
         </main>
         <BottomNav />
@@ -103,12 +116,16 @@ function Header() {
 }
 
 function BottomNav() {
-  const item = 'flex-1 py-3 text-center text-xs uppercase tracking-wider';
+  // The h-14 (56px) content height matches the `bottom-[...+56px]` offset used by
+  // the sticky save bars so they sit flush on top of the nav with no gap.
+  const item = 'flex-1 flex items-center justify-center text-center text-xs uppercase tracking-wider';
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-panel border-t border-line flex pb-[env(safe-area-inset-bottom)]">
-      <NavLink to="/" end className={({ isActive }) => `${item} ${isActive ? 'text-accent' : 'text-muted'}`}>Today</NavLink>
-      <NavLink to="/plan" className={({ isActive }) => `${item} ${isActive ? 'text-accent' : 'text-muted'}`}>Plan</NavLink>
-      <NavLink to="/history" className={({ isActive }) => `${item} ${isActive ? 'text-accent' : 'text-muted'}`}>History</NavLink>
+    <nav className="fixed bottom-0 left-0 right-0 bg-panel border-t border-line pb-[env(safe-area-inset-bottom)]">
+      <div className="flex h-14">
+        <NavLink to="/" end className={({ isActive }) => `${item} ${isActive ? 'text-accent' : 'text-muted'}`}>Train</NavLink>
+        <NavLink to="/plan" className={({ isActive }) => `${item} ${isActive ? 'text-accent' : 'text-muted'}`}>Plan</NavLink>
+        <NavLink to="/progress" className={({ isActive }) => `${item} ${isActive ? 'text-accent' : 'text-muted'}`}>Progress</NavLink>
+      </div>
     </nav>
   );
 }

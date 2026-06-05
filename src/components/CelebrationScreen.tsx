@@ -3,6 +3,7 @@ import { getAllLogs } from '../db';
 import { hasResults } from '../logSummary';
 import { FELT_EMOJI } from './FeltPicker';
 import { formatSec } from '../format';
+import { isoDate as iso, mondayOfWeek } from '../dateUtils';
 import type { WorkoutLog } from '../types';
 
 interface Props {
@@ -20,9 +21,6 @@ const GREETINGS = [
   ['DONE', 'AND DONE.'],
 ];
 
-function iso(d: Date) {
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-}
 
 function hashCode(s: string): number {
   let h = 0;
@@ -55,10 +53,7 @@ export default function CelebrationScreen({ log, onDismiss }: Props) {
       const total = done.length;
 
       const today = new Date(`${log.date}T00:00:00`);
-      const dayOfWeek = (today.getDay() + 6) % 7; // Mon-first
-      const weekStart = new Date(today);
-      weekStart.setDate(today.getDate() - dayOfWeek);
-      const weekStartStr = iso(weekStart);
+      const weekStartStr = iso(mondayOfWeek(today));
       const thisWeek = done.filter((l) => l.date >= weekStartStr && l.date <= log.date).length;
 
       const datesSet = new Set(done.map((l) => l.date));

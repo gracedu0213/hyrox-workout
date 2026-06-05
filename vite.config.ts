@@ -27,5 +27,6 @@ export default defineConfig({
   ],
   server: {
     host: true, // allow LAN access for iPhone testing
+    port: 5174,
   },
 });
