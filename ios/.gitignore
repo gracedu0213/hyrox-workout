@@ -1,5 +1,6 @@
-# XcodeGen generates this
+# XcodeGen generates these (run `xcodegen generate` after cloning)
 *.xcodeproj
+HyroxWorkout/Info.plist
 
 # Xcode build output
 build/

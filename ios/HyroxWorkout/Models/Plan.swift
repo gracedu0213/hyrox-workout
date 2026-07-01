@@ -20,7 +20,8 @@ enum Category: String, Codable, CaseIterable {
 }
 
 enum DayOfWeek: String, Codable, CaseIterable {
-    case mon, tue, wed, thu, fri
+    // Curated plan uses mon–fri; user-built plans use the full week.
+    case mon, tue, wed, thu, fri, sat, sun
 
     var label: String { rawValue.uppercased() }
 }
