@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { deleteWorkout, getWorkout, newId, saveLog } from '../db';
+import { deleteWorkout, getWorkout, getWorkoutTypes, newId, saveLog } from '../db';
 import { formatQty, formatSec } from '../format';
 import { buildSnapshot, formatSingleWeight, isExercise, isRest } from '../workouts';
 import { todayISO } from '../dateUtils';
 import MoreMenu from '../components/MoreMenu';
-import type { CustomWorkout, ExSpec, WorkoutLog } from '../types';
+import type { CustomWorkout, ExSpec, WorkoutLog, WorkoutType } from '../types';
 
 const INTENSITY_DOT: Record<string, string> = {
   easy: '#4ade80',
@@ -44,12 +44,19 @@ export default function WorkoutDetailPage() {
   const presetDate = searchParams.get('date') ?? undefined;
   const nav = useNavigate();
   const [workout, setWorkout] = useState<CustomWorkout | null | undefined>(undefined);
+  const [type, setType] = useState<WorkoutType | undefined>();
   const [scheduling, setScheduling] = useState(false);
   const [scheduleDate, setScheduleDate] = useState(presetDate ?? todayISO());
 
   useEffect(() => {
     if (!id) return;
-    getWorkout(id).then((w) => setWorkout(w ?? null));
+    getWorkout(id).then(async (w) => {
+      setWorkout(w ?? null);
+      if (w?.typeId) {
+        const types = await getWorkoutTypes();
+        setType(types.find((t) => t.id === w.typeId));
+      }
+    });
   }, [id]);
 
   if (workout === undefined) return <div className="p-4 text-muted text-sm">Loading…</div>;
@@ -101,12 +108,23 @@ export default function WorkoutDetailPage() {
         <div className="flex items-start justify-between gap-3 mt-2">
           <div className="min-w-0">
             <h1 className="font-display text-3xl leading-tight tracking-[-0.02em] truncate">{workout.name}</h1>
-            {workout.intensity && (
-              <div className="mt-2">
-                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-panel2 text-[11px] uppercase tracking-wider text-muted">
-                  <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: INTENSITY_DOT[workout.intensity] }} />
-                  {workout.intensity}
-                </span>
+            {(type || workout.intensity) && (
+              <div className="mt-2 flex items-center gap-1.5 flex-wrap">
+                {type && (
+                  <span
+                    className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-panel2 text-[11px] uppercase tracking-wider"
+                    style={{ color: type.color }}
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: type.color }} />
+                    {type.name}
+                  </span>
+                )}
+                {workout.intensity && (
+                  <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-panel2 text-[11px] uppercase tracking-wider text-muted">
+                    <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: INTENSITY_DOT[workout.intensity] }} />
+                    {workout.intensity}
+                  </span>
+                )}
               </div>
             )}
           </div>

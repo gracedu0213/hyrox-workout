@@ -1,18 +1,20 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { deleteWorkout, getCustomWorkouts } from '../db';
+import { deleteWorkout, getCustomWorkouts, getWorkoutTypes } from '../db';
 import { setupSummary } from '../format';
 import { customToSetup } from '../workouts';
 import MoreMenu from './MoreMenu';
-import type { CustomWorkout } from '../types';
+import type { CustomWorkout, WorkoutType } from '../types';
 
 // Browse list of custom workouts (Plan tab + dedicated Workouts page). Tapping a
 // row opens its detail; logging/scheduling live there or on the Train tab.
 export default function WorkoutList() {
   const [workouts, setWorkouts] = useState<CustomWorkout[]>([]);
+  const [types, setTypes] = useState<Map<string, WorkoutType>>(new Map());
 
   async function refresh() {
     setWorkouts(await getCustomWorkouts());
+    setTypes(new Map((await getWorkoutTypes()).map((t) => [t.id, t])));
   }
   useEffect(() => { refresh(); }, []);
 
@@ -34,7 +36,10 @@ export default function WorkoutList() {
     <div className="space-y-2">
       {workouts.map((w) => {
         const summary = setupSummary(customToSetup(w).setup);
-        const color = w.intensity ? INTENSITY_COLOR[w.intensity] : '#5BC0EB';
+        const type = w.typeId ? types.get(w.typeId) : undefined;
+        const intensityColor = w.intensity ? INTENSITY_COLOR[w.intensity] : undefined;
+        // The type label tints the left bar; intensity is the fallback accent.
+        const color = type?.color ?? intensityColor ?? '#5BC0EB';
         return (
           <div key={w.id} className="flex items-center gap-2 bg-panel rounded-lg p-3">
             <div className="w-1 h-10 rounded-full shrink-0" style={{ backgroundColor: color }} />
@@ -42,8 +47,11 @@ export default function WorkoutList() {
               <div className="font-display text-lg leading-tight truncate">{w.name}</div>
               <div className="text-xs text-muted mt-0.5 truncate">
                 {summary}
+                {type && (
+                  <span className="ml-2 uppercase tracking-wider" style={{ color: type.color }}>{type.name}</span>
+                )}
                 {w.intensity && (
-                  <span className="ml-2 uppercase tracking-wider" style={{ color }}>{w.intensity}</span>
+                  <span className="ml-2 uppercase tracking-wider" style={{ color: intensityColor }}>{w.intensity}</span>
                 )}
               </div>
             </Link>

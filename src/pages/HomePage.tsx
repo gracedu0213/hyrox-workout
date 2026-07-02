@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { getActivePlans, getAllLogs, newId, saveLog } from '../db';
 import { isCadence, poolSlots } from '../plans';
 import CadenceLogSheet from '../components/CadenceLogSheet';
@@ -9,6 +9,8 @@ import { hasResults, logKind, logSummary } from '../logSummary';
 import { computeStreak, computeActivityStreak, weekProgress, isQualifying } from '../planStats';
 import Fab from '../components/Fab';
 import ConsistencyHeatmap from '../components/ConsistencyHeatmap';
+import MonthCalendar from '../components/MonthCalendar';
+import { OTHER_TYPE, useLogTypeResolver } from '../logTypeColor';
 import { todayISO } from '../dateUtils';
 import type { UserPlan, WorkoutLog } from '../types';
 
@@ -20,6 +22,30 @@ export default function HomePage() {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [cadenceSheet, setCadenceSheet] = useState<UserPlan | null>(null);
   const nav = useNavigate();
+
+  // Two calendar lenses on the same logs: the 10-week grid for streak texture,
+  // the month view for per-session detail. The choice persists per device.
+  const [calView, setCalView] = useState<'grid' | 'month'>(
+    () => (localStorage.getItem('hyrox.calview.v1') === 'month' ? 'month' : 'grid'),
+  );
+  function switchCalView(v: 'grid' | 'month') {
+    setCalView(v);
+    localStorage.setItem('hyrox.calview.v1', v);
+  }
+  const typeOf = useLogTypeResolver();
+  const legend = useMemo(() => {
+    const m = new Map<string, string>();
+    let other = false;
+    for (const l of logs) {
+      if (!hasResults(l) || logKind(l) === 'rest') continue;
+      const t = typeOf(l);
+      if (t) m.set(t.name, t.color);
+      else other = true;
+    }
+    const entries = [...m].map(([name, color]) => ({ name, color }));
+    if (other) entries.push(OTHER_TYPE);
+    return entries;
+  }, [logs, typeOf]);
 
   async function refresh() {
     const [l, p] = await Promise.all([getAllLogs(), getActivePlans()]);
@@ -88,7 +114,25 @@ export default function HomePage() {
       {/* ── Consistency — streak hero + activity heatmap ────────────────── */}
       {hasActivity && (
         <section>
-          <SectionLabel>Consistency</SectionLabel>
+          <SectionLabel
+            action={
+              <div className="flex rounded-full border border-line overflow-hidden">
+                {(['grid', 'month'] as const).map((v) => (
+                  <button
+                    key={v}
+                    onClick={() => switchCalView(v)}
+                    className={`px-2.5 py-0.5 text-[10px] uppercase tracking-wider ${
+                      calView === v ? 'bg-panel2 text-white' : 'text-muted'
+                    }`}
+                  >
+                    {v}
+                  </button>
+                ))}
+              </div>
+            }
+          >
+            Consistency
+          </SectionLabel>
           <div className="bg-panel rounded-xl p-4">
             {streak > 0 && (
               <div className="flex items-baseline gap-2 mb-3">
@@ -97,11 +141,27 @@ export default function HomePage() {
                 <span className="text-[11px] uppercase tracking-widest text-muted pb-1">week streak</span>
               </div>
             )}
-            <ConsistencyHeatmap logs={logs} selected={selectedDate} onSelect={(d) => setSelectedDate(d === selectedDate ? null : d)} />
+            {calView === 'grid' ? (
+              <ConsistencyHeatmap logs={logs} typeOf={typeOf} selected={selectedDate} onSelect={(d) => setSelectedDate(d === selectedDate ? null : d)} />
+            ) : (
+              <MonthCalendar logs={logs} typeOf={typeOf} selected={selectedDate} onSelect={(d) => setSelectedDate(d === selectedDate ? null : d)} />
+            )}
+            {legend.length > 0 && (
+              <div className="flex flex-wrap gap-x-3 gap-y-1 mt-3">
+                {legend.map((t) => (
+                  <span key={t.name} className="inline-flex items-center gap-1 text-[10px] uppercase tracking-wider text-muted">
+                    <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: t.color }} />
+                    {t.name}
+                  </span>
+                ))}
+              </div>
+            )}
             {selectedDate ? (
               <SelectedDay date={selectedDate} logs={logs.filter((l) => l.date === selectedDate)} />
             ) : (
-              <div className="text-[10px] text-muted mt-2">Last 10 weeks · tap a day</div>
+              <div className="text-[10px] text-muted mt-2">
+                {calView === 'grid' ? 'Last 10 weeks · tap a day' : 'Tap a day'}
+              </div>
             )}
           </div>
         </section>

@@ -788,4 +788,14 @@ export const CATEGORY_COLOR: Record<Day['category'], string> = {
   COMPLETE: 'complete',
 };
 
+// Hex twins of the above — for inline styles, where tailwind's JIT can't see
+// dynamic classes derived from data.
+export const CAT_HEX: Record<Day['category'], string> = {
+  FOUNDATION: '#F0E040',
+  AEROBIC: '#5BC0EB',
+  ENGINE: '#FF6B6B',
+  POWER: '#9B59B6',
+  COMPLETE: '#2ECC71',
+};
+
 export const byId = (id: string): Day | undefined => PLAN.days.find((d) => d.id === id);

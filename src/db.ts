@@ -1,5 +1,5 @@
 import Dexie, { type Table } from 'dexie';
-import type { CustomWorkout, UserPlan, WorkoutLog } from './types';
+import type { CustomWorkout, UserPlan, WorkoutLog, WorkoutType } from './types';
 import { normalizeBlocks } from './workouts';
 
 // Bring persisted workouts up to the current block-row shape on read, so every
@@ -12,10 +12,19 @@ function migrateWorkout(w: CustomWorkout): CustomWorkout {
 // user commits to it (Start), at which point a row with this id is materialized.
 export const CURATED_PLAN_ID = 'curated-12-week';
 
+// Seeded once (fresh install via populate, existing DBs via the v5 upgrade).
+// Fixed ids + epoch-adjacent createdAt keep defaults stable and sorted first.
+const DEFAULT_WORKOUT_TYPES: WorkoutType[] = [
+  { id: 'type-running', name: 'Running', color: '#5BC0EB', createdAt: 0 },
+  { id: 'type-functional', name: 'Functional', color: '#FF6B6B', createdAt: 1 },
+  { id: 'type-deadhang', name: 'Deadhang', color: '#9B59B6', createdAt: 2 },
+];
+
 class HyroxDB extends Dexie {
   logs!: Table<WorkoutLog, string>;
   workouts!: Table<CustomWorkout, string>;
   plans!: Table<UserPlan, string>;
+  workoutTypes!: Table<WorkoutType, string>;
 
   constructor() {
     super('hyrox-tracker');
@@ -32,6 +41,15 @@ class HyroxDB extends Dexie {
     this.version(4).stores({
       logs: 'id, dayId, workoutId, planId, date, createdAt, kind',
       plans: 'id, active, archived, createdAt',
+    });
+    this.version(5)
+      .stores({
+        workoutTypes: 'id, createdAt',
+      })
+      .upgrade((tx) => tx.table('workoutTypes').bulkAdd(DEFAULT_WORKOUT_TYPES));
+    // populate fires only on fresh DB creation (upgrade callbacks don't).
+    this.on('populate', () => {
+      this.workoutTypes.bulkAdd(DEFAULT_WORKOUT_TYPES);
     });
   }
 }
@@ -93,6 +111,16 @@ export async function saveWorkout(w: CustomWorkout): Promise<void> {
 
 export async function deleteWorkout(id: string): Promise<void> {
   await db.workouts.delete(id);
+}
+
+// --- Workout types ---
+
+export async function getWorkoutTypes(): Promise<WorkoutType[]> {
+  return db.workoutTypes.orderBy('createdAt').toArray();
+}
+
+export async function saveWorkoutType(t: WorkoutType): Promise<void> {
+  await db.workoutTypes.put(t);
 }
 
 // --- Plans ---

@@ -4,6 +4,7 @@ import { getWorkout, newId, saveWorkout } from '../db';
 import { setupSummary } from '../format';
 import { customToSetup, isExercise, isRest } from '../workouts';
 import TimeInput from '../components/TimeInput';
+import TypePicker from '../components/TypePicker';
 import type {
   Block,
   CustomWorkout,
@@ -71,6 +72,7 @@ export default function WorkoutBuilderPage() {
   const [blocks, setBlocks] = useState<Block[]>([emptyBlock()]);
   const [intensity, setIntensity] = useState<Intensity | undefined>();
   const [notes, setNotes] = useState('');
+  const [typeId, setTypeId] = useState<string | undefined>();
 
   // Load existing workout when editing
   useEffect(() => {
@@ -88,6 +90,7 @@ export default function WorkoutBuilderPage() {
         setIntervalRestSec(w.format.restSec);
       }
       setBlocks(w.blocks.length ? w.blocks : [emptyBlock()]);
+      setTypeId(w.typeId);
       setIntensity(w.intensity);
       setNotes(w.notes.join('\n'));
       setLoaded(true);
@@ -130,6 +133,7 @@ export default function WorkoutBuilderPage() {
         repeat: Math.max(1, b.repeat || 1),
         label: b.label?.trim() || undefined,
       })),
+      typeId,
       intensity,
       notes: notes.split('\n').map((n) => n.trim()).filter(Boolean),
       createdAt,
@@ -197,6 +201,12 @@ export default function WorkoutBuilderPage() {
             className="block mt-1 bg-panel rounded px-3 py-2 w-full"
             placeholder="e.g. Deadhang circuit, Easy run"
           />
+        </div>
+
+        {/* Type */}
+        <div>
+          <label className="text-xs uppercase tracking-widest text-muted">Type</label>
+          <TypePicker value={typeId} onChange={setTypeId} />
         </div>
 
         {/* Format */}
@@ -446,6 +456,7 @@ function NumberBox({
       className="w-16 bg-bg rounded px-2 py-1.5 text-center text-sm"
       placeholder={placeholder}
       value={value ?? ''}
+      onFocus={(e) => e.target.select()}
       onChange={(e) => {
         const v = e.target.value;
         if (v === '') onChange(undefined);

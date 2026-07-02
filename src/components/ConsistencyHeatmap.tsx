@@ -1,21 +1,48 @@
 import { useMemo } from 'react';
-import { cellState } from './CalendarCell';
 import { isoDate, mondayOfWeek } from '../dateUtils';
+import { groupLogsByDate, hasResults, logKind } from '../logSummary';
+import { OTHER_TYPE, type LogTypeInfo } from '../logTypeColor';
 import type { WorkoutLog } from '../types';
 
-// Compact HabitKit/GitHub-style activity grid for the Overview: columns are
-// Mon-first weeks (oldest → newest), rows are Mon…Sun. A single warm color with
-// intensity-by-session-count reads as "did I show up" at a glance. Tap a tile to
-// browse that day's sessions.
+// Compact HabitKit/GitHub-style activity grid: columns are Mon-first weeks
+// (oldest → newest), rows are Mon…Sun. Logged tiles fill with the session's
+// workout-type color; a day mixing 2+ types splits the tile into equal
+// segments. Tap a tile to browse that day's sessions. The sibling MonthCalendar
+// shows the same data with per-session dots.
 const WEEKS = 10;
 
-function tileStyle(variant: string, count: number, future: boolean): React.CSSProperties {
+type DayVariant = 'logged' | 'rest' | 'planned' | 'empty';
+
+// What a day amounts to, in priority order: a logged session always wins over
+// a rest or planned marker on the same day.
+function dayVariant(logs: WorkoutLog[]): DayVariant {
+  if (logs.some((l) => logKind(l) !== 'rest' && hasResults(l))) return 'logged';
+  if (logs.some((l) => logKind(l) === 'rest')) return 'rest';
+  if (logs.some((l) => logKind(l) !== 'rest' && !hasResults(l))) return 'planned';
+  return 'empty';
+}
+
+function typedTileStyle(dayLogs: WorkoutLog[], typeOf: (l: WorkoutLog) => LogTypeInfo | undefined): React.CSSProperties {
+  const colors = [...new Set(
+    dayLogs
+      .filter((l) => hasResults(l) && logKind(l) !== 'rest')
+      .map((l) => (typeOf(l) ?? OTHER_TYPE).color),
+  )];
+  if (colors.length <= 1) return { backgroundColor: colors[0] ?? OTHER_TYPE.color };
+  const step = 100 / colors.length;
+  const stops = colors.map((c, i) => `${c} ${i * step}% ${(i + 1) * step}%`).join(', ');
+  return { background: `linear-gradient(90deg, ${stops})` };
+}
+
+function tileStyle(
+  dayLogs: WorkoutLog[],
+  future: boolean,
+  typeOf: (l: WorkoutLog) => LogTypeInfo | undefined,
+): React.CSSProperties {
   if (future) return { backgroundColor: 'rgba(255,255,255,0.02)' };
-  switch (variant) {
-    case 'logged-plan':
-    case 'logged-custom':
-      // 1 session = warm; 2+ = full intensity.
-      return { backgroundColor: count > 1 ? '#FF6B6B' : 'rgba(255,107,107,0.55)' };
+  switch (dayVariant(dayLogs)) {
+    case 'logged':
+      return typedTileStyle(dayLogs, typeOf);
     case 'rest':
       return { backgroundColor: 'rgba(255,255,255,0.13)' };
     case 'planned':
@@ -29,19 +56,14 @@ export default function ConsistencyHeatmap({
   logs,
   selected,
   onSelect,
+  typeOf,
 }: {
   logs: WorkoutLog[];
   selected?: string | null;
   onSelect?: (dateISO: string) => void;
+  typeOf: (log: WorkoutLog) => LogTypeInfo | undefined;
 }) {
-  const byDate = useMemo(() => {
-    const m = new Map<string, WorkoutLog[]>();
-    for (const l of logs) {
-      if (!m.has(l.date)) m.set(l.date, []);
-      m.get(l.date)!.push(l);
-    }
-    return m;
-  }, [logs]);
+  const byDate = useMemo(() => groupLogsByDate(logs), [logs]);
 
   const today = isoDate(new Date());
   const columns = useMemo(() => {
@@ -66,8 +88,6 @@ export default function ConsistencyHeatmap({
         <div key={ci} className="flex flex-1 flex-col gap-1">
           {col.map((date, ri) => {
             const ds = isoDate(date);
-            const { variant } = cellState(byDate.get(ds) ?? []);
-            const count = byDate.get(ds)?.length ?? 0;
             const future = ds > today;
             const isSel = selected === ds;
             return (
@@ -79,7 +99,7 @@ export default function ConsistencyHeatmap({
                 className={`aspect-square rounded-[3px] ${ds === today ? 'ring-1 ring-accent ring-inset' : ''} ${
                   isSel ? 'ring-2 ring-white ring-inset' : ''
                 }`}
-                style={tileStyle(variant, count, future)}
+                style={tileStyle(byDate.get(ds) ?? [], future, typeOf)}
               />
             );
           })}

@@ -141,6 +141,15 @@ export interface Plan {
 
 // --- Custom workouts (user-authored, IndexedDB) ---
 
+// A reusable label for workouts (e.g. Running, Functional). Defaults are seeded
+// in the DB; users can create more, each with its own label color.
+export interface WorkoutType {
+  id: string;    // uuid; seeded defaults use fixed ids
+  name: string;
+  color: string; // hex; rendered via inline styles (not bg-${x})
+  createdAt: number;
+}
+
 export type Intensity = 'easy' | 'moderate' | 'hard';
 export type WeightUnit = 'kg' | 'lb';
 export interface SingleWeight {
@@ -193,6 +202,7 @@ export interface CustomWorkout {
   name: string;
   format: WorkoutFormat;
   blocks: Block[];
+  typeId?: string; // refs WorkoutType.id
   intensity?: Intensity;
   notes: string[];
   createdAt: number;
@@ -281,6 +291,7 @@ export interface WorkoutLog {
   workoutId?: string;               // refs CustomWorkout.id (custom workouts)
   customName?: string;              // for kind='custom', e.g. "Basketball", "Long run"
   kind?: 'plan' | 'custom' | 'rest'; // default 'plan' when dayId is present
+  typeId?: string;                  // refs WorkoutType.id — set on quick custom logs (template logs resolve via workoutId)
   intensity?: Intensity;            // per-session effort tag
   planId?: string;                  // attributes this session to a committed UserPlan
   workoutSnapshot?: WorkoutSnapshot; // self-contained copy for custom workouts

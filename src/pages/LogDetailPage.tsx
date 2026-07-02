@@ -6,6 +6,7 @@ import { formatExercise, formatSec, setupSummary } from '../format';
 import ResultHero from '../components/ResultHero';
 import CelebrationScreen from '../components/CelebrationScreen';
 import { logKind } from '../logSummary';
+import { useLogTypeResolver } from '../logTypeColor';
 import { useProfile } from '../profile';
 import { celebrate } from '../celebrate';
 import type { WorkoutLog } from '../types';
@@ -21,6 +22,7 @@ export default function LogDetailPage() {
   const nav = useNavigate();
   const { profile } = useProfile();
   const gender = profile?.gender;
+  const typeOf = useLogTypeResolver();
 
   useEffect(() => {
     if (!logId) return;
@@ -80,7 +82,23 @@ export default function LogDetailPage() {
         <div className="mt-2">
           <div className="text-[10px] uppercase tracking-[0.25em] text-muted font-semibold">{log.date}</div>
           {kind === 'rest' && <div className="font-display text-3xl mt-1.5 tracking-[-0.02em]">🛌 Rest day</div>}
-          {kind === 'custom' && <div className="font-display text-3xl mt-1.5 tracking-[-0.02em]">{log.customName}</div>}
+          {kind === 'custom' && (
+            <>
+              <div className="font-display text-3xl mt-1.5 tracking-[-0.02em]">{log.customName}</div>
+              {(() => {
+                const type = typeOf(log);
+                return type ? (
+                  <span
+                    className="inline-flex items-center gap-1.5 px-2 py-0.5 mt-1.5 rounded-full bg-panel2 text-[11px] uppercase tracking-wider"
+                    style={{ color: type.color }}
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: type.color }} />
+                    {type.name}
+                  </span>
+                ) : null;
+              })()}
+            </>
+          )}
           {kind === 'plan' && planDay && (
             <>
               <div className="flex items-baseline gap-2 mt-1.5 flex-wrap">

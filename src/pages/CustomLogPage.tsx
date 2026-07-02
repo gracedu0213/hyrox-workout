@@ -4,6 +4,7 @@ import { getActivePlans, getLog, newId, saveLog } from '../db';
 import { todayISO } from '../dateUtils';
 import type { UserPlan, WorkoutLog } from '../types';
 import TimeInput from '../components/TimeInput';
+import TypePicker from '../components/TypePicker';
 import FeltPicker, { type Felt } from '../components/FeltPicker';
 
 export default function CustomLogPage() {
@@ -17,6 +18,7 @@ export default function CustomLogPage() {
   const [createdAt, setCreatedAt] = useState<number>(() => Date.now());
   const [date, setDate] = useState(presetDate);
   const [customName, setCustomName] = useState('');
+  const [typeId, setTypeId] = useState<string | undefined>();
   const [totalTimeSec, setTotalTimeSec] = useState<number | undefined>();
   const [felt, setFelt] = useState<Felt | undefined>();
   const [notes, setNotes] = useState('');
@@ -33,6 +35,7 @@ export default function CustomLogPage() {
       setCreatedAt(l.createdAt);
       setDate(l.date);
       setCustomName(l.customName ?? '');
+      setTypeId(l.typeId);
       setTotalTimeSec(l.totalTimeSec);
       setFelt(l.feltLike);
       setNotes(l.notes ?? '');
@@ -45,6 +48,7 @@ export default function CustomLogPage() {
       id: logId,
       kind: 'custom',
       customName: customName || 'Custom workout',
+      typeId,
       date,
       createdAt,
       status: 'logged',
@@ -76,6 +80,11 @@ export default function CustomLogPage() {
             className="block mt-1 bg-panel rounded px-3 py-2 w-full"
             placeholder="e.g. Basketball, Long run, Swim"
           />
+        </div>
+
+        <div>
+          <label className="text-xs uppercase tracking-widest text-muted">Type</label>
+          <TypePicker value={typeId} onChange={setTypeId} />
         </div>
 
         <div>

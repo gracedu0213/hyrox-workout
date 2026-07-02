@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { getCustomWorkouts, getPlan, newId, savePlan } from '../db';
+import { getCustomWorkouts, getPlan, getWorkoutTypes, newId, savePlan } from '../db';
 import { DAY_LABEL, WEEKDAYS_7 } from '../plan';
 import { anytimeSlots, slotForDay, withDaySlot } from '../plans';
-import type { CustomWorkout, DayOfWeek, PlanContent, PlanSlot, PlanWeek, UserPlan } from '../types';
+import type { CustomWorkout, DayOfWeek, PlanContent, PlanSlot, PlanWeek, UserPlan, WorkoutType } from '../types';
 
 const COLORS = ['#FF6B6B', '#FFD500', '#5BC0EB', '#9B59B6', '#2ECC71', '#FF9B5C', '#E84393'];
 
@@ -61,8 +61,10 @@ export default function PlanBuilderPage() {
   const [weeks, setWeeks] = useState<PlanWeek[]>([emptyWeek()]);
 
   const [workouts, setWorkouts] = useState<CustomWorkout[]>([]);
+  const [types, setTypes] = useState<WorkoutType[]>([]);
 
   useEffect(() => { getCustomWorkouts().then(setWorkouts); }, []);
+  useEffect(() => { getWorkoutTypes().then(setTypes); }, []);
 
   useEffect(() => {
     if (!editingId) return;
@@ -115,6 +117,15 @@ export default function PlanBuilderPage() {
   }));
   const hasSlots = cleanWeeks.some((w) => w.slots.length > 0);
   const goalValid = goalPerWeek != null && goalPerWeek > 0;
+
+  // A plan built around a single workout wears that workout's type color; with
+  // several workouts (or an untyped one) the user picks from the palette.
+  const slotWorkoutIds = [...new Set(
+    cleanWeeks.flatMap((w) => w.slots.flatMap((s) => (s.kind === 'workout' ? [s.workoutId] : []))),
+  )];
+  const soleWorkout = slotWorkoutIds.length === 1 ? workouts.find((w) => w.id === slotWorkoutIds[0]) : undefined;
+  const soleType = soleWorkout?.typeId ? types.find((t) => t.id === soleWorkout.typeId) : undefined;
+  const inheritedColor = soleType?.color;
   const canSave =
     name.trim().length > 0 &&
     (curatedContent || (kind === 'cadence' ? goalValid : hasSlots));
@@ -129,7 +140,7 @@ export default function PlanBuilderPage() {
     return {
       id,
       name: name.trim(),
-      color,
+      color: inheritedColor ?? color,
       icon: icon.trim() || undefined,
       content,
       // Cadence is goal-driven (with an optional workout pool + duration);
@@ -253,17 +264,26 @@ export default function PlanBuilderPage() {
         <div className="flex gap-4">
           <div>
             <label className="text-xs uppercase tracking-widest text-muted">Color</label>
-            <div className="mt-1 flex gap-2">
-              {COLORS.map((c) => (
-                <button
-                  key={c}
-                  onClick={() => setColor(c)}
-                  className={`w-7 h-7 rounded-full ${color === c ? 'ring-2 ring-white ring-offset-2 ring-offset-bg' : ''}`}
-                  style={{ backgroundColor: c }}
-                  aria-label={`Color ${c}`}
-                />
-              ))}
-            </div>
+            {inheritedColor ? (
+              <div className="mt-1 flex items-center gap-2 h-7">
+                <span className="w-7 h-7 rounded-full shrink-0" style={{ backgroundColor: inheritedColor }} />
+                <span className="text-xs text-muted">
+                  from {soleWorkout!.name} · {soleType!.name}
+                </span>
+              </div>
+            ) : (
+              <div className="mt-1 flex gap-2">
+                {COLORS.map((c) => (
+                  <button
+                    key={c}
+                    onClick={() => setColor(c)}
+                    className={`w-7 h-7 rounded-full ${color === c ? 'ring-2 ring-white ring-offset-2 ring-offset-bg' : ''}`}
+                    style={{ backgroundColor: c }}
+                    aria-label={`Color ${c}`}
+                  />
+                ))}
+              </div>
+            )}
           </div>
           <div>
             <label className="text-xs uppercase tracking-widest text-muted">Icon</label>

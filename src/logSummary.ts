@@ -40,6 +40,16 @@ export function logSummary(l: WorkoutLog): string {
   return parts.join(' · ');
 }
 
+// Group logs by their training date (ISO) — the shape every calendar view needs.
+export function groupLogsByDate(logs: WorkoutLog[]): Map<string, WorkoutLog[]> {
+  const m = new Map<string, WorkoutLog[]>();
+  for (const l of logs) {
+    if (!m.has(l.date)) m.set(l.date, []);
+    m.get(l.date)!.push(l);
+  }
+  return m;
+}
+
 export function hasResults(l: WorkoutLog): boolean {
   if (logKind(l) === 'rest') return true; // rest day is "done" by itself
   return (

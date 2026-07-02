@@ -9,6 +9,7 @@ import { todayISO, isoDate, mondayOfWeek } from '../dateUtils';
 import { curatedDescriptor, isCurated, isCadence, poolSlots, slotForDay, anytimeSlots } from '../plans';
 import MoreMenu, { type MenuItem } from '../components/MoreMenu';
 import ConsistencyHeatmap from '../components/ConsistencyHeatmap';
+import { useLogTypeResolver } from '../logTypeColor';
 import { weekProgress, computeStreak, isQualifying } from '../planStats';
 import type { CustomWorkout, Day, Phase, UserPlan, WorkoutLog } from '../types';
 
@@ -322,6 +323,7 @@ function CuratedBody({ logs, planActive }: { logs: WorkoutLog[]; planActive: boo
 
 function CadenceBody({ plan, logs }: { plan: UserPlan; logs: WorkoutLog[] }) {
   const [workouts, setWorkouts] = useState<Map<string, CustomWorkout>>(new Map());
+  const typeOf = useLogTypeResolver();
   useEffect(() => {
     getCustomWorkouts().then((ws) => setWorkouts(new Map(ws.map((w) => [w.id, w]))));
   }, []);
@@ -358,7 +360,7 @@ function CadenceBody({ plan, logs }: { plan: UserPlan; logs: WorkoutLog[] }) {
       {/* HabitKit-style adherence: this plan's sessions over the last weeks. */}
       <div className="px-4 mt-4">
         <div className="text-[10px] uppercase tracking-widest text-muted mb-1.5">Consistency</div>
-        <ConsistencyHeatmap logs={logs} />
+        <ConsistencyHeatmap logs={logs} typeOf={typeOf} />
       </div>
 
       <div className="px-4 mt-5">

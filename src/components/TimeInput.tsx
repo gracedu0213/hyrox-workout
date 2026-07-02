@@ -50,20 +50,27 @@ export default function TimeInput({ valueSec, onChange, placeholder, compact }: 
   const [digits, setDigits] = useState(valueSec != null ? secToDigits(valueSec) : '');
   const [focused, setFocused] = useState(false);
   const ref = useRef<HTMLInputElement>(null);
+  const justFocused = useRef(false);
 
   useEffect(() => {
     if (focused) return;
     setDigits(valueSec != null ? secToDigits(valueSec) : '');
   }, [valueSec, focused]);
 
-  // Keep the caret pinned to the end while editing so new digits always land
-  // on the right, regardless of where the user tapped.
+  // On a fresh focus, select the whole value so typing overwrites a prefilled
+  // default (e.g. rest's 1:00) instead of appending to it. While editing, keep
+  // the caret pinned to the end so new digits always land on the right.
   useEffect(() => {
     if (!focused) return;
     const el = ref.current;
     if (!el) return;
     const len = el.value.length;
-    el.setSelectionRange(len, len);
+    if (justFocused.current) {
+      justFocused.current = false;
+      el.setSelectionRange(0, len);
+    } else {
+      el.setSelectionRange(len, len);
+    }
   }, [digits, focused]);
 
   const cls = compact
@@ -79,7 +86,10 @@ export default function TimeInput({ valueSec, onChange, placeholder, compact }: 
       className={cls}
       placeholder={placeholder ? 'h:mm:ss' : ''}
       value={digitsToDisplay(digits)}
-      onFocus={() => setFocused(true)}
+      onFocus={() => {
+        justFocused.current = true;
+        setFocused(true);
+      }}
       onBlur={() => {
         setFocused(false);
         // Roll over seconds ≥ 60 on commit (e.g. "1:99" → "2:39") so the
