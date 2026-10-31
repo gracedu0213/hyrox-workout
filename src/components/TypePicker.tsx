@@ -1,15 +1,14 @@
 import { useEffect, useState } from 'react';
 import { getWorkoutTypes, newId, saveWorkoutType } from '../db';
+import { isBuiltinType, TYPE_PALETTE } from '../tags';
 import type { WorkoutType } from '../types';
 
-// Label color palette for new workout types (existing accent hexes + extras).
-const TYPE_COLORS = ['#5BC0EB', '#2ECC71', '#FF6B6B', '#9B59B6', '#F0E040', '#FF9F43', '#FF6BB5', '#4ADEDE'];
-
 // Workout-type chip row, shared by the workout builder and the quick custom
-// log. Tap a chip to pick (tap again to clear); "+ New type" creates one
-// inline — name + label color — saved to the DB for reuse everywhere. The
-// selected type can be edited in place; color changes propagate to every
-// surface (past logs included) since colors are resolved live, never stored.
+// log. Built-in HYROX types come first and are fixed; "+ New type" creates a
+// user type inline — name + color from a palette that never collides with a
+// built-in — saved to the DB for reuse everywhere. A selected user type can be
+// edited in place; color changes propagate to every surface (past logs
+// included) since colors are resolved live, never stored.
 export default function TypePicker({
   value,
   onChange,
@@ -20,17 +19,19 @@ export default function TypePicker({
   const [types, setTypes] = useState<WorkoutType[]>([]);
   const [form, setForm] = useState<'create' | 'edit' | null>(null);
   const [newName, setNewName] = useState('');
-  const [newColor, setNewColor] = useState(TYPE_COLORS[0]);
+  const [newColor, setNewColor] = useState(TYPE_PALETTE[0]);
 
   useEffect(() => {
     getWorkoutTypes().then(setTypes);
   }, []);
 
   const selectedType = types.find((t) => t.id === value);
+  const canEdit = selectedType != null && !isBuiltinType(selectedType.id);
 
   function openCreate() {
     setNewName('');
-    setNewColor(TYPE_COLORS[0]);
+    // Default to the first palette color no existing type uses yet.
+    setNewColor(TYPE_PALETTE.find((c) => !types.some((t) => t.color === c)) ?? TYPE_PALETTE[0]);
     setForm('create');
   }
 
@@ -79,7 +80,7 @@ export default function TypePicker({
         >
           {form ? 'Cancel' : '+ New type'}
         </button>
-        {selectedType && !form && (
+        {canEdit && !form && (
           <button
             onClick={openEdit}
             className="px-3 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-dashed border-line text-muted"
@@ -99,7 +100,7 @@ export default function TypePicker({
             autoFocus
           />
           <div className="flex items-center gap-2 flex-wrap">
-            {TYPE_COLORS.map((c) => (
+            {TYPE_PALETTE.map((c) => (
               <button
                 key={c}
                 onClick={() => setNewColor(c)}

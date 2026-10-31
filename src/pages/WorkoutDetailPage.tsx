@@ -7,12 +7,6 @@ import { todayISO } from '../dateUtils';
 import MoreMenu from '../components/MoreMenu';
 import type { CustomWorkout, ExSpec, WorkoutLog, WorkoutType } from '../types';
 
-const INTENSITY_DOT: Record<string, string> = {
-  easy: '#4ade80',
-  moderate: '#fbbf24',
-  hard: '#f87171',
-};
-
 // One exercise row: movement name on the left, prescription (reps/distance/time
 // + weight) right-aligned so the page reads like a programming sheet.
 function ExerciseRow({ ex }: { ex: ExSpec }) {
@@ -121,7 +115,6 @@ export default function WorkoutDetailPage() {
                 )}
                 {workout.intensity && (
                   <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-panel2 text-[11px] uppercase tracking-wider text-muted">
-                    <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: INTENSITY_DOT[workout.intensity] }} />
                     {workout.intensity}
                   </span>
                 )}

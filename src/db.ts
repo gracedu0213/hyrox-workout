@@ -2,6 +2,7 @@ import Dexie, { type Table } from 'dexie';
 import type { CustomWorkout, UserPlan, WorkoutLog, WorkoutType } from './types';
 import { normalizeBlocks } from './workouts';
 import { curatedProgram } from './plan';
+import { BUILTIN_TYPES } from './tags';
 
 // Bring persisted workouts up to the current block-row shape on read, so every
 // consumer downstream sees one model regardless of when the row was written.
@@ -12,10 +13,17 @@ function migrateWorkout(w: CustomWorkout): CustomWorkout {
 // Seeded once (fresh install via populate, existing DBs via the v5 upgrade).
 // Fixed ids + epoch-adjacent createdAt keep defaults stable and sorted first.
 const DEFAULT_WORKOUT_TYPES: WorkoutType[] = [
-  { id: 'type-running', name: 'Running', color: '#5BC0EB', createdAt: 0 },
-  { id: 'type-functional', name: 'Functional', color: '#FF6B6B', createdAt: 1 },
-  { id: 'type-deadhang', name: 'Deadhang', color: '#9B59B6', createdAt: 2 },
+  { id: 'type-running', name: 'Running', color: '#FF9F43', createdAt: 0 },
+  { id: 'type-functional', name: 'Functional', color: '#FF6BB5', createdAt: 1 },
+  { id: 'type-deadhang', name: 'Deadhang', color: '#4ADEDE', createdAt: 2 },
 ];
+
+// The defaults' original colors, which collided with the built-in HYROX types.
+const LEGACY_DEFAULT_COLORS: Record<string, string> = {
+  'type-running': '#5BC0EB',
+  'type-functional': '#FF6B6B',
+  'type-deadhang': '#9B59B6',
+};
 
 class HyroxDB extends Dexie {
   logs!: Table<WorkoutLog, string>;
@@ -44,6 +52,15 @@ class HyroxDB extends Dexie {
         workoutTypes: 'id, createdAt',
       })
       .upgrade((tx) => tx.table('workoutTypes').bulkAdd(DEFAULT_WORKOUT_TYPES));
+    // Recolor the seeded defaults off the built-in HYROX colors — only where the
+    // user hasn't already picked their own color.
+    this.version(6).stores({}).upgrade(async (tx) => {
+      for (const d of DEFAULT_WORKOUT_TYPES) {
+        await tx.table('workoutTypes')
+          .where('id').equals(d.id)
+          .modify((t: WorkoutType) => { if (t.color === LEGACY_DEFAULT_COLORS[d.id]) t.color = d.color; });
+      }
+    });
     // populate fires only on fresh DB creation (upgrade callbacks don't).
     this.on('populate', () => {
       this.workoutTypes.bulkAdd(DEFAULT_WORKOUT_TYPES);
@@ -112,8 +129,9 @@ export async function deleteWorkout(id: string): Promise<void> {
 
 // --- Workout types ---
 
+// Built-in HYROX types first, then the user's own (stored) types.
 export async function getWorkoutTypes(): Promise<WorkoutType[]> {
-  return db.workoutTypes.orderBy('createdAt').toArray();
+  return [...BUILTIN_TYPES, ...(await db.workoutTypes.orderBy('createdAt').toArray())];
 }
 
 export async function saveWorkoutType(t: WorkoutType): Promise<void> {

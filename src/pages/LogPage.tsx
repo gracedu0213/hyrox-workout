@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { byId, programForDay, DAY_LABEL, CATEGORY_COLOR } from '../plan';
+import { byId, programForDay, DAY_LABEL } from '../plan';
+import { HYROX_TYPES, INTENSITIES } from '../tags';
 import { newId, saveLog, getLog, getWorkout, getActivePlans } from '../db';
 import { formatWeight } from '../format';
 import { buildSnapshot, customToSetup } from '../workouts';
@@ -20,12 +21,6 @@ import type {
 import TimeInput from '../components/TimeInput';
 import FeltPicker, { type Felt } from '../components/FeltPicker';
 import { todayISO } from '../dateUtils';
-
-const INTENSITIES: { value: Intensity; label: string }[] = [
-  { value: 'easy', label: 'Easy' },
-  { value: 'moderate', label: 'Moderate' },
-  { value: 'hard', label: 'Hard' },
-];
 
 // Normalized view over a library Day or a custom workout.
 interface Target {
@@ -275,7 +270,7 @@ export default function LogPage() {
           ) : (
             <>
               W{target.week} {target.dayOfWeek && DAY_LABEL[target.dayOfWeek]} ·{' '}
-              {target.category && <span className={`text-${CATEGORY_COLOR[target.category]}`}>{target.category}</span>}
+              {target.category && <span style={{ color: HYROX_TYPES[target.category].color }}>{HYROX_TYPES[target.category].name}</span>}
               {' · '}{target.name}
             </>
           )}

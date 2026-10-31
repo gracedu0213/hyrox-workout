@@ -3,14 +3,15 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { getActivePlans, getAllLogs, newId, saveLog } from '../db';
 import { isCadence, poolSlots } from '../plans';
 import CadenceLogSheet from '../components/CadenceLogSheet';
-import { byId, CATEGORY_COLOR, DAY_LABEL } from '../plan';
+import { byId, DAY_LABEL } from '../plan';
 import { formatSec, setupSummary } from '../format';
 import { hasResults, logKind, logSummary } from '../logSummary';
 import { computeStreak, computeActivityStreak, weekProgress, isQualifying } from '../planStats';
 import Fab from '../components/Fab';
 import ConsistencyHeatmap from '../components/ConsistencyHeatmap';
 import MonthCalendar from '../components/MonthCalendar';
-import { OTHER_TYPE, useLogTypeResolver } from '../logTypeColor';
+import { useLogTypeResolver } from '../logTypeColor';
+import { HYROX_TYPES, OTHER_TYPE } from '../tags';
 import { todayISO } from '../dateUtils';
 import type { UserPlan, WorkoutLog } from '../types';
 
@@ -268,8 +269,8 @@ function TodoWorkoutCard({ log }: { log: WorkoutLog }) {
     setup = log.workoutSnapshot ? setupSummary(log.workoutSnapshot.setup) : undefined;
   } else if (planDay) {
     chip = (
-      <span className={`text-xs font-semibold uppercase tracking-wider text-${CATEGORY_COLOR[planDay.category]}`}>
-        {planDay.category}
+      <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: HYROX_TYPES[planDay.category].color }}>
+        {HYROX_TYPES[planDay.category].name}
       </span>
     );
     dayMeta = <span className="text-xs text-muted">W{planDay.week} · {DAY_LABEL[planDay.dayOfWeek]}</span>;
@@ -562,12 +563,12 @@ function UpcomingCard({ log }: { log: WorkoutLog }) {
   return (
     <li>
       <Link to={`/plan/${d.id}`} className="flex items-center gap-3 bg-panel rounded-xl p-3 active:bg-panel2">
-        <div className={`w-1 h-10 rounded-full bg-${CATEGORY_COLOR[d.category]} shrink-0`} />
+        <div className="w-1 h-10 rounded-full shrink-0" style={{ backgroundColor: HYROX_TYPES[d.category].color }} />
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
             <span className="text-xs text-accent">{log.date}</span>
-            <span className={`text-[10px] font-semibold uppercase tracking-wider text-${CATEGORY_COLOR[d.category]}`}>
-              {d.category}
+            <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: HYROX_TYPES[d.category].color }}>
+              {HYROX_TYPES[d.category].name}
             </span>
           </div>
           <div className="text-sm truncate">W{d.week} {DAY_LABEL[d.dayOfWeek]} · {d.workoutLabel}</div>
@@ -606,7 +607,7 @@ function LastLogCard({ log }: { log: WorkoutLog }) {
   if (!d) return null;
   return (
     <Link to={`/log/${log.id}`} className="flex items-center gap-3 bg-panel rounded-xl p-3 active:bg-panel2">
-      <div className={`w-1 h-12 rounded-full bg-${CATEGORY_COLOR[d.category]} shrink-0`} />
+      <div className="w-1 h-12 rounded-full shrink-0" style={{ backgroundColor: HYROX_TYPES[d.category].color }} />
       <div className="flex-1 min-w-0">
         <div className="flex justify-between items-center">
           <span className="text-xs text-muted">{log.date}</span>

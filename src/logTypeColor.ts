@@ -1,19 +1,19 @@
 import { useCallback, useEffect, useState } from 'react';
-import { db } from './db';
-import { byId, CAT_HEX } from './plan';
+import { db, getWorkoutTypes } from './db';
+import { byId } from './plan';
+import { HYROX_TYPES } from './tags';
 import type { WorkoutLog } from './types';
 
 // Calendar views color a day by what KIND of training happened. Resolution
-// order: the log's own typeId (quick custom logs pick one directly), then
-// curated-plan day category, then workoutId → workout.typeId for template
-// logs. Logged sessions that resolve to nothing render as "Other".
+// order: the log's own typeId (quick custom logs pick one directly), then the
+// curated day's built-in HYROX type, then workoutId → workout.typeId for
+// template logs. Everything resolves into the one type list (tags.ts);
+// sessions that resolve to nothing render as OTHER_TYPE.
 
 export interface LogTypeInfo {
   name: string;
   color: string;
 }
-
-export const OTHER_TYPE: LogTypeInfo = { name: 'Other', color: '#FF6B6B' };
 
 interface TypeMaps {
   byType: Map<string, LogTypeInfo>;
@@ -26,7 +26,7 @@ export function useLogTypeResolver(): (log: WorkoutLog) => LogTypeInfo | undefin
   useEffect(() => {
     (async () => {
       // Raw table (not getCustomWorkouts) so archived workouts still resolve.
-      const [workouts, types] = await Promise.all([db.workouts.toArray(), db.workoutTypes.toArray()]);
+      const [workouts, types] = await Promise.all([db.workouts.toArray(), getWorkoutTypes()]);
       const byType = new Map(types.map((t) => [t.id, { name: t.name, color: t.color }]));
       const byWorkout = new Map<string, LogTypeInfo>();
       for (const w of workouts) {
@@ -45,7 +45,7 @@ export function useLogTypeResolver(): (log: WorkoutLog) => LogTypeInfo | undefin
       }
       if (log.dayId) {
         const d = byId(log.dayId);
-        if (d) return { name: d.category.toLowerCase(), color: CAT_HEX[d.category] };
+        if (d) return HYROX_TYPES[d.category];
       }
       if (log.workoutId) return maps.byWorkout.get(log.workoutId);
       return undefined;

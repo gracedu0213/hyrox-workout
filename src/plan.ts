@@ -772,24 +772,6 @@ export const DAY_LABEL: Record<Day['dayOfWeek'], string> = {
   mon: 'MON', tue: 'TUE', wed: 'WED', thu: 'THU', fri: 'FRI', sat: 'SAT', sun: 'SUN',
 };
 
-export const CATEGORY_COLOR: Record<Day['category'], string> = {
-  FOUNDATION: 'foundation',
-  AEROBIC: 'aerobic',
-  ENGINE: 'engine',
-  POWER: 'power',
-  COMPLETE: 'complete',
-};
-
-// Hex twins of the above — for inline styles, where tailwind's JIT can't see
-// dynamic classes derived from data.
-export const CAT_HEX: Record<Day['category'], string> = {
-  FOUNDATION: '#F0E040',
-  AEROBIC: '#5BC0EB',
-  ENGINE: '#FF6B6B',
-  POWER: '#9B59B6',
-  COMPLETE: '#2ECC71',
-};
-
 // --- Curated programs registry ---
 // Each curated program is a "virtual" plan: it has no DB row until the user
 // commits (Start), at which point a row with its fixed planId is materialized.

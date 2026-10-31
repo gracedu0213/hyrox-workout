@@ -4,6 +4,7 @@ import { deleteWorkout, getCustomWorkouts, getWorkoutTypes } from '../db';
 import { setupSummary } from '../format';
 import { customToSetup } from '../workouts';
 import MoreMenu from './MoreMenu';
+import { OTHER_TYPE } from '../tags';
 import type { CustomWorkout, WorkoutType } from '../types';
 
 // Browse list of custom workouts (Plan tab + dedicated Workouts page). Tapping a
@@ -37,9 +38,8 @@ export default function WorkoutList() {
       {workouts.map((w) => {
         const summary = setupSummary(customToSetup(w).setup);
         const type = w.typeId ? types.get(w.typeId) : undefined;
-        const intensityColor = w.intensity ? INTENSITY_COLOR[w.intensity] : undefined;
-        // The type label tints the left bar; intensity is the fallback accent.
-        const color = type?.color ?? intensityColor ?? '#5BC0EB';
+        // Color always means type; untyped workouts get the neutral "Other".
+        const color = type?.color ?? OTHER_TYPE.color;
         return (
           <div key={w.id} className="flex items-center gap-2 bg-panel rounded-lg p-3">
             <div className="w-1 h-10 rounded-full shrink-0" style={{ backgroundColor: color }} />
@@ -51,7 +51,7 @@ export default function WorkoutList() {
                   <span className="ml-2 uppercase tracking-wider" style={{ color: type.color }}>{type.name}</span>
                 )}
                 {w.intensity && (
-                  <span className="ml-2 uppercase tracking-wider" style={{ color: intensityColor }}>{w.intensity}</span>
+                  <span className="ml-2 uppercase tracking-wider">{w.intensity}</span>
                 )}
               </div>
             </Link>
@@ -68,9 +68,3 @@ export default function WorkoutList() {
   );
 }
 
-// Intensity tints the left bar, mirroring the plan rows' color accent.
-const INTENSITY_COLOR: Record<string, string> = {
-  easy: '#2ECC71',
-  moderate: '#FFD500',
-  hard: '#FF6B6B',
-};

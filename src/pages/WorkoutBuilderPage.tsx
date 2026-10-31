@@ -5,6 +5,7 @@ import { setupSummary } from '../format';
 import { customToSetup, isExercise, isRest } from '../workouts';
 import TimeInput from '../components/TimeInput';
 import TypePicker from '../components/TypePicker';
+import { INTENSITIES } from '../tags';
 import type {
   Block,
   CustomWorkout,
@@ -28,12 +29,6 @@ const FORMATS: { type: FormatType; label: string }[] = [
 
 const UNITS: TargetUnit[] = [
   'reps', 'meters', 'feet', 'calories', 'seconds', 'minutes', 'miles', 'failure', 'max',
-];
-
-const INTENSITIES: { value: Intensity; label: string }[] = [
-  { value: 'easy', label: 'Easy' },
-  { value: 'moderate', label: 'Moderate' },
-  { value: 'hard', label: 'Hard' },
 ];
 
 function emptyExercise(): ExSpec {

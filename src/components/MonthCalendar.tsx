@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react';
 import { isoDate, todayISO } from '../dateUtils';
 import { groupLogsByDate, hasResults, logKind } from '../logSummary';
-import { OTHER_TYPE, type LogTypeInfo } from '../logTypeColor';
+import type { LogTypeInfo } from '../logTypeColor';
+import { OTHER_TYPE } from '../tags';
 import type { WorkoutLog } from '../types';
 
 // Strava-style month view: one dot per logged session, colored by workout

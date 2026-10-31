@@ -1,6 +1,7 @@
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { byId, programForDay, CATEGORY_COLOR, DAY_LABEL } from '../plan';
+import { byId, programForDay, DAY_LABEL } from '../plan';
+import { HYROX_TYPES } from '../tags';
 import { formatExercise, setupSummary } from '../format';
 import { deleteLog, getLogsForDate, getLogsForDay, newId, saveLog } from '../db';
 import { hasResults, logKind, logSummary } from '../logSummary';
@@ -68,8 +69,8 @@ export default function DayPage() {
         <Link to={programHref} className="text-muted text-xs">← Plan</Link>
         <div className="mt-2 flex items-baseline gap-2 flex-wrap">
           <span className="font-display text-3xl tracking-[-0.02em]">W{String(day.week).padStart(2, '0')} · {DAY_LABEL[day.dayOfWeek]}</span>
-          <span className={`text-[10px] font-black uppercase tracking-widest text-${CATEGORY_COLOR[day.category]}`}>
-            {day.category}
+          <span className="text-[10px] font-black uppercase tracking-widest" style={{ color: HYROX_TYPES[day.category].color }}>
+            {HYROX_TYPES[day.category].name}
           </span>
         </div>
         <div className="mt-1 text-[10px] text-muted uppercase tracking-[0.25em] font-semibold">{day.phase}</div>
