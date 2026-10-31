@@ -29,5 +29,8 @@ struct AuthService {
 
     func signOut() async throws { try await client.auth.signOut() }
 
-    var currentUserID: String? { client.auth.currentUser?.id.uuidString }
+    /// Lowercased to match Postgres' canonical uuid form (and the web).
+    var currentUserID: String? { client.auth.currentUser?.id.uuidString.lowercased() }
+
+    var isSignedIn: Bool { client.auth.currentSession != nil }
 }

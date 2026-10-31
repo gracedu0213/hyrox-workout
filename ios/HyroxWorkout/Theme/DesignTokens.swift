@@ -1,28 +1,48 @@
 import SwiftUI
 
-// Design language — mirrors the web app's Partiful-inspired tokens.
-// Celebration surfaces (result heroes, completed states) lean electric.
-// Functional surfaces (forms, lists) stay clean.
+// Design language — the SINGLE source of truth on iOS, mirroring the web's
+// tailwind.config.js palette exactly (Partiful-inspired energy on celebration
+// surfaces; functional surfaces stay clean). If a value changes there, change
+// it here.
 
 enum HX {
-    // Surfaces
-    static let bg = Color(red: 0x0A / 255, green: 0x0A / 255, blue: 0x0A / 255)
-    static let panel = Color(red: 0x14 / 255, green: 0x14 / 255, blue: 0x14 / 255)
-    static let panel2 = Color(red: 0x1F / 255, green: 0x1F / 255, blue: 0x1F / 255)
+    // Surfaces (web: bg / panel / panel2 / line)
+    static let bg = Color(hex: "#1a1a1a")
+    static let panel = Color(hex: "#242424")
+    static let panel2 = Color(hex: "#2e2e2e")
+    static let line = Color(hex: "#3a3a3a")
 
     // Text
     static let text = Color.white
-    static let muted = Color(red: 0x99 / 255, green: 0x99 / 255, blue: 0x99 / 255)
+    static let muted = Color(hex: "#8a8a8a")
 
-    // Accents
-    static let accent = Color(red: 1.0, green: 0xD5 / 255, blue: 0)            // #FFD500 yellow
-    static let amber = Color(red: 0xF0 / 255, green: 0xE0 / 255, blue: 0x40 / 255)
-    static let engine = Color(red: 1.0, green: 0x9B / 255, blue: 0x5C / 255)    // #FF9B5C
-    static let coral = Color(red: 1.0, green: 0x6B / 255, blue: 0x6B / 255)     // #FF6B6B
+    // Accents (web: accent / accent2)
+    static let accent = Color(hex: "#F0E040")
+    static let accent2 = Color(hex: "#FFD500")
 
-    // Headline gradient (yellow → amber → coral)
-    static let headlineGradient = LinearGradient(
-        colors: [accent, amber, engine, coral],
+    // Curated-plan category colors (web: foundation/aerobic/engine/power/complete)
+    static let foundation = Color(hex: "#F0E040")
+    static let aerobic = Color(hex: "#5BC0EB")
+    static let engine = Color(hex: "#FF6B6B")
+    static let power = Color(hex: "#9B59B6")
+    static let complete = Color(hex: "#2ECC71")
+
+    /// "Other"/unresolved log type — web OTHER_TYPE (#FF6B6B).
+    static let coral = Color(hex: "#FF6B6B")
+
+    /// Confetti palette (web src/celebrate.ts).
+    static let confetti = ["#F0E040", "#FFD500", "#5BC0EB", "#FF6B6B", "#2ECC71"]
+
+    /// The signature gradient — web `linear-gradient(135deg, #FFD500 0%,
+    /// #F0E040 35%, #FF9B5C 70%, #FF6B6B 100%)`. Used for result numbers and
+    /// big display titles via .gradientText().
+    static let gradient = LinearGradient(
+        stops: [
+            .init(color: Color(hex: "#FFD500"), location: 0),
+            .init(color: Color(hex: "#F0E040"), location: 0.35),
+            .init(color: Color(hex: "#FF9B5C"), location: 0.70),
+            .init(color: Color(hex: "#FF6B6B"), location: 1),
+        ],
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
@@ -30,13 +50,42 @@ enum HX {
     // Result block ambient bleeds
     static let resultBackground = LinearGradient(
         colors: [
-            Color.yellow.opacity(0.12),
+            accent.opacity(0.12),
             Color.clear,
-            Color.pink.opacity(0.10),
+            engine.opacity(0.10),
         ],
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
+}
+
+extension Category {
+    /// Hex twin used where the web inlines CAT_HEX (calendar tiles, dots).
+    var hex: String {
+        switch self {
+        case .foundation: return "#F0E040"
+        case .aerobic:    return "#5BC0EB"
+        case .engine:     return "#FF6B6B"
+        case .power:      return "#9B59B6"
+        case .complete:   return "#2ECC71"
+        }
+    }
+
+    var color: Color { Color(hex: hex) }
+}
+
+extension Color {
+    /// Parse "#RRGGBB" (the only form the app stores — workout type + plan
+    /// colors are user data rendered via inline styles on the web).
+    init(hex: String) {
+        var value: UInt64 = 0
+        Scanner(string: String(hex.dropFirst(hex.hasPrefix("#") ? 1 : 0))).scanHexInt64(&value)
+        self.init(
+            red: Double((value >> 16) & 0xFF) / 255,
+            green: Double((value >> 8) & 0xFF) / 255,
+            blue: Double(value & 0xFF) / 255
+        )
+    }
 }
 
 // Arial Black is what the web app uses for `font-display`. Falls back to

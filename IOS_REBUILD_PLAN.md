@@ -55,24 +55,28 @@ Add `@supabase/supabase-js`, auth screens, Supabase-backed data layer (Dexie bec
 ### Environments (local / staging / production)
 Migrations are environment-agnostic and flow **local → staging → prod**. Runbook + secrets policy in `supabase/README.md`. Staging = "The Hyrox App" (`bhnkoxqhgfoeowwqryra`, West US); production is a separate project **created at launch** (not yet provisioned). Per-env config lives in `[remotes.*]` blocks.
 
-### P2 — iOS data + auth + logic (~1–1.5 wk) — 🚧 in progress (against local Supabase)
+### P2 — iOS data + auth + logic — ✅ done (against local Supabase)
 - ✅ Extensible domain model in Swift: `WorkoutFormat` + `PlanContent` + `BlockRow`/`PlanSlot` as `type`/`kind`-discriminated unions whose Codable JSON matches Supabase `data` exactly (`ios/HyroxWorkout/Models/Workout.swift`, `UserPlan.swift`); `DayOfWeek` widened to all 7. Adding a variant = add a case; the compiler flags every switch to update — no migration.
-- ✅ Test harness: hosted `HyroxWorkoutTests` target + scheme; XCTest via `xcodebuild test`.
-- ✅ `supabase-swift` (SPM) integrated; env-aware client (`Backend.client`, local in DEBUG); Info.plist ATS exception for loopback. Email OTP + Apple `signInWithIdToken` auth (`AuthService`). `WorkoutRepository` maps `CustomWorkout` ⇄ the `custom_workouts` envelope. `newID()` lowercases uuids to match Postgres + web.
-- ✅ **Live integration test green against local Supabase**: email signup → onboarding trigger seeds default types → RLS-scoped save/fetch/delete → jsonb round-trip. **10 tests total, all passing.**
-- ⏭ Remaining: repositories for plans/logs/types; local cache (SwiftData/GRDB) + sync; port `planStats`/`progress`/`logSummary`/`format`/`dateUtils`/`workouts`; bundle curated content as shared JSON; fill staging anon key.
+- ✅ `WorkoutSetup` hand-written Codable (web `{type: …}` shape) + full `WorkoutLog` Codable domain model (snapshot, splits, AMRAP, intervals, exercises) replacing the stale SwiftData stub.
+- ✅ Curated 12-week plan extracted to shared JSON: `npm run export:plan` generates `ios/HyroxWorkout/Resources/curated_plan.json` from `src/plan.ts` (single source of truth); Swift decodes all 60 days (pinned by tests).
+- ✅ All logic modules ported with tests: `Format`/`DateUtils`/`LogSummary`/`PlanStats`/`Progress`/`Workouts`/`PlanHelpers`/`LogTypeResolver` (Mon-first weeks, streak grace, setup summaries byte-identical to web).
+- ✅ Repositories for all tables (`workout_logs`/`user_plans`/`workout_types`/`profiles` + existing `custom_workouts`), envelope + `data jsonb` mapping, `created_at` preserved across round-trips.
+- ✅ Offline-first store: `LocalStore` (atomic per-table JSON files — the Dexie analog) + `AppStore` (in-memory source of truth, db.ts-equivalent queries/mutations) + push-then-pull LWW sync with a persisted pending-op queue. **Live two-device sync integration test green** (create → push → fresh store pull → byte-identical; deletes propagate).
+- ✅ Design tokens aligned to web tailwind exactly (bg `#1a1a1a`, accent `#F0E040`, category colors, signature 4-stop gradient).
+- ⏭ Remaining: fill staging anon key (Supabase dashboard) before running a release build against hosted.
 
-### P3 — iOS core screens (~1.5–2 wk)
-App shell (3-tab nav, header, first-run profile/onboarding gate), **Home/Today** (swipeable rail + dots, consistency heatmap/month-calendar toggle, streak hero, upcoming, last-log), **Plan library**, **Program** (curated/cadence/sequenced bodies), **Progress** (sparklines + trend chips), **Log detail**.
+### P3 — iOS core screens — ✅ built (visual pass in simulator done; on-device QA pending)
+App shell (3-tab nav + header + auth gate + first-run profile sheet), Home/Today (swipeable rail + dots, heatmap/month toggle, streak hero, upcoming, last-log, Fab, cadence cards + log sheet), Plan library, Program (curated/cadence/sequenced bodies, week strips), Progress (sparklines + trend chips), Log detail (result sections + collapsible prescription).
 
-### P4 — iOS builders + logging (~1.5–2 wk) — the hardest
-**Log flow** (setup-driven result sections), **Custom log**, **Workout builder** (blocks/rows/formats), **Plan builder** (cadence/schedule/flexible + draft round-trip), **Day**, **Workout detail**; primitives **TimeInput**, **TypePicker**, **FeltPicker**, pickers, bottom sheets, ⋯ menus, confirm alerts.
+### P4 — iOS builders + logging — ✅ built
+Log flow (setup-driven result sections), Custom log, Workout builder (blocks/rows/formats), Plan builder (cadence/schedule/flexible; the web's draft round-trip is unnecessary natively — pushing the workout builder preserves state), Day page, Workout detail; primitives TimeInput (stopwatch digit model), TypePicker, FeltPicker, Menu pickers, bottom sheets, ⋯ menus, native confirm alerts.
 
-### P5 — Delight + native polish (~3–5 d)
-Confetti + full-screen **CelebrationScreen** (`celebrate=1` flow), **real haptics**, swipe rails, heatmap tile-splitting for multi-type days, sparklines, brand gradients/sparkle motifs, sticky save bars, empty states.
+### P5 — Delight + native polish — ✅ built
+Canvas confetti + full-screen CelebrationScreen (celebrate flow with greeting hash, stat tiles), real haptics (`UINotificationFeedbackGenerator`), snap rails, heatmap tile-splitting for multi-type days, sparklines, brand gradients/sparkle motifs, sticky save bars, empty states.
+DEBUG launch hooks for screenshot QA: `SIMCTL_CHILD_AUTOLOGIN=1`, `SIMCTL_CHILD_SEED_DEMO=1`, `SIMCTL_CHILD_START_TAB=plan|progress`.
 
-### P6 — Ship (~3–5 d)
-App icon, Apple Developer enrollment, privacy manifest, TestFlight, App Store submission.
+### P6 — Ship (~3–5 d) — ⛔ blocked on Apple Developer account
+App icon, Apple Developer enrollment ($99/yr), **Sign in with Apple** (needs the entitlement + Services ID + signing key secrets; email OTP already works), privacy manifest, TestFlight, App Store submission. Also pending sign-off (not account-related): `supabase db push` to hosted staging.
 
 ## Screen-by-screen build manifest
 The exhaustive per-page / per-component behavior spec (all 13 pages, ~17 components, all logic modules, and cross-cutting behaviors) is the authoritative checklist for P3–P5. See the feature inventory captured during scoping.

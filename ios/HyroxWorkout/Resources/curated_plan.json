@@ -1,0 +1,3088 @@
+{
+ "days": [
+  {
+   "id": "w01-mon",
+   "week": 1,
+   "phase": "BASE",
+   "dayOfWeek": "mon",
+   "category": "FOUNDATION",
+   "workoutLabel": "4 RFT",
+   "setup": {
+    "type": "rft",
+    "rounds": 4
+   },
+   "exercises": [
+    {
+     "name": "Row",
+     "qty": 500,
+     "unit": "meters"
+    },
+    {
+     "name": "KB Deadlifts",
+     "qty": 20,
+     "unit": "reps",
+     "weight": {
+      "lbsM": 53,
+      "lbsF": 35,
+      "kgM": 24,
+      "kgF": 16,
+      "count": 2
+     },
+     "note": "Should be done in 1 set"
+    },
+    {
+     "name": "Wall Balls",
+     "qty": 20,
+     "unit": "reps",
+     "weight": {
+      "lbsM": 14,
+      "lbsF": 10,
+      "kgM": 6,
+      "kgF": 4
+     }
+    },
+    {
+     "name": "Farmer Carry",
+     "qty": 100,
+     "unit": "meters",
+     "weight": {
+      "lbsM": 53,
+      "lbsF": 35,
+      "kgM": 24,
+      "kgF": 16,
+      "count": 2
+     }
+    }
+   ],
+   "notes": [
+    "Pay attention to pace on row, stay consistent",
+    "KB Deadlifts should be able to be done in 1 set",
+    "Wall balls should be unbroken",
+    "Go heavier on Farmer Carry if desired"
+   ]
+  },
+  {
+   "id": "w01-tue",
+   "week": 1,
+   "phase": "BASE",
+   "dayOfWeek": "tue",
+   "category": "AEROBIC",
+   "workoutLabel": "45-60 Min Run",
+   "setup": {
+    "type": "for_quality"
+   },
+   "exercises": [
+    {
+     "name": "Run",
+     "unit": "minutes",
+     "qtyMin": 45,
+     "qtyMax": 60,
+     "note": "Finish with 6 x 20 second strides"
+    }
+   ],
+   "notes": [
+    "Conversational Pace",
+    "During strides, start slow and build to sprint effort for the last 6-10 steps"
+   ]
+  },
+  {
+   "id": "w01-wed",
+   "week": 1,
+   "phase": "BASE",
+   "dayOfWeek": "wed",
+   "category": "FOUNDATION",
+   "workoutLabel": "4 RFT",
+   "setup": {
+    "type": "rft",
+    "rounds": 4
+   },
+   "exercises": [
+    {
+     "name": "Sled Push",
+     "qty": 50,
+     "unit": "feet",
+     "modifier": "AHAP",
+     "note": "50ft / 12.5m"
+    },
+    {
+     "name": "Run",
+     "qty": 400,
+     "unit": "meters"
+    },
+    {
+     "name": "Headcutters",
+     "qty": 15,
+     "unit": "reps",
+     "weight": {
+      "lbsM": 53,
+      "lbsF": 35,
+      "kgM": 24,
+      "kgF": 16
+     }
+    }
+   ],
+   "notes": [
+    "AHAP = As heavy as possible",
+    "Option to modify Headcutters to Wall Balls or Goblet Squats as needed"
+   ]
+  },
+  {
+   "id": "w01-thu",
+   "week": 1,
+   "phase": "BASE",
+   "dayOfWeek": "thu",
+   "category": "POWER",
+   "workoutLabel": "4x + 4x (two blocks)",
+   "setup": {
+    "type": "rounds",
+    "rounds": 4
+   },
+   "exercises": [
+    {
+     "name": "Goblet Squat",
+     "qty": 20,
+     "unit": "reps"
+    },
+    {
+     "name": "DB Bench Press",
+     "qty": 15,
+     "unit": "reps"
+    },
+    {
+     "name": "Ring/TRX Rows",
+     "unit": "failure",
+     "note": "x Failure"
+    },
+    {
+     "name": "Max Bike Sprint",
+     "qty": 30,
+     "unit": "seconds"
+    },
+    {
+     "name": "— 1:30 rest —",
+     "note": "Rest 1:30 between rounds"
+    },
+    {
+     "name": "— Block 2 (4 rounds) —"
+    },
+    {
+     "name": "Split Squats",
+     "qty": 10,
+     "unit": "reps",
+     "modifier": "Each leg"
+    },
+    {
+     "name": "DB Shoulder Press",
+     "qty": 15,
+     "unit": "reps"
+    },
+    {
+     "name": "DB Curls",
+     "qty": 12,
+     "unit": "reps",
+     "modifier": "Each arm"
+    },
+    {
+     "name": "Loaded Carry",
+     "qty": 200,
+     "unit": "meters",
+     "note": "100m Front Rack / 100m Farmer Carry"
+    }
+   ],
+   "notes": [
+    "This is for quality, not for time",
+    "Choose weights where the last 3 reps are very challenging",
+    "If unable to do chin ups, do TRX or Ring Rows",
+    "Movements are meant to be done one after the other with minimal rest. Rest 90 seconds after each round",
+    "On the loaded carry, use the same weight for both. Hold KBs or DBs in front rack position for the first 100m, then switch to a farmer carry hold for the second 100m",
+    "Rest as needed throughout"
+   ]
+  },
+  {
+   "id": "w01-fri",
+   "week": 1,
+   "phase": "BASE",
+   "dayOfWeek": "fri",
+   "category": "FOUNDATION",
+   "workoutLabel": "For Time: 3 Rounds (descending)",
+   "setup": {
+    "type": "descending_rounds",
+    "rounds": 3,
+    "roundDetails": [
+     "Round 1: 800m Run + 30 reps each movement",
+     "Round 2: 400m Run + 20 reps each movement",
+     "Round 3: 200m Run + 10 reps each movement"
+    ]
+   },
+   "exercises": [
+    {
+     "name": "Run",
+     "perRound": [
+      800,
+      400,
+      200
+     ],
+     "note": "800 / 400 / 200m per round"
+    },
+    {
+     "name": "Alt DB Snatch",
+     "unit": "reps",
+     "perRound": [
+      30,
+      20,
+      10
+     ]
+    },
+    {
+     "name": "Goblet Squat",
+     "unit": "reps",
+     "perRound": [
+      30,
+      20,
+      10
+     ]
+    },
+    {
+     "name": "Goblet Lunge",
+     "unit": "reps",
+     "perRound": [
+      30,
+      20,
+      10
+     ]
+    },
+    {
+     "name": "Sled Push",
+     "qty": 50,
+     "unit": "feet",
+     "note": "50ft / 12.5m after each round"
+    }
+   ],
+   "notes": [
+    "Workout is 3 rounds total, with descending reps each round (Sled Push remains the same throughout)"
+   ]
+  },
+  {
+   "id": "w02-mon",
+   "week": 2,
+   "phase": "BASE",
+   "dayOfWeek": "mon",
+   "category": "FOUNDATION",
+   "workoutLabel": "25 Min AMRAP — ladder 5-10-15-20-25-etc",
+   "setup": {
+    "type": "amrap",
+    "durationSec": 1500
+   },
+   "exercises": [
+    {
+     "name": "KB Deadlift",
+     "unit": "reps",
+     "weight": {
+      "lbsM": 53,
+      "lbsF": 35,
+      "kgM": 24,
+      "kgF": 16,
+      "count": 2
+     },
+     "ladder": {
+      "start": 5,
+      "step": 5,
+      "openEnded": true
+     }
+    },
+    {
+     "name": "Goblet Lunge",
+     "unit": "reps",
+     "weight": {
+      "lbsM": 50,
+      "lbsF": 35,
+      "kgM": 22.5,
+      "kgF": 15
+     },
+     "ladder": {
+      "start": 5,
+      "step": 5,
+      "openEnded": true
+     }
+    },
+    {
+     "name": "Wall Balls",
+     "unit": "reps",
+     "weight": {
+      "lbsM": 14,
+      "lbsF": 10,
+      "kgM": 6,
+      "kgF": 4
+     },
+     "ladder": {
+      "start": 10,
+      "step": 10,
+      "openEnded": true
+     }
+    },
+    {
+     "name": "Run",
+     "qty": 200,
+     "unit": "meters",
+     "note": "200m Run after each round (does not change)"
+    }
+   ],
+   "notes": [
+    "Continue up the ladder until you reach 25 minutes",
+    "200m Run does not change throughout",
+    "Round 1: 5 KB DL / 5 FR Lunge / 10 Wallballs / 200m Run",
+    "Round 2: 10 KB DL / 10 FR Lunge / 20 Wallballs / 200m Run",
+    "Round 3: 15 KB DL / 15 FR Lunge / 30 Wallballs / 200m Run"
+   ]
+  },
+  {
+   "id": "w02-tue",
+   "week": 2,
+   "phase": "BASE",
+   "dayOfWeek": "tue",
+   "category": "AEROBIC",
+   "workoutLabel": "50-60 Min AMRAP",
+   "setup": {
+    "type": "amrap",
+    "durationSec": 3600
+   },
+   "exercises": [
+    {
+     "name": "Bike",
+     "qty": 5,
+     "unit": "minutes"
+    },
+    {
+     "name": "Row",
+     "qty": 5,
+     "unit": "minutes"
+    },
+    {
+     "name": "Ski",
+     "qty": 5,
+     "unit": "minutes"
+    }
+   ],
+   "notes": [
+    "Work for 50-60 minutes total",
+    "All at an easy yet consistent pace",
+    "Pay attention to pace throughout and stay consistent",
+    "Conversational pace, but you should break a sweat"
+   ]
+  },
+  {
+   "id": "w02-wed",
+   "week": 2,
+   "phase": "BASE",
+   "dayOfWeek": "wed",
+   "category": "FOUNDATION",
+   "workoutLabel": "4 RFT",
+   "setup": {
+    "type": "rft",
+    "rounds": 4
+   },
+   "exercises": [
+    {
+     "name": "Run",
+     "qty": 400,
+     "unit": "meters"
+    },
+    {
+     "name": "DB Thruster",
+     "qty": 10,
+     "unit": "reps",
+     "weight": {
+      "lbsM": 35,
+      "lbsF": 20,
+      "kgM": 15,
+      "kgF": 10,
+      "count": 2
+     }
+    },
+    {
+     "name": "Burpee Broad Jumps",
+     "qty": 12,
+     "unit": "reps"
+    }
+   ],
+   "notes": [
+    "DB Thrusters should be unbroken",
+    "Plant hands close to feet in order to maintain the Burpee Broad Jump standard"
+   ]
+  },
+  {
+   "id": "w02-thu",
+   "week": 2,
+   "phase": "BASE",
+   "dayOfWeek": "thu",
+   "category": "POWER",
+   "workoutLabel": "100 Cal Row + EMOM + 4x block",
+   "setup": {
+    "type": "rounds",
+    "rounds": 4
+   },
+   "exercises": [
+    {
+     "name": "Row",
+     "qty": 100,
+     "unit": "calories",
+     "note": "Buy-in: stop every 2:00 and complete 10 x Bench Press"
+    },
+    {
+     "name": "Bench Press",
+     "qty": 10,
+     "unit": "reps",
+     "note": "Every 2:00 during the row"
+    },
+    {
+     "name": "— Then 4 rounds: —"
+    },
+    {
+     "name": "Back Squats",
+     "qty": 25,
+     "unit": "reps",
+     "modifier": "Unbroken"
+    },
+    {
+     "name": "Cal Bike Sprint",
+     "qty": 10,
+     "unit": "calories"
+    },
+    {
+     "name": "Rest",
+     "qty": 2,
+     "unit": "minutes"
+    },
+    {
+     "name": "Suitcase Carry",
+     "qty": 400,
+     "unit": "meters",
+     "note": "Switch arms as needed"
+    }
+   ],
+   "notes": [
+    "100 Cal Row should be a moderate pace",
+    "Stop every 2 Minutes and complete 10 x Bench Press (Build each round)",
+    "Back squats should be unbroken, build each round",
+    "Go immediately into the 10 Cal Bike Sprint",
+    "Suitcase Carry: Switch arms as needed but don't come to a complete stop at any point"
+   ]
+  },
+  {
+   "id": "w02-fri",
+   "week": 2,
+   "phase": "BASE",
+   "dayOfWeek": "fri",
+   "category": "FOUNDATION",
+   "workoutLabel": "For Time: 3 Rounds (descending)",
+   "setup": {
+    "type": "descending_rounds",
+    "rounds": 3,
+    "roundDetails": [
+     "Round 1: 30 reps each",
+     "Round 2: 20 reps each",
+     "Round 3: 10 reps each"
+    ]
+   },
+   "exercises": [
+    {
+     "name": "Alt DB Snatch",
+     "unit": "reps",
+     "perRound": [
+      30,
+      20,
+      10
+     ]
+    },
+    {
+     "name": "Sled Pull (Arms Only)",
+     "qty": 50,
+     "unit": "feet"
+    },
+    {
+     "name": "Farmer Carry",
+     "qty": 200,
+     "unit": "meters",
+     "weight": {
+      "lbsM": 53,
+      "lbsF": 35,
+      "kgM": 24,
+      "kgF": 16,
+      "count": 2
+     },
+     "note": "After each round"
+    }
+   ],
+   "notes": [
+    "3 Rounds total",
+    "DB Snatch reps decrease each round",
+    "Sled Pull should be AHAP, no walking back",
+    "Farmer Carry should be heavy enough where you need to break at least 1 time during each 200m"
+   ]
+  },
+  {
+   "id": "w03-mon",
+   "week": 3,
+   "phase": "BASE",
+   "dayOfWeek": "mon",
+   "category": "FOUNDATION",
+   "workoutLabel": "For Time: 5 Rounds (descending)",
+   "setup": {
+    "type": "descending_rounds",
+    "rounds": 5,
+    "roundDetails": [
+     "Wall Balls: 50-40-30-20-10",
+     "KBS: 21-18-15-12-9",
+     "400m Run after each round"
+    ]
+   },
+   "exercises": [
+    {
+     "name": "Wall Balls",
+     "unit": "reps",
+     "perRound": [
+      50,
+      40,
+      30,
+      20,
+      10
+     ],
+     "weight": {
+      "lbsM": 14,
+      "lbsF": 10,
+      "kgM": 6,
+      "kgF": 4
+     }
+    },
+    {
+     "name": "KB Swings",
+     "unit": "reps",
+     "perRound": [
+      21,
+      18,
+      15,
+      12,
+      9
+     ],
+     "weight": {
+      "lbsM": 53,
+      "lbsF": 35,
+      "kgM": 24,
+      "kgF": 16
+     }
+    },
+    {
+     "name": "Run",
+     "qty": 400,
+     "unit": "meters"
+    },
+    {
+     "name": "Burpee Penalty",
+     "qty": 10,
+     "unit": "reps",
+     "note": "Every time you break on Wall Balls, FOUNDATION 10 Burpees"
+    }
+   ],
+   "notes": [
+    "5 Rounds, reps decrease each round",
+    "400m Run remains the same",
+    "A break on Wall Balls is any time movement stops or ball drops",
+    "Round 1: 50 Wall Balls / 21 KBS / 400m Run",
+    "Round 2: 40 Wall Balls / 18 KBS / 400m Run",
+    "Round 3: 30 Wall Balls / 15 KBS / 400m Run",
+    "(+ penalty burpees if you break on wall balls)"
+   ]
+  },
+  {
+   "id": "w03-tue",
+   "week": 3,
+   "phase": "BASE",
+   "dayOfWeek": "tue",
+   "category": "AEROBIC",
+   "workoutLabel": "50 Minutes Progressive Run",
+   "setup": {
+    "type": "for_quality"
+   },
+   "exercises": [
+    {
+     "name": "Run",
+     "qty": 50,
+     "unit": "minutes",
+     "note": "Increase pace every 10 mins; last 10 mins hardest"
+    }
+   ],
+   "notes": [
+    "Increase pace every 10 mins so at least 10 mins faster / hardest effort",
+    "If you have a GPS watch, use it and take splits to record data",
+    "The last 10 mins should feel harder than race effort"
+   ]
+  },
+  {
+   "id": "w03-wed",
+   "week": 3,
+   "phase": "BASE",
+   "dayOfWeek": "wed",
+   "category": "FOUNDATION",
+   "workoutLabel": "For Time: 21-18-15-12-9-6-3",
+   "setup": {
+    "type": "descending_rounds",
+    "rounds": 7,
+    "roundDetails": [
+     "Reps per round: 21-18-15-12-9-6-3 of each",
+     "Each round starts with a 100m Farmer Carry"
+    ]
+   },
+   "exercises": [
+    {
+     "name": "Farmer Carry",
+     "qty": 100,
+     "unit": "meters",
+     "note": "At the start of each round"
+    },
+    {
+     "name": "DB Hang Clean",
+     "unit": "reps",
+     "perRound": [
+      21,
+      18,
+      15,
+      12,
+      9,
+      6,
+      3
+     ],
+     "weight": {
+      "lbsM": 35,
+      "lbsF": 20,
+      "kgM": 15,
+      "kgF": 10,
+      "count": 2
+     }
+    },
+    {
+     "name": "DB Push Press",
+     "unit": "reps",
+     "perRound": [
+      21,
+      18,
+      15,
+      12,
+      9,
+      6,
+      3
+     ],
+     "weight": {
+      "lbsM": 35,
+      "lbsF": 20,
+      "kgM": 15,
+      "kgF": 10,
+      "count": 2
+     }
+    },
+    {
+     "name": "DB Front Squat",
+     "unit": "reps",
+     "perRound": [
+      21,
+      18,
+      15,
+      12,
+      9,
+      6,
+      3
+     ],
+     "weight": {
+      "lbsM": 35,
+      "lbsF": 20,
+      "kgM": 15,
+      "kgF": 10,
+      "count": 2
+     }
+    }
+   ],
+   "notes": [
+    "7 Rounds total",
+    "Each round starts with a 100m Farmer Carry",
+    "This will be grippy!",
+    "Use the same weight throughout for all movements"
+   ]
+  },
+  {
+   "id": "w03-thu",
+   "week": 3,
+   "phase": "BASE",
+   "dayOfWeek": "thu",
+   "category": "POWER",
+   "workoutLabel": "4x + 4x (two blocks)",
+   "setup": {
+    "type": "rounds",
+    "rounds": 4
+   },
+   "exercises": [
+    {
+     "name": "Barbell RDL",
+     "qty": 8,
+     "unit": "reps"
+    },
+    {
+     "name": "Split Squat Jump",
+     "qty": 10,
+     "unit": "reps"
+    },
+    {
+     "name": "Sled Sprint",
+     "qty": 100,
+     "unit": "feet"
+    },
+    {
+     "name": "Rest",
+     "qty": 90,
+     "unit": "seconds"
+    },
+    {
+     "name": "— Block 2 (4 rounds) —"
+    },
+    {
+     "name": "Bench Press",
+     "qty": 20,
+     "unit": "reps"
+    },
+    {
+     "name": "KB Swings",
+     "qty": 20,
+     "unit": "reps"
+    },
+    {
+     "name": "Cal Ski Sprint",
+     "qty": 10,
+     "unit": "calories"
+    },
+    {
+     "name": "Rest",
+     "qty": 90,
+     "unit": "seconds"
+    }
+   ],
+   "notes": [
+    "For quality, not for time",
+    "Build RDL weight",
+    "Sled Push: Use ½ \"Normal\" weight (what you normally use in training)",
+    "Rest after each complete round",
+    "Bench Press: Build each round",
+    "Movements should be back to back with rest after each round"
+   ]
+  },
+  {
+   "id": "w03-fri",
+   "week": 3,
+   "phase": "BASE",
+   "dayOfWeek": "fri",
+   "category": "FOUNDATION",
+   "workoutLabel": "4 RFT",
+   "setup": {
+    "type": "rft",
+    "rounds": 4
+   },
+   "exercises": [
+    {
+     "name": "DB Front Rack Lunge",
+     "qty": 20,
+     "unit": "reps",
+     "weight": {
+      "lbsM": 50,
+      "lbsF": 35,
+      "kgM": 22.5,
+      "kgF": 15,
+      "count": 2
+     }
+    },
+    {
+     "name": "HR Push Ups",
+     "qty": 15,
+     "unit": "reps",
+     "note": "Hand Release"
+    },
+    {
+     "name": "Cal Ski",
+     "qty": 10,
+     "unit": "calories"
+    },
+    {
+     "name": "Bear Crawl",
+     "qty": 100,
+     "unit": "feet",
+     "note": "100ft / 25m"
+    }
+   ],
+   "notes": [
+    "Lunges should be unbroken",
+    "Push Ups should be STRICT: No sagging core, hips and shoulders in line",
+    "HR = Hand Release at bottom of push up",
+    "Bear Crawl: Hands and feet only touching the ground"
+   ]
+  },
+  {
+   "id": "w04-mon",
+   "week": 4,
+   "phase": "BASE",
+   "dayOfWeek": "mon",
+   "category": "FOUNDATION",
+   "workoutLabel": "For Time: 3 Rounds (descending)",
+   "setup": {
+    "type": "descending_rounds",
+    "rounds": 3,
+    "roundDetails": [
+     "Round 1: 30 reps / 50ft Sled Pull / 30 reps / 800m Run",
+     "Round 2: 20 reps / 50ft Sled Pull / 20 reps / 800m Run",
+     "Round 3: 10 reps / 50ft Sled Pull / 10 reps / 800m Run"
+    ]
+   },
+   "exercises": [
+    {
+     "name": "DB Push Press",
+     "unit": "reps",
+     "perRound": [
+      30,
+      20,
+      10
+     ],
+     "weight": {
+      "lbsM": 35,
+      "lbsF": 20,
+      "kgM": 15,
+      "kgF": 10,
+      "count": 2
+     }
+    },
+    {
+     "name": "Sled Pull",
+     "qty": 50,
+     "unit": "feet",
+     "note": "50ft / 12.5m — same each round"
+    },
+    {
+     "name": "Alt DB Snatch",
+     "unit": "reps",
+     "perRound": [
+      30,
+      20,
+      10
+     ]
+    },
+    {
+     "name": "Run",
+     "qty": 800,
+     "unit": "meters",
+     "note": "800m after each round (same each round)"
+    }
+   ],
+   "notes": [
+    "3 Rounds, decrease reps EXCEPT Sled Pull and 800m Run remain the same"
+   ]
+  },
+  {
+   "id": "w04-tue",
+   "week": 4,
+   "phase": "BASE",
+   "dayOfWeek": "tue",
+   "category": "AEROBIC",
+   "workoutLabel": "Mile + 12 x 200m + Mile",
+   "setup": {
+    "type": "intervals",
+    "rounds": 12,
+    "workDescription": "200m at 90% effort",
+    "restSec": 60
+   },
+   "exercises": [
+    {
+     "name": "Run Warm Up",
+     "qty": 1,
+     "unit": "miles"
+    },
+    {
+     "name": "200m Intervals",
+     "qty": 12,
+     "note": "12 x 200m at 90% effort"
+    },
+    {
+     "name": "Easy Jog",
+     "qty": 60,
+     "unit": "seconds",
+     "note": "Between each interval"
+    },
+    {
+     "name": "Cool Down",
+     "qty": 1,
+     "unit": "miles"
+    }
+   ],
+   "notes": [
+    "Each effort should be a build to 90% effort",
+    "Focus on quick turnover",
+    "Recovery jog should be super slow/easy if not walk"
+   ]
+  },
+  {
+   "id": "w04-wed",
+   "week": 4,
+   "phase": "BASE",
+   "dayOfWeek": "wed",
+   "category": "FOUNDATION",
+   "workoutLabel": "4 RFT",
+   "setup": {
+    "type": "rft",
+    "rounds": 4
+   },
+   "exercises": [
+    {
+     "name": "Ski/Row",
+     "qty": 400,
+     "unit": "meters"
+    },
+    {
+     "name": "Run",
+     "qty": 400,
+     "unit": "meters"
+    },
+    {
+     "name": "Sled Push",
+     "qty": 100,
+     "unit": "feet",
+     "modifier": "AHAP",
+     "note": "100ft / 25m"
+    }
+   ],
+   "notes": [
+    "Ski/Row: Moderate Pace",
+    "Run: Race Pace",
+    "Sled Push: Sled should be AHAP (As Heavy As Possible)"
+   ]
+  },
+  {
+   "id": "w04-thu",
+   "week": 4,
+   "phase": "BASE",
+   "dayOfWeek": "thu",
+   "category": "POWER",
+   "workoutLabel": "4x + 4x (two blocks)",
+   "setup": {
+    "type": "rounds",
+    "rounds": 4
+   },
+   "exercises": [
+    {
+     "name": "Split Squat",
+     "qty": 10,
+     "unit": "reps",
+     "modifier": "Each leg"
+    },
+    {
+     "name": "KB Deadlift",
+     "qty": 20,
+     "unit": "reps"
+    },
+    {
+     "name": "DB Bench Press",
+     "qty": 20,
+     "unit": "reps"
+    },
+    {
+     "name": "Rest",
+     "qty": 60,
+     "unit": "seconds"
+    },
+    {
+     "name": "— Block 2 (4 rounds) —"
+    },
+    {
+     "name": "Cal Ski",
+     "qty": 10,
+     "unit": "calories"
+    },
+    {
+     "name": "Ring Rows",
+     "unit": "reps",
+     "qtyMin": 10,
+     "qtyMax": 20
+    },
+    {
+     "name": "Sled Pull",
+     "qty": 50,
+     "unit": "feet",
+     "note": "50ft or 12.5m"
+    },
+    {
+     "name": "Rest",
+     "qty": 60,
+     "unit": "seconds"
+    }
+   ],
+   "notes": [
+    "For Quality, not for time",
+    "Split Squat: Complete all 10 reps on one leg before switching to the other. Feet should remain planted in lunge for entirety of set",
+    "KB Deadlift and DB Bench Press should be unbroken",
+    "Sled Pull should be arms only",
+    "Rest at the end of each round"
+   ]
+  },
+  {
+   "id": "w04-fri",
+   "week": 4,
+   "phase": "BASE",
+   "dayOfWeek": "fri",
+   "category": "FOUNDATION",
+   "workoutLabel": "30 Minutes AMRAP — ladder 3-6-9-12-15-etc",
+   "setup": {
+    "type": "amrap",
+    "durationSec": 1800
+   },
+   "exercises": [
+    {
+     "name": "KB Swings",
+     "unit": "reps",
+     "weight": {
+      "lbsM": 53,
+      "lbsF": 35,
+      "kgM": 24,
+      "kgF": 16
+     },
+     "ladder": {
+      "start": 3,
+      "step": 3,
+      "openEnded": true
+     }
+    },
+    {
+     "name": "Headcutter",
+     "unit": "reps",
+     "ladder": {
+      "start": 3,
+      "step": 3,
+      "openEnded": true
+     }
+    },
+    {
+     "name": "Burpee Broad Jump",
+     "unit": "reps",
+     "ladder": {
+      "start": 3,
+      "step": 3,
+      "openEnded": true
+     }
+    },
+    {
+     "name": "Cal Sprint",
+     "qty": 10,
+     "unit": "calories",
+     "note": "Any machine, after each round"
+    }
+   ],
+   "notes": [
+    "Continue ascending rep ladder until 30:00 Minutes are up",
+    "Each movement (except for cals) should increase by 3 reps each round",
+    "Each round should end with a 10 Cal Sprint"
+   ]
+  },
+  {
+   "id": "w05-mon",
+   "week": 5,
+   "phase": "PACE",
+   "dayOfWeek": "mon",
+   "category": "FOUNDATION",
+   "workoutLabel": "For Time: 30-25-20-15-10",
+   "setup": {
+    "type": "descending_rounds",
+    "rounds": 5,
+    "roundDetails": [
+     "Reps per round: 30-25-20-15-10 of each"
+    ]
+   },
+   "exercises": [
+    {
+     "name": "Cal Ski",
+     "unit": "calories",
+     "perRound": [
+      30,
+      25,
+      20,
+      15,
+      10
+     ]
+    },
+    {
+     "name": "HR Push Ups",
+     "unit": "reps",
+     "perRound": [
+      30,
+      25,
+      20,
+      15,
+      10
+     ],
+     "note": "Hand Release"
+    },
+    {
+     "name": "DB Push Press",
+     "unit": "reps",
+     "perRound": [
+      30,
+      25,
+      20,
+      15,
+      10
+     ]
+    },
+    {
+     "name": "KB Deadlift",
+     "unit": "reps",
+     "perRound": [
+      30,
+      25,
+      20,
+      15,
+      10
+     ]
+    }
+   ],
+   "notes": [
+    "Push Ups should be STRICT: No sagging core, hips and shoulders in line",
+    "HR = Hand Release at bottom of push up",
+    "Option to go heavier on KB Deadlift",
+    "Expect to break up sets"
+   ]
+  },
+  {
+   "id": "w05-tue",
+   "week": 5,
+   "phase": "PACE",
+   "dayOfWeek": "tue",
+   "category": "ENGINE",
+   "workoutLabel": "5 x 4 Min AMRAP (4:00 on / 2:00 off)",
+   "setup": {
+    "type": "intervals",
+    "rounds": 5,
+    "workSec": 240,
+    "restSec": 120
+   },
+   "exercises": [
+    {
+     "name": "Run",
+     "qty": 400,
+     "unit": "meters"
+    },
+    {
+     "name": "Headcutters",
+     "qty": 12,
+     "unit": "reps",
+     "weight": {
+      "lbsM": 53,
+      "lbsF": 35,
+      "kgM": 24,
+      "kgF": 16
+     }
+    },
+    {
+     "name": "Cal Bike",
+     "unit": "max",
+     "note": "Max cals in remaining time"
+    }
+   ],
+   "notes": [
+    "Each round should be a 90% effort",
+    "Goal is pacing and consistency across rounds",
+    "Headcutters should be unbroken",
+    "Score = number of cals"
+   ]
+  },
+  {
+   "id": "w05-wed",
+   "week": 5,
+   "phase": "PACE",
+   "dayOfWeek": "wed",
+   "category": "AEROBIC",
+   "workoutLabel": "5000m Row + E2MOM",
+   "setup": {
+    "type": "for_time"
+   },
+   "exercises": [
+    {
+     "name": "Row",
+     "qty": 5000,
+     "unit": "meters",
+     "note": "Stop every 2 min for 5 Burpees Over Rower"
+    },
+    {
+     "name": "Burpees Over Rower",
+     "qty": 5,
+     "unit": "reps",
+     "note": "Every 2 minutes during the row"
+    }
+   ],
+   "notes": [
+    "Starting at 0:00, complete 5 Burpees over the rower",
+    "Continue rowing until you reach 5000m while stopping every 2 minutes on the minute to do 5 Burpees over the rower"
+   ]
+  },
+  {
+   "id": "w05-thu",
+   "week": 5,
+   "phase": "PACE",
+   "dayOfWeek": "thu",
+   "category": "ENGINE",
+   "workoutLabel": "6 x 400m Run",
+   "setup": {
+    "type": "intervals",
+    "rounds": 6,
+    "workDescription": "400m Run",
+    "restSec": 120
+   },
+   "exercises": [
+    {
+     "name": "Run",
+     "qty": 400,
+     "unit": "meters"
+    },
+    {
+     "name": "Rest",
+     "qty": 2,
+     "unit": "minutes"
+    }
+   ],
+   "notes": [
+    "Each 400m should feel like race pace",
+    "Record each 400m split",
+    "Log results and note changes in pace, what you are able to hold, etc.",
+    "The goal should be to find what pace you can maintain without leaving anything in the tank"
+   ]
+  },
+  {
+   "id": "w05-fri",
+   "week": 5,
+   "phase": "PACE",
+   "dayOfWeek": "fri",
+   "category": "COMPLETE",
+   "workoutLabel": "For Time: 1000m + 4 RFT + 100/75 Cal Bike",
+   "setup": {
+    "type": "for_time"
+   },
+   "exercises": [
+    {
+     "name": "Row/Ski",
+     "qty": 1000,
+     "unit": "meters",
+     "note": "Buy-in"
+    },
+    {
+     "name": "— 4 Rounds: —"
+    },
+    {
+     "name": "Sandbag Lunge",
+     "qty": 150,
+     "unit": "feet",
+     "weight": {
+      "lbsM": 35,
+      "lbsF": 20,
+      "kgM": 15,
+      "kgF": 10,
+      "count": 2
+     },
+     "note": "150ft / 25m"
+    },
+    {
+     "name": "Wall Balls",
+     "qty": 25,
+     "unit": "reps",
+     "weight": {
+      "lbsM": 14,
+      "lbsF": 10,
+      "kgM": 6,
+      "kgF": 4
+     }
+    },
+    {
+     "name": "Run",
+     "qty": 400,
+     "unit": "meters"
+    },
+    {
+     "name": "— Then: —"
+    },
+    {
+     "name": "Cal Bike",
+     "qty": 100,
+     "unit": "calories",
+     "note": "100/75 (M/F) cash out"
+    },
+    {
+     "name": "Sled Push",
+     "qty": 350,
+     "unit": "feet",
+     "modifier": "AHAP",
+     "note": "Accumulate 350ft / 100m throughout the 4 rounds"
+    }
+   ],
+   "notes": [
+    "The 1000m Row or Ski is to be done once as a buy in",
+    "The 100/75 Cal Bike is to be done once as a cash out",
+    "DB Lunges can be done as Front Rack or to your sides",
+    "The Sled Push can be broken up in any way throughout",
+    "Weight on the sled should be AHAP (As Heavy As Possible)"
+   ]
+  },
+  {
+   "id": "w06-mon",
+   "week": 6,
+   "phase": "PACE",
+   "dayOfWeek": "mon",
+   "category": "FOUNDATION",
+   "workoutLabel": "3 RFT",
+   "setup": {
+    "type": "rft",
+    "rounds": 3
+   },
+   "exercises": [
+    {
+     "name": "Farmer Carry",
+     "qty": 200,
+     "unit": "meters",
+     "weight": {
+      "lbsM": 53,
+      "lbsF": 35,
+      "kgM": 24,
+      "kgF": 16,
+      "count": 2
+     }
+    },
+    {
+     "name": "KB Swings",
+     "qty": 15,
+     "unit": "reps",
+     "weight": {
+      "lbsM": 53,
+      "lbsF": 35,
+      "kgM": 24,
+      "kgF": 16
+     }
+    },
+    {
+     "name": "Goblet Squat",
+     "qty": 30,
+     "unit": "reps",
+     "weight": {
+      "lbsM": 53,
+      "lbsF": 35,
+      "kgM": 24,
+      "kgF": 16
+     }
+    },
+    {
+     "name": "Ski or Row",
+     "qty": 400,
+     "unit": "meters"
+    }
+   ],
+   "notes": [
+    "Use the same weight throughout: 1 KB for KBS and Goblet Squat / 2 KBs for Farmers Carry",
+    "Farmers Carry weight should be heavy enough where you need to set the KBs down 1-2 times"
+   ]
+  },
+  {
+   "id": "w06-tue",
+   "week": 6,
+   "phase": "PACE",
+   "dayOfWeek": "tue",
+   "category": "ENGINE",
+   "workoutLabel": "20 Min Alt EMOM (50 on / 10 off)",
+   "setup": {
+    "type": "emom",
+    "everySec": 60,
+    "totalRounds": 20
+   },
+   "exercises": [
+    {
+     "name": "Goblet Lunge",
+     "unit": "max",
+     "weight": {
+      "lbsM": 53,
+      "lbsF": 35,
+      "kgM": 24,
+      "kgF": 16
+     },
+     "note": "Max reps in 50 sec — Minute 1, 5, 9, 13, 17"
+    },
+    {
+     "name": "Strict Pull Ups / Push Ups",
+     "unit": "max",
+     "note": "Max reps in 50 sec — Minute 2, 6, 10, 14, 18"
+    },
+    {
+     "name": "Run",
+     "qty": 200,
+     "unit": "meters",
+     "note": "Minute 3, 7, 11, 15, 19"
+    },
+    {
+     "name": "Rest",
+     "note": "Minute 4, 8, 12, 16, 20"
+    }
+   ],
+   "notes": [
+    "Alternate movements each minute",
+    "Work 50 seconds, use the 10 seconds rest to transition",
+    "Do a max set of push ups followed by ring rows in the time remaining",
+    "If you are unable to do push ups, do ring rows only"
+   ]
+  },
+  {
+   "id": "w06-wed",
+   "week": 6,
+   "phase": "PACE",
+   "dayOfWeek": "wed",
+   "category": "AEROBIC",
+   "workoutLabel": "60 Minutes Run + 2x 15 Min Pickups",
+   "setup": {
+    "type": "for_quality"
+   },
+   "exercises": [
+    {
+     "name": "Run",
+     "qty": 60,
+     "unit": "minutes"
+    },
+    {
+     "name": "15 Min Pickup",
+     "qty": 15,
+     "unit": "minutes",
+     "note": "2x within the 60 min window"
+    }
+   ],
+   "notes": [
+    "The 15 Minutes Pick Ups can be done at any time",
+    "Pace should be lactate threshold hold, or a pace you can maintain for 15 minutes just below the point of discomfort"
+   ]
+  },
+  {
+   "id": "w06-thu",
+   "week": 6,
+   "phase": "PACE",
+   "dayOfWeek": "thu",
+   "category": "ENGINE",
+   "workoutLabel": "3 Rounds: 1:00 on / 1:00 off",
+   "setup": {
+    "type": "intervals",
+    "rounds": 3,
+    "workSec": 60,
+    "restSec": 60
+   },
+   "exercises": [
+    {
+     "name": "Sled Push",
+     "note": "1 min on / 1 min off"
+    },
+    {
+     "name": "Sled Pull",
+     "note": "1 min on / 1 min off"
+    },
+    {
+     "name": "DB Box Over",
+     "note": "1 min on / 1 min off"
+    },
+    {
+     "name": "Headcutters",
+     "weight": {
+      "lbsM": 53,
+      "lbsF": 35,
+      "kgM": 24,
+      "kgF": 16
+     },
+     "note": "1 min on / 1 min off"
+    },
+    {
+     "name": "Push Ups",
+     "note": "1 min on / 1 min off"
+    }
+   ],
+   "notes": [
+    "1 Minute at each movement station",
+    "Alternate movements",
+    "1 Minute rest between each",
+    "You should be working HARD the entirety of the minute"
+   ]
+  },
+  {
+   "id": "w06-fri",
+   "week": 6,
+   "phase": "PACE",
+   "dayOfWeek": "fri",
+   "category": "COMPLETE",
+   "workoutLabel": "For Time",
+   "setup": {
+    "type": "for_time"
+   },
+   "exercises": [
+    {
+     "name": "Cal Bike or Ski",
+     "qty": 100,
+     "unit": "calories"
+    },
+    {
+     "name": "Back Squats",
+     "qty": 100,
+     "unit": "reps",
+     "weight": {
+      "lbsM": 105,
+      "lbsF": 75,
+      "kgM": 50,
+      "kgF": 35
+     }
+    },
+    {
+     "name": "Run",
+     "qty": 1,
+     "unit": "miles"
+    },
+    {
+     "name": "KB Swings",
+     "qty": 100,
+     "unit": "reps",
+     "weight": {
+      "lbsM": 35,
+      "lbsF": 25,
+      "kgM": 15,
+      "kgF": 12.5
+     }
+    },
+    {
+     "name": "Cal Bike or Ski",
+     "qty": 100,
+     "unit": "calories"
+    },
+    {
+     "name": "Headcutters",
+     "qty": 100,
+     "unit": "reps",
+     "weight": {
+      "lbsM": 35,
+      "lbsF": 25,
+      "kgM": 15,
+      "kgF": 12.5
+     }
+    },
+    {
+     "name": "Farmer Carry Penalty",
+     "qty": 100,
+     "unit": "meters",
+     "weight": {
+      "lbsM": 53,
+      "lbsF": 35,
+      "kgM": 24,
+      "kgF": 16,
+      "count": 2
+     },
+     "note": "Every break: 100m Farmer Carry"
+    }
+   ],
+   "notes": [
+    "Back Squats: Choose a weight that you can get at least a set of 30 unbroken while fresh",
+    "KBS and Headcutter weight should be slightly lighter than usual",
+    "Every time you break, complete 100m Farmer Carry (only applies for back squat, KBS, and Headcutters)",
+    "Break on back squats = bar down. Break on KBS/Headcutters = movement stops"
+   ]
+  },
+  {
+   "id": "w07-mon",
+   "week": 7,
+   "phase": "PACE",
+   "dayOfWeek": "mon",
+   "category": "FOUNDATION",
+   "workoutLabel": "For Time: 30-25-20-15",
+   "setup": {
+    "type": "descending_rounds",
+    "rounds": 4,
+    "roundDetails": [
+     "Reps per round: 30-25-20-15 of each"
+    ]
+   },
+   "exercises": [
+    {
+     "name": "KB Deadlift",
+     "unit": "reps",
+     "perRound": [
+      30,
+      25,
+      20,
+      15
+     ],
+     "weight": {
+      "lbsM": 53,
+      "lbsF": 35,
+      "kgM": 24,
+      "kgF": 16
+     }
+    },
+    {
+     "name": "DB/KB Lunges",
+     "unit": "reps",
+     "perRound": [
+      30,
+      25,
+      20,
+      15
+     ],
+     "weight": {
+      "lbsM": 25,
+      "lbsF": 15,
+      "kgM": 12.5,
+      "kgF": 7.5,
+      "count": 2
+     }
+    },
+    {
+     "name": "Headcutters",
+     "unit": "reps",
+     "perRound": [
+      30,
+      25,
+      20,
+      15
+     ],
+     "weight": {
+      "lbsM": 53,
+      "lbsF": 35,
+      "kgM": 24,
+      "kgF": 16
+     }
+    },
+    {
+     "name": "Farmer Carry",
+     "qty": 100,
+     "unit": "meters",
+     "weight": {
+      "lbsM": 53,
+      "lbsF": 35,
+      "kgM": 24,
+      "kgF": 16,
+      "count": 2
+     }
+    }
+   ],
+   "notes": [
+    "Weight should be the same for KB Deadlift and Farmer Carry",
+    "Lunges can be done with a front rack hold or to the sides",
+    "Headcutter: Use 1 of the KBs you used for the Farmer Carry and Deadlift"
+   ]
+  },
+  {
+   "id": "w07-tue",
+   "week": 7,
+   "phase": "PACE",
+   "dayOfWeek": "tue",
+   "category": "ENGINE",
+   "workoutLabel": "5 x 3 Min AMRAP (3:00 on / 3:00 off)",
+   "setup": {
+    "type": "intervals",
+    "rounds": 5,
+    "workSec": 180,
+    "restSec": 180
+   },
+   "exercises": [
+    {
+     "name": "Devil Press",
+     "qty": 10,
+     "unit": "reps",
+     "weight": {
+      "lbsM": 35,
+      "lbsF": 20,
+      "kgM": 15,
+      "kgF": 7.5,
+      "count": 2
+     }
+    },
+    {
+     "name": "Burpee Box Jump Over",
+     "qty": 6,
+     "unit": "reps"
+    },
+    {
+     "name": "Cal Bike",
+     "unit": "max",
+     "note": "Max cals in remaining time"
+    }
+   ],
+   "notes": [
+    "Devils Press should be done in 1:30 or less (Lower reps if needed)",
+    "Each round should be a sprint effort",
+    "Goal is to find a pace where you can go HARD but maintain while having a 1:1 work/rest ratio",
+    "Score = cals (Stay consistent)"
+   ]
+  },
+  {
+   "id": "w07-wed",
+   "week": 7,
+   "phase": "PACE",
+   "dayOfWeek": "wed",
+   "category": "ENGINE",
+   "workoutLabel": "4 x 1000m Run at Race Pace",
+   "setup": {
+    "type": "intervals",
+    "rounds": 4,
+    "workDescription": "1000m Run at race pace",
+    "restSec": 120
+   },
+   "exercises": [
+    {
+     "name": "Run",
+     "qty": 1000,
+     "unit": "meters"
+    },
+    {
+     "name": "Rest",
+     "qty": 2,
+     "unit": "minutes"
+    }
+   ],
+   "notes": [
+    "Record each 1000m Split",
+    "Log results and note changes in pace, what you are able to hold, etc.",
+    "The goal should be to find what pace you can maintain without leaving anything in the tank"
+   ]
+  },
+  {
+   "id": "w07-thu",
+   "week": 7,
+   "phase": "PACE",
+   "dayOfWeek": "thu",
+   "category": "FOUNDATION",
+   "workoutLabel": "Multi-window AMRAP (0-12 / 12-22 / 22-30)",
+   "setup": {
+    "type": "multi_window_amrap",
+    "windows": [
+     {
+      "label": "0:00 - 12:00 AMRAP",
+      "durationSec": 720
+     },
+     {
+      "label": "12:00 - 22:00 AMRAP",
+      "durationSec": 600
+     },
+     {
+      "label": "22:00 - 30:00 AMRAP",
+      "durationSec": 480
+     }
+    ]
+   },
+   "exercises": [
+    {
+     "name": "Wall Balls",
+     "qty": 15,
+     "unit": "reps",
+     "weight": {
+      "lbsM": 20,
+      "lbsF": 14,
+      "kgM": 9,
+      "kgF": 6
+     },
+     "note": "Window 1"
+    },
+    {
+     "name": "DB Push Press",
+     "qty": 12,
+     "unit": "reps",
+     "weight": {
+      "lbsM": 53,
+      "lbsF": 35,
+      "kgM": 24,
+      "kgF": 16,
+      "count": 2
+     },
+     "note": "Window 1"
+    },
+    {
+     "name": "Cal Ski",
+     "qty": 9,
+     "unit": "calories",
+     "note": "Window 1"
+    },
+    {
+     "name": "Sled Push",
+     "qty": 50,
+     "unit": "feet",
+     "modifier": "AHAP",
+     "note": "Window 2 — 50ft / 12.5m"
+    },
+    {
+     "name": "Run",
+     "qty": 200,
+     "unit": "meters",
+     "note": "Window 2"
+    },
+    {
+     "name": "Headcutters",
+     "qty": 8,
+     "unit": "reps",
+     "weight": {
+      "lbsM": 70,
+      "lbsF": 35,
+      "kgM": 32,
+      "kgF": 16
+     },
+     "note": "Window 3"
+    },
+    {
+     "name": "Burpees",
+     "qty": 10,
+     "unit": "reps",
+     "note": "Window 3"
+    }
+   ],
+   "notes": [
+    "Each AMRAP goes immediately into the next",
+    "Sled Push should be As Heavy As Possible",
+    "Focus on going right into the run",
+    "Headcutters should be done unbroken"
+   ]
+  },
+  {
+   "id": "w07-fri",
+   "week": 7,
+   "phase": "PACE",
+   "dayOfWeek": "fri",
+   "category": "COMPLETE",
+   "workoutLabel": "3x + 3x (two blocks)",
+   "setup": {
+    "type": "rft",
+    "rounds": 3
+   },
+   "exercises": [
+    {
+     "name": "Cal Bike",
+     "qty": 30,
+     "unit": "calories"
+    },
+    {
+     "name": "Sled Push",
+     "qty": 100,
+     "unit": "feet",
+     "modifier": "AHAP"
+    },
+    {
+     "name": "Burpee Broad Jumps",
+     "qty": 50,
+     "unit": "feet",
+     "note": "50ft / 12.5m"
+    },
+    {
+     "name": "Run",
+     "qty": 400,
+     "unit": "meters"
+    },
+    {
+     "name": "— Then 3 rounds: —"
+    },
+    {
+     "name": "Cal Ski",
+     "qty": 30,
+     "unit": "calories"
+    },
+    {
+     "name": "KB Deadlift",
+     "qty": 20,
+     "unit": "reps",
+     "weight": {
+      "lbsM": 53,
+      "lbsF": 35,
+      "kgM": 24,
+      "kgF": 16,
+      "count": 2
+     }
+    },
+    {
+     "name": "Farmer Carry",
+     "qty": 100,
+     "unit": "meters",
+     "weight": {
+      "lbsM": 53,
+      "lbsF": 35,
+      "kgM": 24,
+      "kgF": 16,
+      "count": 2
+     }
+    },
+    {
+     "name": "Wall Balls",
+     "qty": 25,
+     "unit": "reps",
+     "weight": {
+      "lbsM": 14,
+      "lbsF": 10,
+      "kgM": 6,
+      "kgF": 4
+     }
+    }
+   ],
+   "notes": [
+    "Focus on consistent and steady pace throughout BBJ",
+    "Recover on runs as needed",
+    "KB Deadlift and Farmers Carry weight should be the same",
+    "Go unbroken on Wall Balls"
+   ]
+  },
+  {
+   "id": "w08-mon",
+   "week": 8,
+   "phase": "PACE",
+   "dayOfWeek": "mon",
+   "category": "FOUNDATION",
+   "workoutLabel": "5 RFT",
+   "setup": {
+    "type": "rft",
+    "rounds": 5
+   },
+   "exercises": [
+    {
+     "name": "Sled Pull",
+     "qty": 50,
+     "unit": "feet",
+     "note": "50ft / 12.5m"
+    },
+    {
+     "name": "Alt DB Snatch",
+     "qty": 12,
+     "unit": "reps",
+     "weight": {
+      "lbsM": 35,
+      "lbsF": 20,
+      "kgM": 15,
+      "kgF": 7.5,
+      "count": 2
+     }
+    },
+    {
+     "name": "Wall Balls",
+     "qty": 25,
+     "unit": "reps",
+     "weight": {
+      "lbsM": 14,
+      "lbsF": 10,
+      "kgM": 6,
+      "kgF": 4
+     }
+    },
+    {
+     "name": "Ski",
+     "qty": 200,
+     "unit": "meters"
+    }
+   ],
+   "notes": [
+    "Sled Pull: Practice both walk back method and arms only. Adjust weight as needed",
+    "Wall Balls should be unbroken"
+   ]
+  },
+  {
+   "id": "w08-tue",
+   "week": 8,
+   "phase": "PACE",
+   "dayOfWeek": "tue",
+   "category": "ENGINE",
+   "workoutLabel": "E2MOM x 10",
+   "setup": {
+    "type": "emom",
+    "everySec": 120,
+    "totalRounds": 10
+   },
+   "exercises": [
+    {
+     "name": "Sled Push",
+     "qty": 50,
+     "unit": "feet",
+     "note": "50ft / 12.5m"
+    },
+    {
+     "name": "Sprint",
+     "qty": 200,
+     "unit": "meters"
+    },
+    {
+     "name": "Rest",
+     "note": "In time remaining"
+    }
+   ],
+   "notes": [
+    "The focus is getting used to running immediately after the sled",
+    "Run what \"feels\" like a sprint after the sled push"
+   ]
+  },
+  {
+   "id": "w08-wed",
+   "week": 8,
+   "phase": "PACE",
+   "dayOfWeek": "wed",
+   "category": "ENGINE",
+   "workoutLabel": "8 x 400m Run",
+   "setup": {
+    "type": "intervals",
+    "rounds": 8,
+    "workDescription": "400m Run",
+    "restSec": 120
+   },
+   "exercises": [
+    {
+     "name": "Run",
+     "qty": 400,
+     "unit": "meters"
+    },
+    {
+     "name": "Rest",
+     "qty": 2,
+     "unit": "minutes"
+    }
+   ],
+   "notes": [
+    "Challenge yourself to see what you're capable of",
+    "Push the pace on these 400m runs",
+    "Keep track of your splits and see where you fall off",
+    "Goal should be to find your breaking point"
+   ]
+  },
+  {
+   "id": "w08-thu",
+   "week": 8,
+   "phase": "PACE",
+   "dayOfWeek": "thu",
+   "category": "ENGINE",
+   "workoutLabel": "Every 3:30 Minutes x 5",
+   "setup": {
+    "type": "emom",
+    "everySec": 210,
+    "totalRounds": 5
+   },
+   "exercises": [
+    {
+     "name": "Wall Balls",
+     "qty": 30,
+     "unit": "reps",
+     "weight": {
+      "lbsM": 14,
+      "lbsF": 10,
+      "kgM": 6,
+      "kgF": 4
+     }
+    },
+    {
+     "name": "Sprint",
+     "qty": 200,
+     "unit": "meters"
+    },
+    {
+     "name": "Rest",
+     "note": "In time remaining"
+    }
+   ],
+   "notes": [
+    "Focus is SPEED",
+    "Wall Balls unbroken",
+    "No rest, immediately into the 200m Sprint"
+   ]
+  },
+  {
+   "id": "w08-fri",
+   "week": 8,
+   "phase": "PACE",
+   "dayOfWeek": "fri",
+   "category": "COMPLETE",
+   "workoutLabel": "3 RFT",
+   "setup": {
+    "type": "rft",
+    "rounds": 3
+   },
+   "exercises": [
+    {
+     "name": "Ski/Row",
+     "qty": 500,
+     "unit": "meters"
+    },
+    {
+     "name": "KB Lunge",
+     "qty": 100,
+     "unit": "feet",
+     "weight": {
+      "lbsM": 35,
+      "lbsF": 25,
+      "kgM": 16,
+      "kgF": 8,
+      "count": 2
+     },
+     "note": "100ft / 25m"
+    },
+    {
+     "name": "Farmer Carry",
+     "qty": 100,
+     "unit": "meters",
+     "weight": {
+      "lbsM": 53,
+      "lbsF": 35,
+      "kgM": 24,
+      "kgF": 16,
+      "count": 2
+     }
+    },
+    {
+     "name": "Run",
+     "qty": 1000,
+     "unit": "meters"
+    },
+    {
+     "name": "Sled Push or Pull",
+     "qty": 350,
+     "unit": "feet",
+     "note": "Accumulate 350ft / 100m throughout (AHAP)"
+    }
+   ],
+   "notes": [
+    "Lunges can be front rack hold or KB/DBs to your sides",
+    "Option to use one KB/DB in Goblet Hold",
+    "Sled Push or Pull can be broken up throughout, as long as you reach the designated distance total"
+   ]
+  },
+  {
+   "id": "w09-mon",
+   "week": 9,
+   "phase": "ACCELERATE",
+   "dayOfWeek": "mon",
+   "category": "ENGINE",
+   "workoutLabel": "5 Rounds: 500m Run + 500m Movement Run",
+   "setup": {
+    "type": "rounds",
+    "rounds": 5
+   },
+   "exercises": [
+    {
+     "name": "Run",
+     "qty": 500,
+     "unit": "meters"
+    },
+    {
+     "name": "Movement Run",
+     "qty": 500,
+     "unit": "meters",
+     "note": "See per-round movement below"
+    },
+    {
+     "name": "Rest",
+     "qty": 2,
+     "unit": "minutes"
+    },
+    {
+     "name": "Round 1",
+     "qty": 500,
+     "unit": "meters",
+     "note": "500m Ski"
+    },
+    {
+     "name": "Round 2",
+     "qty": 40,
+     "unit": "reps",
+     "note": "40 BBJs"
+    },
+    {
+     "name": "Round 3",
+     "qty": 200,
+     "unit": "meters",
+     "weight": {
+      "lbsM": 53,
+      "lbsF": 35,
+      "kgM": 24,
+      "kgF": 16,
+      "count": 2
+     },
+     "note": "200m Farmers Carry"
+    },
+    {
+     "name": "Round 4",
+     "qty": 80,
+     "unit": "reps",
+     "weight": {
+      "lbsM": 20,
+      "kgM": 10,
+      "lbsF": 20,
+      "kgF": 10
+     },
+     "note": "80 Sandbag Lunge"
+    },
+    {
+     "name": "Round 5",
+     "qty": 100,
+     "unit": "reps",
+     "weight": {
+      "lbsM": 14,
+      "lbsF": 10,
+      "kgM": 6,
+      "kgF": 4
+     },
+     "note": "100 Wall Balls"
+    }
+   ],
+   "notes": [
+    "Focus is on run pace",
+    "Each round starts with a 500m Run",
+    "Take splits of each run",
+    "Each run should feel like a race pace effort",
+    "The movement will change each round",
+    "Do the movement that corresponds to the round"
+   ]
+  },
+  {
+   "id": "w09-tue",
+   "week": 9,
+   "phase": "ACCELERATE",
+   "dayOfWeek": "tue",
+   "category": "COMPLETE",
+   "workoutLabel": "For Time: 50-40-30-20-10",
+   "setup": {
+    "type": "descending_rounds",
+    "rounds": 5,
+    "roundDetails": [
+     "Reps per round: 50-40-30-20-10 of each"
+    ]
+   },
+   "exercises": [
+    {
+     "name": "Cal Ski",
+     "unit": "calories",
+     "perRound": [
+      50,
+      40,
+      30,
+      20,
+      10
+     ]
+    },
+    {
+     "name": "DB Push Press",
+     "unit": "reps",
+     "perRound": [
+      50,
+      40,
+      30,
+      20,
+      10
+     ],
+     "weight": {
+      "lbsM": 53,
+      "lbsF": 35,
+      "kgM": 24,
+      "kgF": 16
+     }
+    },
+    {
+     "name": "Alt DB Snatch",
+     "unit": "reps",
+     "perRound": [
+      50,
+      40,
+      30,
+      20,
+      10
+     ],
+     "weight": {
+      "lbsM": 35,
+      "lbsF": 20,
+      "kgM": 15,
+      "kgF": 7.5,
+      "count": 2
+     }
+    },
+    {
+     "name": "DB Front Squat",
+     "unit": "reps",
+     "perRound": [
+      50,
+      40,
+      30,
+      20,
+      10
+     ],
+     "weight": {
+      "lbsM": 35,
+      "lbsF": 20,
+      "kgM": 15,
+      "kgF": 7.5,
+      "count": 2
+     }
+    }
+   ],
+   "notes": [
+    "Steady Pace",
+    "Break up DB movements as needed"
+   ]
+  },
+  {
+   "id": "w09-wed",
+   "week": 9,
+   "phase": "ACCELERATE",
+   "dayOfWeek": "wed",
+   "category": "ENGINE",
+   "workoutLabel": "8 x 200m Run Max Effort",
+   "setup": {
+    "type": "intervals",
+    "rounds": 8,
+    "workDescription": "200m Run max effort",
+    "restSec": 90
+   },
+   "exercises": [
+    {
+     "name": "Run",
+     "qty": 200,
+     "unit": "meters"
+    },
+    {
+     "name": "Rest",
+     "qty": 90,
+     "unit": "seconds"
+    }
+   ],
+   "notes": [
+    "Each 200m should be a build to sprint",
+    "Start at 80% effort for first 100m, build to sprint for the remainder",
+    "Record splits"
+   ]
+  },
+  {
+   "id": "w09-thu",
+   "week": 9,
+   "phase": "ACCELERATE",
+   "dayOfWeek": "thu",
+   "category": "ENGINE",
+   "workoutLabel": "Every 5:00 Minutes x 6",
+   "setup": {
+    "type": "emom",
+    "everySec": 300,
+    "totalRounds": 6
+   },
+   "exercises": [
+    {
+     "name": "Cal Bike",
+     "qty": 10,
+     "unit": "calories",
+     "note": "10/8 (M/F)"
+    },
+    {
+     "name": "Sled Push",
+     "qty": 50,
+     "unit": "feet",
+     "note": "50ft / 12.5m"
+    },
+    {
+     "name": "Run",
+     "qty": 200,
+     "unit": "meters"
+    },
+    {
+     "name": "Rest",
+     "note": "In time remaining"
+    }
+   ],
+   "notes": [
+    "Focus on running immediately after the sled push and on speed/turnover of your legs",
+    "The runs won't feel fast but see what your legs can do while compromised"
+   ]
+  },
+  {
+   "id": "w09-fri",
+   "week": 9,
+   "phase": "ACCELERATE",
+   "dayOfWeek": "fri",
+   "category": "COMPLETE",
+   "workoutLabel": "For Time: 40-25-15",
+   "setup": {
+    "type": "descending_rounds",
+    "rounds": 3,
+    "roundDetails": [
+     "Reps per round: 40-25-15 of each",
+     "800m Run after each round"
+    ]
+   },
+   "exercises": [
+    {
+     "name": "Cal Bike",
+     "unit": "calories",
+     "perRound": [
+      40,
+      25,
+      15
+     ]
+    },
+    {
+     "name": "Wall Balls",
+     "unit": "reps",
+     "perRound": [
+      40,
+      25,
+      15
+     ],
+     "weight": {
+      "lbsM": 14,
+      "lbsF": 10,
+      "kgM": 6,
+      "kgF": 4
+     }
+    },
+    {
+     "name": "Goblet Lunge",
+     "unit": "reps",
+     "perRound": [
+      40,
+      25,
+      15
+     ]
+    },
+    {
+     "name": "DB Push Press",
+     "unit": "reps",
+     "perRound": [
+      40,
+      25,
+      15
+     ],
+     "weight": {
+      "lbsM": 50,
+      "lbsF": 35,
+      "kgM": 22.5,
+      "kgF": 15,
+      "count": 2
+     }
+    },
+    {
+     "name": "Run",
+     "qty": 800,
+     "unit": "meters",
+     "note": "After each round"
+    }
+   ],
+   "notes": [
+    "Steady pace throughout",
+    "Record 800m run splits to see variance per round"
+   ]
+  },
+  {
+   "id": "w10-mon",
+   "week": 10,
+   "phase": "ACCELERATE",
+   "dayOfWeek": "mon",
+   "category": "ENGINE",
+   "workoutLabel": "6 Rounds: 400m Run + 25 Reps Movement",
+   "setup": {
+    "type": "rounds",
+    "rounds": 6
+   },
+   "exercises": [
+    {
+     "name": "Run",
+     "qty": 400,
+     "unit": "meters"
+    },
+    {
+     "name": "Movement",
+     "qty": 25,
+     "unit": "reps",
+     "note": "See per-round movement"
+    },
+    {
+     "name": "Rest",
+     "qty": 2,
+     "unit": "minutes"
+    },
+    {
+     "name": "Round 1",
+     "qty": 25,
+     "unit": "reps",
+     "weight": {
+      "lbsM": 14,
+      "lbsF": 10,
+      "kgM": 6,
+      "kgF": 4
+     },
+     "note": "25 Wall Balls"
+    },
+    {
+     "name": "Round 2",
+     "qty": 25,
+     "unit": "reps",
+     "weight": {
+      "lbsM": 35,
+      "lbsF": 20,
+      "kgM": 15,
+      "kgF": 7.5,
+      "count": 2
+     },
+     "note": "25 DB Lunge"
+    },
+    {
+     "name": "Round 3",
+     "qty": 25,
+     "unit": "reps",
+     "weight": {
+      "lbsM": 35,
+      "lbsF": 20,
+      "kgM": 15,
+      "kgF": 7.5,
+      "count": 2
+     },
+     "note": "25 DB Front Squat"
+    },
+    {
+     "name": "Rounds 4-6",
+     "note": "Repeat sequence (WB → DB Lunge → DB FS)"
+    }
+   ],
+   "notes": [
+    "Focus is on run speed",
+    "Record splits for each, try to stay consistent but aim for faster than race pace",
+    "Do 25 reps of the corresponding movement immediately after the run",
+    "You will go through each movement 2x total",
+    "2:00 Minutes rest after each round"
+   ]
+  },
+  {
+   "id": "w10-tue",
+   "week": 10,
+   "phase": "ACCELERATE",
+   "dayOfWeek": "tue",
+   "category": "COMPLETE",
+   "workoutLabel": "4 RFT",
+   "setup": {
+    "type": "rft",
+    "rounds": 4
+   },
+   "exercises": [
+    {
+     "name": "Run",
+     "qty": 1000,
+     "unit": "meters"
+    },
+    {
+     "name": "Sled Push",
+     "qty": 100,
+     "unit": "feet",
+     "modifier": "AHAP",
+     "note": "100ft / 25m"
+    },
+    {
+     "name": "Back Rack Walking Lunge",
+     "qty": 40,
+     "unit": "reps"
+    }
+   ],
+   "notes": [
+    "1000m runs should feel like race effort",
+    "Sled Push should be AHAP (As Heavy As Possible)",
+    "For lunges, choose any way to add weight on back (Sandbag, barbell, etc)",
+    "If using a barbell, go heavy enough that you'd break after 20 reps"
+   ]
+  },
+  {
+   "id": "w10-wed",
+   "week": 10,
+   "phase": "ACCELERATE",
+   "dayOfWeek": "wed",
+   "category": "ENGINE",
+   "workoutLabel": "6 x 400m Run HARD",
+   "setup": {
+    "type": "intervals",
+    "rounds": 6,
+    "workDescription": "400m Run HARD",
+    "restSec": 120
+   },
+   "exercises": [
+    {
+     "name": "Run",
+     "qty": 400,
+     "unit": "meters"
+    },
+    {
+     "name": "Rest",
+     "qty": 2,
+     "unit": "minutes"
+    }
+   ],
+   "notes": [
+    "Don't hold back on these 400m runs",
+    "See where you can hang and where you fall off",
+    "Record Splits"
+   ]
+  },
+  {
+   "id": "w10-thu",
+   "week": 10,
+   "phase": "ACCELERATE",
+   "dayOfWeek": "thu",
+   "category": "ENGINE",
+   "workoutLabel": "5 Rounds",
+   "setup": {
+    "type": "rounds",
+    "rounds": 5
+   },
+   "exercises": [
+    {
+     "name": "Cal Bike",
+     "qty": 12,
+     "unit": "calories",
+     "note": "12/10 (M/F)"
+    },
+    {
+     "name": "Burpee Broad Jumps",
+     "qty": 8,
+     "unit": "reps"
+    },
+    {
+     "name": "Wall Balls",
+     "qty": 20,
+     "unit": "reps",
+     "weight": {
+      "lbsM": 14,
+      "lbsF": 10,
+      "kgM": 6,
+      "kgF": 4
+     }
+    },
+    {
+     "name": "Cal Bike",
+     "qty": 12,
+     "unit": "calories",
+     "note": "12/10 (M/F)"
+    },
+    {
+     "name": "Rest",
+     "qty": 60,
+     "unit": "seconds"
+    }
+   ],
+   "notes": [
+    "Each round is an 80-100% effort",
+    "Wall Balls should be unbroken",
+    "PUSH on the bike but pay attention to RPM and don't fall off",
+    "Adjust weight as needed throughout"
+   ]
+  },
+  {
+   "id": "w10-fri",
+   "week": 10,
+   "phase": "ACCELERATE",
+   "dayOfWeek": "fri",
+   "category": "COMPLETE",
+   "workoutLabel": "For Time",
+   "setup": {
+    "type": "for_time"
+   },
+   "exercises": [
+    {
+     "name": "Ski",
+     "qty": 1000,
+     "unit": "meters"
+    },
+    {
+     "name": "Row",
+     "qty": 1000,
+     "unit": "meters"
+    },
+    {
+     "name": "Run",
+     "qty": 1000,
+     "unit": "meters"
+    },
+    {
+     "name": "Goblet Squat",
+     "qty": 75,
+     "unit": "reps",
+     "weight": {
+      "lbsM": 53,
+      "lbsF": 35,
+      "kgM": 24,
+      "kgF": 16
+     }
+    },
+    {
+     "name": "KB Swings",
+     "qty": 75,
+     "unit": "reps",
+     "weight": {
+      "lbsM": 53,
+      "lbsF": 35,
+      "kgM": 24,
+      "kgF": 16
+     }
+    },
+    {
+     "name": "Headcutters",
+     "qty": 50,
+     "unit": "reps"
+    },
+    {
+     "name": "Burpee Broad Jump",
+     "qty": 50,
+     "unit": "reps"
+    },
+    {
+     "name": "Cal Bike",
+     "qty": 50,
+     "unit": "calories"
+    },
+    {
+     "name": "Sled Push",
+     "qty": 100,
+     "unit": "meters"
+    }
+   ],
+   "notes": [
+    "Partition reps in any way, in any order",
+    "Goal is completion in 60 minutes or less",
+    "Use the same KB weight throughout"
+   ]
+  },
+  {
+   "id": "w11-mon",
+   "week": 11,
+   "phase": "PRIME",
+   "dayOfWeek": "mon",
+   "category": "COMPLETE",
+   "workoutLabel": "3 RFT",
+   "setup": {
+    "type": "rft",
+    "rounds": 3
+   },
+   "exercises": [
+    {
+     "name": "Cal Bike",
+     "qty": 35,
+     "unit": "calories",
+     "note": "35/20 (M/F)"
+    },
+    {
+     "name": "Run",
+     "qty": 400,
+     "unit": "meters"
+    },
+    {
+     "name": "Sandbag Lunge",
+     "qty": 30,
+     "unit": "reps"
+    },
+    {
+     "name": "Ski",
+     "qty": 500,
+     "unit": "meters"
+    },
+    {
+     "name": "Farmers Carry",
+     "qty": 100,
+     "unit": "meters",
+     "weight": {
+      "lbsM": 53,
+      "lbsF": 35,
+      "kgM": 24,
+      "kgF": 16,
+      "count": 2
+     }
+    }
+   ],
+   "notes": [
+    "Watch RPM on bike and stay consistent",
+    "If no sandbag, use DB or Barbell on back",
+    "100m Farmer Carry should be unbroken"
+   ]
+  },
+  {
+   "id": "w11-tue",
+   "week": 11,
+   "phase": "PRIME",
+   "dayOfWeek": "tue",
+   "category": "FOUNDATION",
+   "workoutLabel": "25 Min AMRAP",
+   "setup": {
+    "type": "amrap",
+    "durationSec": 1500
+   },
+   "exercises": [
+    {
+     "name": "Sled Push",
+     "qty": 100,
+     "unit": "feet",
+     "note": "100ft / 25m"
+    },
+    {
+     "name": "Run or Row",
+     "qty": 500,
+     "unit": "meters"
+    },
+    {
+     "name": "Wall Balls",
+     "qty": 20,
+     "unit": "reps",
+     "weight": {
+      "lbsM": 14,
+      "lbsF": 10,
+      "kgM": 6,
+      "kgF": 4
+     }
+    }
+   ],
+   "notes": [
+    "This should be a moderate Recovery Pace",
+    "Stay steady and consistent",
+    "Run or Row, depending on what you're feeling for the day"
+   ]
+  },
+  {
+   "id": "w11-wed",
+   "week": 11,
+   "phase": "PRIME",
+   "dayOfWeek": "wed",
+   "category": "ENGINE",
+   "workoutLabel": "4 x 800m Run at Race Pace",
+   "setup": {
+    "type": "intervals",
+    "rounds": 4,
+    "workDescription": "800m Run at race pace",
+    "restSec": 120
+   },
+   "exercises": [
+    {
+     "name": "Run",
+     "qty": 800,
+     "unit": "meters"
+    },
+    {
+     "name": "Rest",
+     "qty": 2,
+     "unit": "minutes"
+    }
+   ],
+   "notes": [
+    "These should feel fresh",
+    "Run at what you feel is race pace",
+    "Record Splits"
+   ]
+  },
+  {
+   "id": "w11-thu",
+   "week": 11,
+   "phase": "PRIME",
+   "dayOfWeek": "thu",
+   "category": "AEROBIC",
+   "workoutLabel": "45-60 Min Run + 6 x 1 Min Pickup",
+   "setup": {
+    "type": "for_quality"
+   },
+   "exercises": [
+    {
+     "name": "Run",
+     "qty": 45,
+     "unit": "minutes",
+     "note": "45-60 minutes"
+    },
+    {
+     "name": "1 Min Pickup",
+     "qty": 1,
+     "unit": "minutes",
+     "note": "6 x with 2 min easy between"
+    }
+   ],
+   "notes": [
+    "FOUNDATION 6 x 1 Minutes Pick Up / 2 Minutes Easy at some point during the run",
+    "The pickup can be hard or moderate depending on how you're feeling"
+   ]
+  },
+  {
+   "id": "w11-fri",
+   "week": 11,
+   "phase": "PRIME",
+   "dayOfWeek": "fri",
+   "category": "COMPLETE",
+   "workoutLabel": "5 Rounds — Pick 5 HYROX Stations",
+   "setup": {
+    "type": "rounds",
+    "rounds": 5
+   },
+   "exercises": [
+    {
+     "name": "Run",
+     "qty": 800,
+     "unit": "meters"
+    },
+    {
+     "name": "HYROX Station",
+     "note": "Choose 5 HYROX Stations to run through"
+    }
+   ],
+   "notes": [
+    "Choose any 5 HYROX Race Movement Standards",
+    "Go in race order",
+    "Goal should be race pace or race feel"
+   ]
+  },
+  {
+   "id": "w12-mon",
+   "week": 12,
+   "phase": "RACE",
+   "dayOfWeek": "mon",
+   "category": "FOUNDATION",
+   "workoutLabel": "4 RFT",
+   "setup": {
+    "type": "rft",
+    "rounds": 4
+   },
+   "exercises": [
+    {
+     "name": "Row",
+     "qty": 500,
+     "unit": "meters"
+    },
+    {
+     "name": "KB Deadlift",
+     "qty": 20,
+     "unit": "reps",
+     "weight": {
+      "lbsM": 53,
+      "lbsF": 35,
+      "kgM": 24,
+      "kgF": 16,
+      "count": 2
+     }
+    },
+    {
+     "name": "Farmer Carry",
+     "qty": 100,
+     "unit": "meters",
+     "weight": {
+      "lbsM": 53,
+      "lbsF": 35,
+      "kgM": 24,
+      "kgF": 16,
+      "count": 2
+     }
+    },
+    {
+     "name": "Sled Pull",
+     "qty": 50,
+     "unit": "feet",
+     "note": "50ft / 12.5m"
+    }
+   ],
+   "notes": [
+    "Moderate Pace",
+    "Practice different types of sled pull technique: arms only, full body, walk back",
+    "Go lighter on KB Deadlift and Farmer Carry if you want to lower the intensity"
+   ]
+  },
+  {
+   "id": "w12-tue",
+   "week": 12,
+   "phase": "RACE",
+   "dayOfWeek": "tue",
+   "category": "AEROBIC",
+   "workoutLabel": "40 Min AMRAP — Machine Cals",
+   "setup": {
+    "type": "amrap",
+    "durationSec": 2400
+   },
+   "exercises": [
+    {
+     "name": "Machine Cals",
+     "unit": "calories",
+     "ladder": {
+      "start": 10,
+      "step": 5,
+      "openEnded": true
+     },
+     "note": "Rotate between Ski/Bike/Row"
+    }
+   ],
+   "notes": [
+    "Moderate Pace",
+    "Go by feel, if you feel good and want to add intensity",
+    "Do the first 10 Cals of each movement as a sprint or hard effort followed by recovery"
+   ]
+  },
+  {
+   "id": "w12-wed",
+   "week": 12,
+   "phase": "RACE",
+   "dayOfWeek": "wed",
+   "category": "ENGINE",
+   "workoutLabel": "6 Rounds: 200m + 6 BBJ",
+   "setup": {
+    "type": "rounds",
+    "rounds": 6
+   },
+   "exercises": [
+    {
+     "name": "200m Build to Sprint",
+     "qty": 200,
+     "unit": "meters"
+    },
+    {
+     "name": "Burpee Broad Jump",
+     "qty": 6,
+     "unit": "reps"
+    },
+    {
+     "name": "Rest",
+     "qty": 60,
+     "unit": "seconds"
+    }
+   ],
+   "notes": [
+    "These should feel fresh",
+    "Build to a sprint",
+    "Adjust the number of Burpee Broad Jumps as desired"
+   ]
+  },
+  {
+   "id": "w12-thu",
+   "week": 12,
+   "phase": "RACE",
+   "dayOfWeek": "thu",
+   "category": "AEROBIC",
+   "workoutLabel": "45 Minutes Easy Run",
+   "setup": {
+    "type": "for_quality"
+   },
+   "exercises": [
+    {
+     "name": "Easy Run",
+     "qty": 45,
+     "unit": "minutes"
+    }
+   ],
+   "notes": [
+    "This should be a \"Feel good\" Jog",
+    "Option to switch to Row, Ski or Bike"
+   ]
+  },
+  {
+   "id": "w12-fri",
+   "week": 12,
+   "phase": "RACE",
+   "dayOfWeek": "fri",
+   "category": "AEROBIC",
+   "workoutLabel": "OPTIONAL: 20-30 Min Shake Out Run",
+   "setup": {
+    "type": "for_quality"
+   },
+   "exercises": [
+    {
+     "name": "Shake Out Run",
+     "qty": 25,
+     "unit": "minutes",
+     "note": "20-30 minutes, optional"
+    }
+   ],
+   "notes": [
+    "Totally optional depending on how you're feeling",
+    "Only if you think your legs will benefit from a quick/easy run",
+    "Don't stress about getting it in"
+   ]
+  }
+ ]
+}

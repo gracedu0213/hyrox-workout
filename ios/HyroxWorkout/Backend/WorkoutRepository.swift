@@ -25,19 +25,14 @@ struct WorkoutRepository {
         let type_id: String?
         let archived: Bool
         let data: Payload
-        let created_at: String?
+        let created_at: Date?
 
         func toDomain() -> CustomWorkout {
             CustomWorkout(
                 id: id, name: name, format: data.format, blocks: data.blocks,
                 typeId: type_id, intensity: data.intensity, notes: data.notes,
-                createdAt: Row.epochMillis(created_at), archived: archived
+                createdAt: created_at?.epochMillis ?? 0, archived: archived
             )
-        }
-
-        static func epochMillis(_ iso: String?) -> Double {
-            guard let iso, let date = ISO8601DateFormatter.hyrox.date(from: iso) else { return 0 }
-            return date.timeIntervalSince1970 * 1000
         }
     }
 
@@ -48,13 +43,15 @@ struct WorkoutRepository {
         let type_id: String?
         let archived: Bool
         let data: Payload
+        let created_at: Date
     }
 
+    /// All rows, archived included — filtering is a UI concern (matching the
+    /// web, which keeps archived rows in the store too).
     func fetchAll() async throws -> [CustomWorkout] {
         let rows: [Row] = try await client
             .from("custom_workouts")
             .select()
-            .eq("archived", value: false)
             .order("created_at", ascending: false)
             .execute()
             .value
@@ -67,19 +64,11 @@ struct WorkoutRepository {
                               intensity: workout.intensity, notes: workout.notes)
         let row = Insert(id: workout.id, user_id: userID, name: workout.name,
                          type_id: workout.typeId, archived: workout.archived ?? false,
-                         data: payload)
+                         data: payload, created_at: Date(epochMillis: workout.createdAt))
         try await client.from("custom_workouts").upsert(row).execute()
     }
 
     func delete(id: String) async throws {
         try await client.from("custom_workouts").delete().eq("id", value: id).execute()
     }
-}
-
-private extension ISO8601DateFormatter {
-    static let hyrox: ISO8601DateFormatter = {
-        let f = ISO8601DateFormatter()
-        f.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        return f
-    }()
 }

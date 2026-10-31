@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "export:plan": "jiti scripts/export-curated-plan.ts",
     "lint": "eslint .",
     "preview": "vite preview"
   },
