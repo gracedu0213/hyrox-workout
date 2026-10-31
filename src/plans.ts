@@ -1,19 +1,19 @@
-// Helpers around the UserPlan entity, including the synthetic descriptor for
-// the curated 12-week program (which has no DB row until the user commits).
+// Helpers around the UserPlan entity, including the synthetic descriptors for
+// the curated 12-week programs (which have no DB row until the user commits).
 
-import { CURATED_PLAN_ID } from './db';
+import { CURATED_PROGRAMS, curatedProgram, type CuratedProgram } from './plan';
 import type { DayOfWeek, PlanSlot, PlanWeek, UserPlan } from './types';
 
 export const CURATED_WEEKS = 12;
 
-// Synthetic, un-started descriptor for the curated 12-week program. A real DB
-// row (with active/createdAt) replaces this once the user taps Start.
-export function curatedDescriptor(): UserPlan {
+// Synthetic, un-started descriptor for a curated program. A real DB row (with
+// active/createdAt) replaces it once the user taps Start.
+export function curatedDescriptor(program: CuratedProgram): UserPlan {
   return {
-    id: CURATED_PLAN_ID,
-    name: '12-Week HYROX Program',
-    color: '#FF6B6B',
-    icon: '🏋️',
+    id: program.planId,
+    name: program.name,
+    color: program.color,
+    icon: program.icon,
     content: { type: 'curated' },
     active: false,
     createdAt: 0,
@@ -21,14 +21,13 @@ export function curatedDescriptor(): UserPlan {
 }
 
 export function isCurated(p: UserPlan): boolean {
-  return p.id === CURATED_PLAN_ID;
+  return curatedProgram(p.id) != null;
 }
 
-// Merge the synthetic curated descriptor with DB rows, deduping by id so the
-// curated plan shows in the library whether or not it's been committed yet.
+// Every curated program first (committed or not), then the user's own plans.
 export function withCurated(dbPlans: UserPlan[]): UserPlan[] {
-  if (dbPlans.some((p) => p.id === CURATED_PLAN_ID)) return dbPlans;
-  return [curatedDescriptor(), ...dbPlans];
+  const curated = CURATED_PROGRAMS.map((c) => dbPlans.find((p) => p.id === c.planId) ?? curatedDescriptor(c));
+  return [...curated, ...dbPlans.filter((p) => !isCurated(p))];
 }
 
 // Number of weeks of structured content (0 for goal-only/cadence plans — a

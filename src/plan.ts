@@ -4,7 +4,9 @@
 // Faithful to the PDF. Where the source omitted a rep count or weight,
 // the field is left undefined and the original wording lives in exercise.note.
 
-import type { Day, Exercise, Plan, Weight } from './types';
+import { day, ex } from './planBuild';
+import { PRO_PLAN } from './planPro';
+import type { Day, Plan, Weight } from './types';
 
 // --- Weight shortcuts ---
 const KB24: Weight = { lbsM: 53, lbsF: 35, kgM: 24, kgF: 16 };
@@ -23,17 +25,7 @@ const WB9: Weight = { lbsM: 20, lbsF: 14, kgM: 9, kgF: 6 };
 const SB15x2: Weight = { lbsM: 35, lbsF: 20, kgM: 15, kgF: 10, count: 2 };
 const BB105: Weight = { lbsM: 105, lbsF: 75, kgM: 50, kgF: 35 };
 
-// --- Helpers ---
-const ex = (name: string, qty?: number, unit?: Exercise['unit'], extra: Partial<Exercise> = {}): Exercise =>
-  ({ name, qty, unit, ...extra });
-
-const day = (
-  id: string, week: number, phase: Day['phase'], dayOfWeek: Day['dayOfWeek'],
-  category: Day['category'], workoutLabel: string, setup: Day['setup'],
-  exercises: Exercise[], notes: string[]
-): Day => ({ id, week, phase, dayOfWeek, category, workoutLabel, setup, exercises, notes });
-
-export const PLAN: Plan = {
+export const OPEN_PLAN: Plan = {
   days: [
     // ============ WEEK 01 — BASE ============
     day('w01-mon', 1, 'BASE', 'mon', 'FOUNDATION', '4 RFT', { type: 'rft', rounds: 4 }, [
@@ -798,4 +790,28 @@ export const CAT_HEX: Record<Day['category'], string> = {
   COMPLETE: '#2ECC71',
 };
 
-export const byId = (id: string): Day | undefined => PLAN.days.find((d) => d.id === id);
+// --- Curated programs registry ---
+// Each curated program is a "virtual" plan: it has no DB row until the user
+// commits (Start), at which point a row with its fixed planId is materialized.
+// The Open plan keeps its original id + day ids so existing logs stay attached.
+export interface CuratedProgram {
+  planId: string;
+  name: string;
+  color: string;
+  icon: string;
+  plan: Plan;
+}
+
+export const CURATED_PROGRAMS: CuratedProgram[] = [
+  { planId: 'curated-12-week', name: '12-Week HYROX Open', color: '#FF6B6B', icon: '🏋️', plan: OPEN_PLAN },
+  { planId: 'curated-12-week-pro', name: '12-Week HYROX Pro', color: '#9B59B6', icon: '🔥', plan: PRO_PLAN },
+];
+
+export const curatedProgram = (planId: string): CuratedProgram | undefined =>
+  CURATED_PROGRAMS.find((p) => p.planId === planId);
+
+const PROGRAM_BY_DAY = new Map(CURATED_PROGRAMS.flatMap((p) => p.plan.days.map((d) => [d.id, p] as const)));
+const DAY_BY_ID = new Map(CURATED_PROGRAMS.flatMap((p) => p.plan.days.map((d) => [d.id, d] as const)));
+
+export const byId = (id: string): Day | undefined => DAY_BY_ID.get(id);
+export const programForDay = (dayId: string): CuratedProgram | undefined => PROGRAM_BY_DAY.get(dayId);

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { byId, DAY_LABEL, CATEGORY_COLOR } from '../plan';
-import { newId, saveLog, getLog, getWorkout, getActivePlans, CURATED_PLAN_ID } from '../db';
+import { byId, programForDay, DAY_LABEL, CATEGORY_COLOR } from '../plan';
+import { newId, saveLog, getLog, getWorkout, getActivePlans } from '../db';
 import { formatWeight } from '../format';
 import { buildSnapshot, customToSetup } from '../workouts';
 import { useProfile } from '../profile';
@@ -105,10 +105,11 @@ export default function LogPage() {
       if (cancelled) return;
       setActivePlans(plans);
       // Initial attribution: an existing log's plan, an explicit ?planId, or —
-      // for a curated day with the 12-week committed — the curated plan.
+      // for a curated day whose program is committed — that program.
       let initialPlan = loaded?.planId ?? presetPlanId;
-      if (!initialPlan && t && !t.isCustom && plans.some((p) => p.id === CURATED_PLAN_ID)) {
-        initialPlan = CURATED_PLAN_ID;
+      const dayProgram = t && !t.isCustom ? programForDay(t.id) : undefined;
+      if (!initialPlan && dayProgram && plans.some((p) => p.id === dayProgram.planId)) {
+        initialPlan = dayProgram.planId;
       }
       setPlanId(initialPlan);
 

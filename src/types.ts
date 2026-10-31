@@ -233,7 +233,7 @@ export type PlanContent =
 // A Plan is "a thing you commit to": optional structured content AND/OR a
 // per-week cadence goal, always tracking active state + progress.
 export interface UserPlan {
-  id: string;                 // uuid; the curated plan uses the fixed CURATED_PLAN_ID
+  id: string;                 // uuid; curated programs use their fixed registry planId (plan.ts)
   name: string;
   color: string;              // hex; rendered via inline styles (not bg-${x})
   icon?: string;              // optional emoji

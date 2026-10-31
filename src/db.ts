@@ -1,16 +1,13 @@
 import Dexie, { type Table } from 'dexie';
 import type { CustomWorkout, UserPlan, WorkoutLog, WorkoutType } from './types';
 import { normalizeBlocks } from './workouts';
+import { curatedProgram } from './plan';
 
 // Bring persisted workouts up to the current block-row shape on read, so every
 // consumer downstream sees one model regardless of when the row was written.
 function migrateWorkout(w: CustomWorkout): CustomWorkout {
   return { ...w, blocks: normalizeBlocks(w.blocks) };
 }
-
-// The curated 12-week program is a "virtual" plan: it has no DB row until the
-// user commits to it (Start), at which point a row with this id is materialized.
-export const CURATED_PLAN_ID = 'curated-12-week';
 
 // Seeded once (fresh install via populate, existing DBs via the v5 upgrade).
 // Fixed ids + epoch-adjacent createdAt keep defaults stable and sorted first.
@@ -125,18 +122,26 @@ export async function saveWorkoutType(t: WorkoutType): Promise<void> {
 
 // --- Plans ---
 
+// A curated program's identity (name/color/icon) comes from the registry, not
+// the stored row, so plans committed before a rename show the current name.
+function readPlan(p: UserPlan): UserPlan {
+  const c = curatedProgram(p.id);
+  return c ? { ...p, name: c.name, color: c.color, icon: c.icon } : p;
+}
+
 export async function getPlans(): Promise<UserPlan[]> {
   const all = await db.plans.orderBy('createdAt').reverse().toArray();
-  return all.filter((p) => !p.archived);
+  return all.filter((p) => !p.archived).map(readPlan);
 }
 
 export async function getActivePlans(): Promise<UserPlan[]> {
   const all = await db.plans.toArray();
-  return all.filter((p) => p.active && !p.archived);
+  return all.filter((p) => p.active && !p.archived).map(readPlan);
 }
 
 export async function getPlan(id: string): Promise<UserPlan | undefined> {
-  return db.plans.get(id);
+  const p = await db.plans.get(id);
+  return p && readPlan(p);
 }
 
 // Create, update, start, and end all collapse into one put (toggle `active`).

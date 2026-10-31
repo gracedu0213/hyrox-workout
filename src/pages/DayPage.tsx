@@ -1,8 +1,8 @@
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { byId, CATEGORY_COLOR, DAY_LABEL } from '../plan';
+import { byId, programForDay, CATEGORY_COLOR, DAY_LABEL } from '../plan';
 import { formatExercise, setupSummary } from '../format';
-import { deleteLog, getLogsForDate, getLogsForDay, newId, saveLog, CURATED_PLAN_ID } from '../db';
+import { deleteLog, getLogsForDate, getLogsForDay, newId, saveLog } from '../db';
 import { hasResults, logKind, logSummary } from '../logSummary';
 import { todayISO } from '../dateUtils';
 import { useProfile } from '../profile';
@@ -11,6 +11,7 @@ import type { WorkoutLog } from '../types';
 export default function DayPage() {
   const { dayId } = useParams<{ dayId: string }>();
   const day = dayId ? byId(dayId) : undefined;
+  const programHref = day ? `/plan/program/${programForDay(day.id)!.planId}?week=${day.week}` : '/plan';
   const [logs, setLogs] = useState<WorkoutLog[]>([]);
   const nav = useNavigate();
   const { profile } = useProfile();
@@ -43,7 +44,7 @@ export default function DayPage() {
       status: 'planned',
     };
     await saveLog(log);
-    nav(scheduleDate === todayISO() ? '/' : `/plan/program/${CURATED_PLAN_ID}?week=${day.week}`);
+    nav(scheduleDate === todayISO() ? '/' : programHref);
   }
 
   async function removeLog(id: string) {
@@ -64,7 +65,7 @@ export default function DayPage() {
   return (
     <div>
       <div className="px-4 pt-3 pb-5 border-b border-line">
-        <Link to={`/plan/program/${CURATED_PLAN_ID}?week=${day.week}`} className="text-muted text-xs">← Plan</Link>
+        <Link to={programHref} className="text-muted text-xs">← Plan</Link>
         <div className="mt-2 flex items-baseline gap-2 flex-wrap">
           <span className="font-display text-3xl tracking-[-0.02em]">W{String(day.week).padStart(2, '0')} · {DAY_LABEL[day.dayOfWeek]}</span>
           <span className={`text-[10px] font-black uppercase tracking-widest text-${CATEGORY_COLOR[day.category]}`}>

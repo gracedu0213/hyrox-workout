@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { PLAN, byId, DAY_LABEL, CATEGORY_COLOR, WEEKDAYS_7 } from '../plan';
+import { byId, curatedProgram, programForDay, DAY_LABEL, CATEGORY_COLOR, WEEKDAYS_7, type CuratedProgram } from '../plan';
 import { setupSummary } from '../format';
 import { customToSetup } from '../workouts';
-import { getAllLogs, getCustomWorkouts, getPlan, savePlan, archivePlan, CURATED_PLAN_ID } from '../db';
+import { getAllLogs, getCustomWorkouts, getPlan, savePlan, archivePlan } from '../db';
 import { hasResults, logKind } from '../logSummary';
 import { todayISO, isoDate, mondayOfWeek } from '../dateUtils';
 import { curatedDescriptor, isCurated, isCadence, poolSlots, slotForDay, anytimeSlots } from '../plans';
@@ -37,8 +37,9 @@ export default function ProgramPage() {
     setLogs(all);
     if (!planId) { setNotFound(true); return; }
     const row = await getPlan(planId);
+    const program = curatedProgram(planId);
     if (row) setPlan(row);
-    else if (planId === CURATED_PLAN_ID) setPlan(curatedDescriptor());
+    else if (program) setPlan(curatedDescriptor(program));
     else setNotFound(true);
   }
 
@@ -72,6 +73,7 @@ export default function ProgramPage() {
     nav('/plan');
   }
 
+  const program = curatedProgram(plan.id);
   const planLogs = logs.filter((l) => l.planId === plan.id);
   const progress = weekProgress(planLogs, plan);
   const streak = computeStreak(planLogs, plan);
@@ -121,8 +123,8 @@ export default function ProgramPage() {
         </div>
       </header>
 
-      {isCurated(plan)
-        ? <CuratedBody logs={logs} planActive={plan.active} />
+      {program
+        ? <CuratedBody program={program} logs={logs} planActive={plan.active} />
         : isCadence(plan)
           ? <CadenceBody plan={plan} logs={planLogs} />
           : <SequencedBody plan={plan} logs={planLogs} />}
@@ -132,15 +134,21 @@ export default function ProgramPage() {
 
 // ---- Curated 12-week (the original week-strip view, unchanged) ----
 
-function CuratedBody({ logs, planActive }: { logs: WorkoutLog[]; planActive: boolean }) {
+function CuratedBody({ program, logs: allLogs, planActive }: { program: CuratedProgram; logs: WorkoutLog[]; planActive: boolean }) {
+  // Only this program's days: completion, upcoming, and the latest-week jump
+  // must not pick up sessions from the other curated program.
+  const logs = useMemo(
+    () => allLogs.filter((l) => l.dayId && programForDay(l.dayId) === program),
+    [allLogs, program],
+  );
   const weeks = useMemo(() => {
     const map = new Map<number, Day[]>();
-    for (const d of PLAN.days) {
+    for (const d of program.plan.days) {
       if (!map.has(d.week)) map.set(d.week, []);
       map.get(d.week)!.push(d);
     }
     return Array.from(map.entries()).sort((a, b) => a[0] - b[0]);
-  }, []);
+  }, [program]);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const urlWeek = Number(searchParams.get('week')) || 0;
@@ -159,7 +167,7 @@ function CuratedBody({ logs, planActive }: { logs: WorkoutLog[]; planActive: boo
       const planLogs = logs.filter((l) => logKind(l) === 'plan' && hasResults(l));
       let latestWeek = 1;
       for (const l of planLogs) {
-        const d = l.dayId ? PLAN.days.find((dd) => dd.id === l.dayId) : undefined;
+        const d = l.dayId ? byId(l.dayId) : undefined;
         if (d && d.week > latestWeek) latestWeek = d.week;
       }
       setActiveWeek(latestWeek);
