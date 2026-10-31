@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useProfile, type Gender } from '../profile';
+import BackupSection from './BackupSection';
 
 export default function ProfileDialog() {
   const { profile, setProfile, dialogOpen, closeDialog } = useProfile();
@@ -79,6 +80,8 @@ export default function ProfileDialog() {
             })}
           </div>
         </div>
+
+        {!isFirstTime && <BackupSection />}
 
         <div className="mt-5 flex gap-2">
           {!isFirstTime && (
