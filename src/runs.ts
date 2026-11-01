@@ -19,16 +19,12 @@ export interface RunPreset {
 export const RUNNING_TYPE_ID = 'type-running';
 
 export const RUN_PRESETS: RunPreset[] = [
-  { id: 'easy', chip: 'Easy', name: 'Easy run', shape: 'steady', cue: 'Conversational pace — you could talk in full sentences', defaults: { distanceKm: 5 } },
-  { id: 'long', chip: 'Long', name: 'Long run', shape: 'steady', cue: 'Easy pace, the longest run of your week', defaults: { distanceKm: 10 } },
+  { id: 'run', chip: 'Run', name: 'Run', shape: 'steady', cue: 'A continuous run — easy, long, or anything in between', defaults: { distanceKm: 5 } },
   { id: 'tempo', chip: 'Tempo', name: 'Tempo run', shape: 'tempo', cue: 'Comfortably hard — about the pace you could hold for an hour', defaults: { warmupKm: 1.5, tempoKm: 4, cooldownKm: 1.5 } },
   { id: 'intervals', chip: 'Intervals', name: 'Intervals', shape: 'distance_reps', cue: '5K effort on the reps, jog the recovery', defaults: { reps: 6, repM: 800, restSec: 90 } },
   { id: 'km_repeats', chip: '1 km repeats', name: '1 km repeats', shape: 'distance_reps', cue: 'HYROX race pace — hold it even across every rep', defaults: { reps: 5, repM: 1000, restSec: 120 } },
   { id: 'hills', chip: 'Hills', name: 'Hill repeats', shape: 'timed_reps', cue: 'Hard uphill with tall posture, easy jog back down', defaults: { reps: 8, repSec: 60, restSec: 90 } },
   { id: 'fartlek', chip: 'Fartlek', name: 'Fartlek', shape: 'timed_reps', cue: 'Surge hard, then float easy — by feel, not by watch', defaults: { reps: 8, repSec: 60, restSec: 60 } },
-  { id: 'progression', chip: 'Progression', name: 'Progression run', shape: 'steady', cue: 'Start easy, get a little faster every third', defaults: { distanceKm: 6 } },
-  { id: 'recovery', chip: 'Recovery', name: 'Recovery run', shape: 'steady', cue: 'Very easy — slower than you think', defaults: { distanceKm: 3 } },
-  { id: 'time_trial', chip: 'Time trial', name: 'Time trial', shape: 'steady', cue: 'All out — a benchmark to measure progress against', defaults: { distanceKm: 5 } },
 ];
 
 export function runPreset(id: RunPresetId): RunPreset {

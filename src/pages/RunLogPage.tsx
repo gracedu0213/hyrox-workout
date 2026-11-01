@@ -25,7 +25,7 @@ export default function RunLogPage() {
   const [logId, setLogId] = useState<string>(() => editingId ?? newId());
   const [createdAt, setCreatedAt] = useState<number>(() => Date.now());
   const [date, setDate] = useState(searchParams.get('date') ?? todayISO());
-  const [run, setRun] = useState<RunDetail>(() => presetDetail('easy'));
+  const [run, setRun] = useState<RunDetail>(() => presetDetail('run'));
   const [totalTimeSec, setTotalTimeSec] = useState<number | undefined>();
   const [felt, setFelt] = useState<Felt | undefined>();
   const [notes, setNotes] = useState('');

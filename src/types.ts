@@ -288,7 +288,7 @@ export interface IntervalResult {
 // --- Runs (preset-driven run logs) ---
 
 export type RunPresetId =
-  | 'easy' | 'long' | 'recovery' | 'progression' | 'time_trial'
+  | 'run'
   | 'tempo'
   | 'intervals' | 'km_repeats'
   | 'hills' | 'fartlek';
