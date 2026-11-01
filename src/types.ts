@@ -287,14 +287,10 @@ export interface IntervalResult {
 
 // --- Runs (preset-driven run logs) ---
 
-export type RunPresetId =
-  | 'run'
-  | 'tempo'
-  | 'intervals' | 'km_repeats'
-  | 'hills' | 'fartlek';
+export type RunPresetId = 'run' | 'tempo' | 'intervals' | 'timed';
 
 // What was run, as adjusted from its preset. Which fields apply depends on the
-// preset's shape (runs.ts). Distances in km, except rep length in metres.
+// preset (runs.ts). Distances in km, except rep length in metres.
 export interface RunDetail {
   preset: RunPresetId;
   distanceKm?: number;      // total distance (tempo derives it from segments)
@@ -306,7 +302,7 @@ export interface RunDetail {
   repM?: number;            // distance reps
   repSec?: number;          // timed reps (hills, fartlek)
   restSec?: number;
-  repTimesSec?: (number | null)[]; // distance reps: time per rep, by index
+  repTimesSec?: (number | null)[]; // intervals: time per rep, by index
 }
 
 export interface WorkoutLog {

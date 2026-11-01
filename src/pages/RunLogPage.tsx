@@ -50,7 +50,7 @@ export default function RunLogPage() {
   }, [editingId]);
 
   const preset = runPreset(run.preset);
-  const shape = preset.shape;
+  const kind = run.preset;
   const set = (patch: Partial<RunDetail>) => setRun((r) => ({ ...r, ...patch }));
 
   function pickPreset(id: RunPresetId) {
@@ -116,7 +116,7 @@ export default function RunLogPage() {
       </section>
 
       {/* Structure (adjustable) */}
-      {shape === 'tempo' && (
+      {kind === 'tempo' && (
         <section className="px-4 pt-5">
           <div className="text-xs uppercase tracking-widest text-accent">Structure</div>
           <div className="mt-2 grid grid-cols-3 gap-2">
@@ -134,12 +134,12 @@ export default function RunLogPage() {
         </section>
       )}
 
-      {(shape === 'distance_reps' || shape === 'timed_reps') && (
+      {(kind === 'intervals' || kind === 'timed') && (
         <section className="px-4 pt-5">
           <div className="text-xs uppercase tracking-widest text-accent">Structure</div>
           <div className="mt-2 grid grid-cols-3 gap-2">
             <NumField label="Reps" value={run.reps} onChange={(v) => set({ reps: v })} />
-            {shape === 'distance_reps' ? (
+            {kind === 'intervals' ? (
               <NumField label="Rep (m)" value={run.repM} onChange={(v) => set({ repM: v })} />
             ) : (
               <TimeField label="Rep" value={run.repSec} onChange={(v) => set({ repSec: v })} />
@@ -149,7 +149,7 @@ export default function RunLogPage() {
         </section>
       )}
 
-      {shape === 'distance_reps' && repCount > 0 && (
+      {kind === 'intervals' && repCount > 0 && (
         <section className="px-4 pt-5">
           <div className="text-xs uppercase tracking-widest text-accent">Rep times</div>
           <div className="mt-2 space-y-2">
@@ -179,10 +179,10 @@ export default function RunLogPage() {
       {/* Totals */}
       <section className="px-4 pt-5">
         <div className="text-xs uppercase tracking-widest text-accent">
-          {shape === 'steady' ? 'The run' : 'Total (incl. warm-up & recovery)'}
+          {kind === 'run' ? 'The run' : 'Total (incl. warm-up & recovery)'}
         </div>
         <div className="mt-2 grid grid-cols-3 gap-2 items-end">
-          {shape === 'tempo' ? (
+          {kind === 'tempo' ? (
             <div>
               <label className="text-[10px] uppercase tracking-wider text-muted">Distance km</label>
               <div className="mt-1 bg-panel2 rounded px-2 py-1.5 text-center text-white/70">{totalKm ?? '—'}</div>
@@ -253,16 +253,15 @@ export default function RunLogPage() {
   );
 }
 
-// Keep only the fields the preset's shape uses, and rep times for reps that exist.
+// Keep only the fields the preset uses, and rep times for reps that exist.
 function cleanRun(r: RunDetail): RunDetail {
-  const shape = runPreset(r.preset).shape;
   const base: RunDetail = { preset: r.preset };
-  if (shape === 'steady') return { ...base, distanceKm: r.distanceKm };
-  if (shape === 'tempo') {
+  if (r.preset === 'run') return { ...base, distanceKm: r.distanceKm };
+  if (r.preset === 'tempo') {
     return { ...base, warmupKm: r.warmupKm, tempoKm: r.tempoKm, cooldownKm: r.cooldownKm, tempoTimeSec: r.tempoTimeSec };
   }
   const out: RunDetail = { ...base, distanceKm: r.distanceKm, reps: r.reps, restSec: r.restSec };
-  if (shape === 'timed_reps') return { ...out, repSec: r.repSec };
+  if (r.preset === 'timed') return { ...out, repSec: r.repSec };
   const times = (r.repTimesSec ?? []).slice(0, r.reps ?? 0).map((t) => t ?? null);
   return { ...out, repM: r.repM, repTimesSec: times.some((t) => t != null) ? times : undefined };
 }
