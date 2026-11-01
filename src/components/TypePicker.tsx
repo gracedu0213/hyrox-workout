@@ -28,10 +28,16 @@ export default function TypePicker({
   const selectedType = types.find((t) => t.id === value);
   const canEdit = selectedType != null && !isBuiltinType(selectedType.id);
 
+  // Every type keeps a unique color: offer only colors no OTHER type uses.
+  const editingId = form === 'edit' ? selectedType?.id : undefined;
+  const takenBy = (id?: string) => new Set(types.filter((t) => t.id !== id).map((t) => t.color.toUpperCase()));
+  const taken = takenBy(editingId);
+  const available = TYPE_PALETTE.filter((c) => !taken.has(c));
+  const colorOk = newColor !== '' && !taken.has(newColor.toUpperCase());
+
   function openCreate() {
     setNewName('');
-    // Default to the first palette color no existing type uses yet.
-    setNewColor(TYPE_PALETTE.find((c) => !types.some((t) => t.color === c)) ?? TYPE_PALETTE[0]);
+    setNewColor(TYPE_PALETTE.find((c) => !takenBy().has(c)) ?? '');
     setForm('create');
   }
 
@@ -44,7 +50,7 @@ export default function TypePicker({
 
   async function submit() {
     const name = newName.trim();
-    if (!name) return;
+    if (!name || !colorOk) return;
     const t: WorkoutType =
       form === 'edit' && selectedType
         ? { ...selectedType, name, color: newColor }
@@ -100,7 +106,8 @@ export default function TypePicker({
             autoFocus
           />
           <div className="flex items-center gap-2 flex-wrap">
-            {TYPE_PALETTE.map((c) => (
+            {available.length === 0 && <span className="text-xs text-muted">All colors are in use — recolor or reuse an existing type.</span>}
+            {available.map((c) => (
               <button
                 key={c}
                 onClick={() => setNewColor(c)}
@@ -112,7 +119,7 @@ export default function TypePicker({
           </div>
           <button
             onClick={submit}
-            disabled={!newName.trim()}
+            disabled={!newName.trim() || !colorOk}
             className="w-full bg-panel2 rounded py-2 text-sm font-semibold uppercase tracking-wider disabled:opacity-40"
             style={{ color: newColor }}
           >

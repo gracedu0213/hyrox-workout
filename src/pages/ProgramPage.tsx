@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { byId, curatedProgram, programForDay, DAY_LABEL, WEEKDAYS_7, type CuratedProgram } from '../plan';
-import { HYROX_TYPES } from '../tags';
+import { CATEGORIES } from '../tags';
 import { setupSummary } from '../format';
 import { customToSetup } from '../workouts';
 import { getAllLogs, getCustomWorkouts, getPlan, savePlan, archivePlan } from '../db';
@@ -256,10 +256,10 @@ function CuratedBody({ program, logs: allLogs, planActive }: { program: CuratedP
                 <li key={l.id} className="shrink-0 w-40 snap-start">
                   <Link to={`/plan/${d.id}`} className="block bg-panel rounded-lg p-3 active:bg-panel2 h-full">
                     <div className="flex items-center gap-2">
-                      <div className="w-1 h-6 rounded-full" style={{ backgroundColor: HYROX_TYPES[d.category].color }} />
+                      <div className="w-1 h-6 rounded-full" style={{ backgroundColor: CATEGORIES[d.category].color }} />
                       <span className="text-xs text-accent">{formatShortDate(l.date)}</span>
-                      <span className="text-[10px] font-semibold uppercase tracking-wider ml-auto" style={{ color: HYROX_TYPES[d.category].color }}>
-                        {HYROX_TYPES[d.category].name.slice(0, 4)}
+                      <span className="text-[10px] font-semibold uppercase tracking-wider ml-auto" style={{ color: CATEGORIES[d.category].color }}>
+                        {CATEGORIES[d.category].name.slice(0, 4)}
                       </span>
                     </div>
                     <div className="text-[11px] text-muted mt-1.5 uppercase tracking-wider">W{d.week} · {DAY_LABEL[d.dayOfWeek]}</div>
@@ -295,12 +295,12 @@ function CuratedBody({ program, logs: allLogs, planActive }: { program: CuratedP
                 className={`block bg-panel rounded-lg p-3 active:bg-panel2 ${done ? 'opacity-50' : ''}`}
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-1 h-12 rounded-full" style={{ backgroundColor: HYROX_TYPES[d.category].color }} />
+                  <div className="w-1 h-12 rounded-full" style={{ backgroundColor: CATEGORIES[d.category].color }} />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <span className="font-semibold text-sm">{DAY_LABEL[d.dayOfWeek]}</span>
-                      <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: HYROX_TYPES[d.category].color }}>
-                        {HYROX_TYPES[d.category].name}
+                      <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: CATEGORIES[d.category].color }}>
+                        {CATEGORIES[d.category].name}
                       </span>
                       {done && (
                         <span className="ml-auto inline-block bg-accent text-bg text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded">

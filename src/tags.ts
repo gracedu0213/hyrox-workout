@@ -1,29 +1,38 @@
-// The one tagging vocabulary. A workout's "type" is either a built-in HYROX
-// type (fixed, defined here) or a user type (editable, stored in the DB); both
-// live in one list. Curated plan days map onto the built-ins by category.
-// Colors are unique across built-ins, user-type defaults, and the picker
-// palette, so a calendar color always means exactly one type.
+// The one tagging vocabulary. A workout's "type" is the built-in HYROX type
+// (every curated plan workout) or a user type (editable, stored in the DB);
+// both live in one list. Every type has its own color, so a calendar color
+// always means exactly one type.
+//
+// Plan-workout categories (Foundation/Engine/…) are NOT types: they describe a
+// curated day on plan pages only and never reach the calendar or picker.
 
 import type { Category, Intensity, WorkoutType } from './types';
 
-// Negative createdAt sorts built-ins ahead of user types.
-export const HYROX_TYPES: Record<Category, WorkoutType> = {
-  FOUNDATION: { id: 'type-foundation', name: 'Foundation', color: '#F0E040', createdAt: -5 },
-  AEROBIC: { id: 'type-aerobic', name: 'Aerobic', color: '#5BC0EB', createdAt: -4 },
-  ENGINE: { id: 'type-engine', name: 'Engine', color: '#FF6B6B', createdAt: -3 },
-  POWER: { id: 'type-power', name: 'Power', color: '#9B59B6', createdAt: -2 },
-  COMPLETE: { id: 'type-complete', name: 'Complete', color: '#2ECC71', createdAt: -1 },
-};
+// Negative createdAt sorts the built-in ahead of user types.
+export const HYROX_TYPE: WorkoutType = { id: 'type-hyrox', name: 'HYROX', color: '#F0E040', createdAt: -1 };
 
-export const BUILTIN_TYPES: WorkoutType[] = Object.values(HYROX_TYPES);
+export const BUILTIN_TYPES: WorkoutType[] = [HYROX_TYPE];
 
 export const isBuiltinType = (id: string): boolean => BUILTIN_TYPES.some((t) => t.id === id);
 
-// Colors offered for user types — none shared with a built-in or OTHER_TYPE.
-export const TYPE_PALETTE = ['#FF9F43', '#FF6BB5', '#4ADEDE', '#A3E635', '#C08457', '#E8E8E8'];
+// Logged sessions with no resolvable type. Neutral grey; sorts last.
+export const OTHER_TYPE: WorkoutType = { id: 'type-other', name: 'Other', color: '#6B7280', createdAt: Infinity };
 
-// Logged sessions with no resolvable type. Neutral so it never reads as a type.
-export const OTHER_TYPE = { name: 'Other', color: '#6B7280' };
+// Colors for user types. Excludes the HYROX and Other colors; the picker also
+// hides any color another type already uses.
+export const TYPE_PALETTE = [
+  '#FF9F43', '#FF6BB5', '#4ADEDE', '#2ECC71', '#5BC0EB',
+  '#9B59B6', '#FF6B6B', '#A3E635', '#C08457', '#E8E8E8',
+];
+
+// Plan-page labels for curated days.
+export const CATEGORIES: Record<Category, { name: string; color: string }> = {
+  FOUNDATION: { name: 'Foundation', color: '#F0E040' },
+  AEROBIC: { name: 'Aerobic', color: '#5BC0EB' },
+  ENGINE: { name: 'Engine', color: '#FF6B6B' },
+  POWER: { name: 'Power', color: '#9B59B6' },
+  COMPLETE: { name: 'Complete', color: '#2ECC71' },
+};
 
 // Intensity is a text-only label: color is reserved for type.
 export const INTENSITIES: { value: Intensity; label: string }[] = [

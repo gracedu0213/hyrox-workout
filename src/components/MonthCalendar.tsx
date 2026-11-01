@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react';
 import { isoDate, todayISO } from '../dateUtils';
 import { groupLogsByDate, hasResults, logKind } from '../logSummary';
-import type { LogTypeInfo } from '../logTypeColor';
+import type { TypeResolver } from '../logTypeColor';
+import TypeLegend from './TypeLegend';
 import { OTHER_TYPE } from '../tags';
 import type { WorkoutLog } from '../types';
 
@@ -17,11 +18,13 @@ export default function MonthCalendar({
   selected,
   onSelect,
   typeOf,
+  legend = false,
 }: {
   logs: WorkoutLog[];
   selected?: string | null;
   onSelect?: (dateISO: string) => void;
-  typeOf: (log: WorkoutLog) => LogTypeInfo | undefined;
+  typeOf: TypeResolver;
+  legend?: boolean;
 }) {
   // Months back from the current month; can't navigate into the future.
   const [offset, setOffset] = useState(0);
@@ -34,6 +37,8 @@ export default function MonthCalendar({
     return new Date(now.getFullYear(), now.getMonth() - offset, 1);
   }, [offset]);
   const monthLabel = first.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+  const monthPrefix = isoDate(first).slice(0, 7);
+  const monthLogs = useMemo(() => logs.filter((l) => l.date.startsWith(monthPrefix)), [logs, monthPrefix]);
 
   // Mon-first week rows covering the month; days outside it render as blanks.
   const weeks = useMemo(() => {
@@ -119,6 +124,7 @@ export default function MonthCalendar({
           );
         })}
       </div>
+      {legend && <TypeLegend logs={monthLogs} typeOf={typeOf} />}
     </div>
   );
 }

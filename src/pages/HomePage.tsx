@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { getActivePlans, getAllLogs, newId, saveLog } from '../db';
 import { isCadence, poolSlots } from '../plans';
 import CadenceLogSheet from '../components/CadenceLogSheet';
@@ -11,7 +11,7 @@ import Fab from '../components/Fab';
 import ConsistencyHeatmap from '../components/ConsistencyHeatmap';
 import MonthCalendar from '../components/MonthCalendar';
 import { useLogTypeResolver } from '../logTypeColor';
-import { HYROX_TYPES, OTHER_TYPE } from '../tags';
+import { CATEGORIES } from '../tags';
 import { todayISO } from '../dateUtils';
 import type { UserPlan, WorkoutLog } from '../types';
 
@@ -34,20 +34,6 @@ export default function HomePage() {
     localStorage.setItem('hyrox.calview.v1', v);
   }
   const typeOf = useLogTypeResolver();
-  const legend = useMemo(() => {
-    const m = new Map<string, string>();
-    let other = false;
-    for (const l of logs) {
-      if (!hasResults(l) || logKind(l) === 'rest') continue;
-      const t = typeOf(l);
-      if (t) m.set(t.name, t.color);
-      else other = true;
-    }
-    const entries = [...m].map(([name, color]) => ({ name, color }));
-    if (other) entries.push(OTHER_TYPE);
-    return entries;
-  }, [logs, typeOf]);
-
   async function refresh() {
     const [l, p] = await Promise.all([getAllLogs(), getActivePlans()]);
     setLogs(l);
@@ -143,19 +129,9 @@ export default function HomePage() {
               </div>
             )}
             {calView === 'grid' ? (
-              <ConsistencyHeatmap logs={logs} typeOf={typeOf} selected={selectedDate} onSelect={(d) => setSelectedDate(d === selectedDate ? null : d)} />
+              <ConsistencyHeatmap legend logs={logs} typeOf={typeOf} selected={selectedDate} onSelect={(d) => setSelectedDate(d === selectedDate ? null : d)} />
             ) : (
-              <MonthCalendar logs={logs} typeOf={typeOf} selected={selectedDate} onSelect={(d) => setSelectedDate(d === selectedDate ? null : d)} />
-            )}
-            {legend.length > 0 && (
-              <div className="flex flex-wrap gap-x-3 gap-y-1 mt-3">
-                {legend.map((t) => (
-                  <span key={t.name} className="inline-flex items-center gap-1 text-[10px] uppercase tracking-wider text-muted">
-                    <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: t.color }} />
-                    {t.name}
-                  </span>
-                ))}
-              </div>
+              <MonthCalendar legend logs={logs} typeOf={typeOf} selected={selectedDate} onSelect={(d) => setSelectedDate(d === selectedDate ? null : d)} />
             )}
             {selectedDate ? (
               <SelectedDay date={selectedDate} logs={logs.filter((l) => l.date === selectedDate)} />
@@ -269,8 +245,8 @@ function TodoWorkoutCard({ log }: { log: WorkoutLog }) {
     setup = log.workoutSnapshot ? setupSummary(log.workoutSnapshot.setup) : undefined;
   } else if (planDay) {
     chip = (
-      <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: HYROX_TYPES[planDay.category].color }}>
-        {HYROX_TYPES[planDay.category].name}
+      <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: CATEGORIES[planDay.category].color }}>
+        {CATEGORIES[planDay.category].name}
       </span>
     );
     dayMeta = <span className="text-xs text-muted">W{planDay.week} · {DAY_LABEL[planDay.dayOfWeek]}</span>;
@@ -563,12 +539,12 @@ function UpcomingCard({ log }: { log: WorkoutLog }) {
   return (
     <li>
       <Link to={`/plan/${d.id}`} className="flex items-center gap-3 bg-panel rounded-xl p-3 active:bg-panel2">
-        <div className="w-1 h-10 rounded-full shrink-0" style={{ backgroundColor: HYROX_TYPES[d.category].color }} />
+        <div className="w-1 h-10 rounded-full shrink-0" style={{ backgroundColor: CATEGORIES[d.category].color }} />
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
             <span className="text-xs text-accent">{log.date}</span>
-            <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: HYROX_TYPES[d.category].color }}>
-              {HYROX_TYPES[d.category].name}
+            <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: CATEGORIES[d.category].color }}>
+              {CATEGORIES[d.category].name}
             </span>
           </div>
           <div className="text-sm truncate">W{d.week} {DAY_LABEL[d.dayOfWeek]} · {d.workoutLabel}</div>
@@ -607,7 +583,7 @@ function LastLogCard({ log }: { log: WorkoutLog }) {
   if (!d) return null;
   return (
     <Link to={`/log/${log.id}`} className="flex items-center gap-3 bg-panel rounded-xl p-3 active:bg-panel2">
-      <div className="w-1 h-12 rounded-full shrink-0" style={{ backgroundColor: HYROX_TYPES[d.category].color }} />
+      <div className="w-1 h-12 rounded-full shrink-0" style={{ backgroundColor: CATEGORIES[d.category].color }} />
       <div className="flex-1 min-w-0">
         <div className="flex justify-between items-center">
           <span className="text-xs text-muted">{log.date}</span>

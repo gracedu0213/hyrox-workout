@@ -2,7 +2,7 @@ import Dexie, { type Table } from 'dexie';
 import type { CustomWorkout, UserPlan, WorkoutLog, WorkoutType } from './types';
 import { normalizeBlocks } from './workouts';
 import { curatedProgram } from './plan';
-import { BUILTIN_TYPES } from './tags';
+import { BUILTIN_TYPES, HYROX_TYPE, OTHER_TYPE, TYPE_PALETTE } from './tags';
 
 // Bring persisted workouts up to the current block-row shape on read, so every
 // consumer downstream sees one model regardless of when the row was written.
@@ -24,6 +24,8 @@ const LEGACY_DEFAULT_COLORS: Record<string, string> = {
   'type-functional': '#FF6B6B',
   'type-deadhang': '#9B59B6',
 };
+
+const RETIRED_TYPE_IDS = ['type-foundation', 'type-aerobic', 'type-engine', 'type-power', 'type-complete'];
 
 class HyroxDB extends Dexie {
   logs!: Table<WorkoutLog, string>;
@@ -59,6 +61,33 @@ class HyroxDB extends Dexie {
         await tx.table('workoutTypes')
           .where('id').equals(d.id)
           .modify((t: WorkoutType) => { if (t.color === LEGACY_DEFAULT_COLORS[d.id]) t.color = d.color; });
+      }
+    });
+    // v6 shipped the 5 plan categories as built-in types; they're now the one
+    // HYROX type. Re-tag anything pointing at the retired ids, then give every
+    // user type a color no other type (or HYROX/Other) uses — earliest type
+    // keeps its color, later duplicates move to a free palette color.
+    this.version(7).stores({}).upgrade(async (tx) => {
+      for (const table of ['logs', 'workouts']) {
+        await tx.table(table)
+          .filter((r: { typeId?: string }) => !!r.typeId && RETIRED_TYPE_IDS.includes(r.typeId))
+          .modify({ typeId: HYROX_TYPE.id });
+      }
+      const types: WorkoutType[] = await tx.table('workoutTypes').orderBy('createdAt').toArray();
+      const taken = new Set(types.map((t) => t.color.toUpperCase()));
+      const used = new Set([HYROX_TYPE.color, OTHER_TYPE.color]);
+      for (const t of types) {
+        const color = t.color.toUpperCase();
+        if (used.has(color)) {
+          const free = TYPE_PALETTE.find((c) => !taken.has(c) && !used.has(c));
+          if (free) {
+            await tx.table('workoutTypes').update(t.id, { color: free });
+            taken.add(free);
+            used.add(free);
+            continue;
+          }
+        }
+        used.add(color);
       }
     });
     // populate fires only on fresh DB creation (upgrade callbacks don't).

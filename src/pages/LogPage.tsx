@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { byId, programForDay, DAY_LABEL } from '../plan';
-import { HYROX_TYPES, INTENSITIES } from '../tags';
+import { CATEGORIES, INTENSITIES } from '../tags';
 import { newId, saveLog, getLog, getWorkout, getActivePlans } from '../db';
 import { formatWeight } from '../format';
 import { buildSnapshot, customToSetup } from '../workouts';
@@ -270,7 +270,7 @@ export default function LogPage() {
           ) : (
             <>
               W{target.week} {target.dayOfWeek && DAY_LABEL[target.dayOfWeek]} ·{' '}
-              {target.category && <span style={{ color: HYROX_TYPES[target.category].color }}>{HYROX_TYPES[target.category].name}</span>}
+              {target.category && <span style={{ color: CATEGORIES[target.category].color }}>{CATEGORIES[target.category].name}</span>}
               {' · '}{target.name}
             </>
           )}

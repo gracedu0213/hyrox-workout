@@ -1,7 +1,7 @@
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { byId, DAY_LABEL } from '../plan';
-import { HYROX_TYPES } from '../tags';
+import { CATEGORIES } from '../tags';
 import { deleteLog, getLog } from '../db';
 import { formatExercise, formatSec, setupSummary } from '../format';
 import ResultHero from '../components/ResultHero';
@@ -104,8 +104,8 @@ export default function LogDetailPage() {
             <>
               <div className="flex items-baseline gap-2 mt-1.5 flex-wrap">
                 <span className="font-display text-3xl tracking-[-0.02em]">W{planDay.week} · {DAY_LABEL[planDay.dayOfWeek]}</span>
-                <span className="text-[10px] font-black uppercase tracking-widest" style={{ color: HYROX_TYPES[planDay.category].color }}>
-                  {HYROX_TYPES[planDay.category].name}
+                <span className="text-[10px] font-black uppercase tracking-widest" style={{ color: CATEGORIES[planDay.category].color }}>
+                  {CATEGORIES[planDay.category].name}
                 </span>
               </div>
               <div className="text-base text-white/90 mt-1">{planDay.workoutLabel}</div>

@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
 import { isoDate, mondayOfWeek } from '../dateUtils';
 import { groupLogsByDate, hasResults, logKind } from '../logSummary';
-import type { LogTypeInfo } from '../logTypeColor';
+import type { TypeResolver } from '../logTypeColor';
+import TypeLegend from './TypeLegend';
 import { OTHER_TYPE } from '../tags';
 import type { WorkoutLog } from '../types';
 
@@ -23,7 +24,7 @@ function dayVariant(logs: WorkoutLog[]): DayVariant {
   return 'empty';
 }
 
-function typedTileStyle(dayLogs: WorkoutLog[], typeOf: (l: WorkoutLog) => LogTypeInfo | undefined): React.CSSProperties {
+function typedTileStyle(dayLogs: WorkoutLog[], typeOf: TypeResolver): React.CSSProperties {
   const colors = [...new Set(
     dayLogs
       .filter((l) => hasResults(l) && logKind(l) !== 'rest')
@@ -38,7 +39,7 @@ function typedTileStyle(dayLogs: WorkoutLog[], typeOf: (l: WorkoutLog) => LogTyp
 function tileStyle(
   dayLogs: WorkoutLog[],
   future: boolean,
-  typeOf: (l: WorkoutLog) => LogTypeInfo | undefined,
+  typeOf: TypeResolver,
 ): React.CSSProperties {
   if (future) return { backgroundColor: 'rgba(255,255,255,0.02)' };
   switch (dayVariant(dayLogs)) {
@@ -58,11 +59,13 @@ export default function ConsistencyHeatmap({
   selected,
   onSelect,
   typeOf,
+  legend = false,
 }: {
   logs: WorkoutLog[];
   selected?: string | null;
   onSelect?: (dateISO: string) => void;
-  typeOf: (log: WorkoutLog) => LogTypeInfo | undefined;
+  typeOf: TypeResolver;
+  legend?: boolean;
 }) {
   const byDate = useMemo(() => groupLogsByDate(logs), [logs]);
 
@@ -83,29 +86,35 @@ export default function ConsistencyHeatmap({
     return cols;
   }, []);
 
+  const firstDay = isoDate(columns[0][0]);
+  const visibleLogs = useMemo(() => logs.filter((l) => l.date >= firstDay && l.date <= today), [logs, firstDay, today]);
+
   return (
-    <div className="flex gap-1">
-      {columns.map((col, ci) => (
-        <div key={ci} className="flex flex-1 flex-col gap-1">
-          {col.map((date, ri) => {
-            const ds = isoDate(date);
-            const future = ds > today;
-            const isSel = selected === ds;
-            return (
-              <button
-                key={ri}
-                type="button"
-                disabled={future || !onSelect}
-                onClick={() => onSelect?.(ds)}
-                className={`aspect-square rounded-[3px] ${ds === today ? 'ring-1 ring-accent ring-inset' : ''} ${
-                  isSel ? 'ring-2 ring-white ring-inset' : ''
-                }`}
-                style={tileStyle(byDate.get(ds) ?? [], future, typeOf)}
-              />
-            );
-          })}
-        </div>
-      ))}
+    <div>
+      <div className="flex gap-1">
+        {columns.map((col, ci) => (
+          <div key={ci} className="flex flex-1 flex-col gap-1">
+            {col.map((date, ri) => {
+              const ds = isoDate(date);
+              const future = ds > today;
+              const isSel = selected === ds;
+              return (
+                <button
+                  key={ri}
+                  type="button"
+                  disabled={future || !onSelect}
+                  onClick={() => onSelect?.(ds)}
+                  className={`aspect-square rounded-[3px] ${ds === today ? 'ring-1 ring-accent ring-inset' : ''} ${
+                    isSel ? 'ring-2 ring-white ring-inset' : ''
+                  }`}
+                  style={tileStyle(byDate.get(ds) ?? [], future, typeOf)}
+                />
+              );
+            })}
+          </div>
+        ))}
+      </div>
+      {legend && <TypeLegend logs={visibleLogs} typeOf={typeOf} />}
     </div>
   );
 }
