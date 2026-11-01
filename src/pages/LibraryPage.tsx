@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
+import { withDate } from '../dateUtils';
 import { getPlans, savePlan } from '../db';
 import { withCurated, planSubtitle, planWeekCount } from '../plans';
 import WorkoutList from '../components/WorkoutList';
@@ -7,6 +8,7 @@ import type { UserPlan } from '../types';
 
 export default function LibraryPage() {
   const [plans, setPlans] = useState<UserPlan[]>([]);
+  const date = useSearchParams()[0].get('date');
 
   async function refresh() {
     setPlans(await getPlans());
@@ -45,7 +47,7 @@ export default function LibraryPage() {
           {programs.map((p) => (
             <div key={p.id} className="flex items-center gap-3 bg-panel rounded-lg p-3">
               <div className="w-1 h-10 rounded-full shrink-0" style={{ backgroundColor: p.color }} />
-              <Link to={`/plan/program/${p.id}`} className="flex-1 min-w-0">
+              <Link to={withDate(`/plan/program/${p.id}`, date)} className="flex-1 min-w-0">
                 <div className="font-display text-lg leading-tight flex items-center gap-2">
                   {p.icon && <span>{p.icon}</span>}
                   <span className="truncate">{p.name}</span>
@@ -73,7 +75,7 @@ export default function LibraryPage() {
           <div className="text-xs uppercase tracking-widest text-muted">Workouts</div>
           <Link to="/workout/new" className="text-xs text-accent">+ New workout</Link>
         </div>
-        <WorkoutList />
+        <WorkoutList date={date} />
       </section>
     </div>
   );

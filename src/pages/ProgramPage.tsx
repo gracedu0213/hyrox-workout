@@ -6,7 +6,7 @@ import { setupSummary } from '../format';
 import { customToSetup } from '../workouts';
 import { getAllLogs, getCustomWorkouts, getPlan, savePlan, archivePlan } from '../db';
 import { hasResults, logKind } from '../logSummary';
-import { todayISO, isoDate, mondayOfWeek } from '../dateUtils';
+import { todayISO, isoDate, mondayOfWeek, withDate } from '../dateUtils';
 import { curatedDescriptor, isCurated, isCadence, poolSlots, slotForDay, anytimeSlots } from '../plans';
 import MoreMenu, { type MenuItem } from '../components/MoreMenu';
 import ConsistencyHeatmap from '../components/ConsistencyHeatmap';
@@ -32,6 +32,7 @@ export default function ProgramPage() {
   const [plan, setPlan] = useState<UserPlan | null>(null);
   const [logs, setLogs] = useState<WorkoutLog[]>([]);
   const [notFound, setNotFound] = useState(false);
+  const date = useSearchParams()[0].get('date');
 
   async function refresh() {
     const all = await getAllLogs();
@@ -49,7 +50,7 @@ export default function ProgramPage() {
   if (notFound) {
     return (
       <div className="px-4 pt-6">
-        <Link to="/plan" className="text-sm text-accent">← Plans</Link>
+        <Link to={withDate('/plan', date)} className="text-sm text-accent">← Plans</Link>
         <p className="text-muted mt-6">Plan not found.</p>
       </div>
     );
@@ -88,7 +89,7 @@ export default function ProgramPage() {
   return (
     <div className="pb-8">
       <header className="px-4 pt-5">
-        <Link to="/plan" className="text-sm text-accent">← Plans</Link>
+        <Link to={withDate('/plan', date)} className="text-sm text-accent">← Plans</Link>
         <div className="flex items-start justify-between mt-2 gap-3">
           <div className="min-w-0">
             <h1 className="font-display text-3xl leading-[0.95] tracking-[-0.02em] flex items-center gap-2">
@@ -153,13 +154,14 @@ function CuratedBody({ program, logs: allLogs, planActive }: { program: CuratedP
 
   const [searchParams, setSearchParams] = useSearchParams();
   const urlWeek = Number(searchParams.get('week')) || 0;
+  const date = searchParams.get('date');
   const [activeWeek, setActiveWeek] = useState<number>(urlWeek || 1);
   const [didInit, setDidInit] = useState(false);
   const stripRef = useRef<HTMLDivElement>(null);
 
   function selectWeek(w: number) {
     setActiveWeek(w);
-    setSearchParams({ week: String(w) }, { replace: true });
+    setSearchParams((p) => { const next = new URLSearchParams(p); next.set('week', String(w)); return next; }, { replace: true });
   }
 
   useEffect(() => {
@@ -254,7 +256,7 @@ function CuratedBody({ program, logs: allLogs, planActive }: { program: CuratedP
               if (!d) return null;
               return (
                 <li key={l.id} className="shrink-0 w-40 snap-start">
-                  <Link to={`/plan/${d.id}`} className="block bg-panel rounded-lg p-3 active:bg-panel2 h-full">
+                  <Link to={withDate(`/plan/${d.id}`, date)} className="block bg-panel rounded-lg p-3 active:bg-panel2 h-full">
                     <div className="flex items-center gap-2">
                       <div className="w-1 h-6 rounded-full" style={{ backgroundColor: CATEGORIES[d.category].color }} />
                       <span className="text-xs text-accent">{formatShortDate(l.date)}</span>
@@ -291,7 +293,7 @@ function CuratedBody({ program, logs: allLogs, planActive }: { program: CuratedP
           return (
             <li key={d.id}>
               <Link
-                to={`/plan/${d.id}`}
+                to={withDate(`/plan/${d.id}`, date)}
                 className={`block bg-panel rounded-lg p-3 active:bg-panel2 ${done ? 'opacity-50' : ''}`}
               >
                 <div className="flex items-center gap-3">
@@ -331,6 +333,7 @@ function CuratedBody({ program, logs: allLogs, planActive }: { program: CuratedP
 // ---- Cadence plan (weekly target + go-to pool; no weeks) ----
 
 function CadenceBody({ plan, logs }: { plan: UserPlan; logs: WorkoutLog[] }) {
+  const date = useSearchParams()[0].get('date');
   const [workouts, setWorkouts] = useState<Map<string, CustomWorkout>>(new Map());
   const typeOf = useLogTypeResolver();
   useEffect(() => {
@@ -388,7 +391,7 @@ function CadenceBody({ plan, logs }: { plan: UserPlan; logs: WorkoutLog[] }) {
             {targets.map((w) => (
               <li key={w.id}>
                 <Link
-                  to={`/workout/${w.id}?planId=${plan.id}`}
+                  to={withDate(`/workout/${w.id}?planId=${plan.id}`, date)}
                   className="flex items-center justify-between gap-3 bg-panel rounded-lg p-3 active:bg-panel2"
                 >
                   <div className="min-w-0">
@@ -409,6 +412,7 @@ function CadenceBody({ plan, logs }: { plan: UserPlan; logs: WorkoutLog[] }) {
 // ---- User-built sequenced plan (day-of-week grid per week) ----
 
 function SequencedBody({ plan, logs }: { plan: UserPlan; logs: WorkoutLog[] }) {
+  const pickedDate = useSearchParams()[0].get('date');
   const weeks = plan.content?.type === 'sequenced' ? plan.content.weeks : [];
   const [workouts, setWorkouts] = useState<Map<string, CustomWorkout>>(new Map());
   const [activeWeek, setActiveWeek] = useState(1);
@@ -459,7 +463,7 @@ function SequencedBody({ plan, logs }: { plan: UserPlan; logs: WorkoutLog[] }) {
     if (!w) return <span className="text-sm text-muted/60">Workout removed</span>;
     return (
       <Link
-        to={`/workout/${w.id}?planId=${plan.id}${date ? `&date=${date}` : ''}`}
+        to={withDate(`/workout/${w.id}?planId=${plan.id}`, pickedDate ?? date)}
         className="flex-1 min-w-0"
       >
         <div className={`text-sm font-semibold truncate ${done ? 'text-muted line-through' : ''}`}>{w.name}</div>

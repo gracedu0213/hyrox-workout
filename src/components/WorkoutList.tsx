@@ -3,13 +3,14 @@ import { Link } from 'react-router-dom';
 import { deleteWorkout, getCustomWorkouts, getWorkoutTypes } from '../db';
 import { setupSummary } from '../format';
 import { customToSetup } from '../workouts';
+import { withDate } from '../dateUtils';
 import MoreMenu from './MoreMenu';
 import { OTHER_TYPE } from '../tags';
 import type { CustomWorkout, WorkoutType } from '../types';
 
 // Browse list of custom workouts (Plan tab + dedicated Workouts page). Tapping a
 // row opens its detail; logging/scheduling live there or on the Train tab.
-export default function WorkoutList() {
+export default function WorkoutList({ date }: { date?: string | null }) {
   const [workouts, setWorkouts] = useState<CustomWorkout[]>([]);
   const [types, setTypes] = useState<Map<string, WorkoutType>>(new Map());
 
@@ -43,7 +44,7 @@ export default function WorkoutList() {
         return (
           <div key={w.id} className="flex items-center gap-2 bg-panel rounded-lg p-3">
             <div className="w-1 h-10 rounded-full shrink-0" style={{ backgroundColor: color }} />
-            <Link to={`/workout/${w.id}`} className="flex-1 min-w-0">
+            <Link to={withDate(`/workout/${w.id}`, date)} className="flex-1 min-w-0">
               <div className="font-display text-lg leading-tight truncate">{w.name}</div>
               <div className="text-xs text-muted mt-0.5 truncate">
                 {summary}

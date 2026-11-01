@@ -5,6 +5,13 @@ export function isoDate(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
+// Appends the day a log should land on (picked on the Train calendar) to an
+// in-app link, so it survives browsing Plan → program → workout.
+export function withDate(path: string, date: string | null | undefined): string {
+  if (!date) return path;
+  return `${path}${path.includes('?') ? '&' : '?'}date=${date}`;
+}
+
 export function todayISO(): string {
   return isoDate(new Date());
 }

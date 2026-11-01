@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { byId, programForDay, DAY_LABEL } from '../plan';
 import { CATEGORIES } from '../tags';
@@ -25,7 +25,8 @@ export default function DayPage() {
 
   useEffect(() => { refresh(); }, [dayId]);
 
-  const [scheduleDate, setScheduleDate] = useState<string>(todayISO());
+  const presetDate = useSearchParams()[0].get('date');
+  const [scheduleDate, setScheduleDate] = useState<string>(presetDate ?? todayISO());
 
   async function addToPlan() {
     if (!day || !scheduleDate) return;
