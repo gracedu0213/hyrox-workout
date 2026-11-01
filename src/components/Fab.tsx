@@ -4,11 +4,12 @@ import { newId, saveLog } from '../db';
 import type { WorkoutLog } from '../types';
 
 interface Props {
-  todayISO: string;
+  dateISO: string; // the day new entries land on — today, or the day picked on the calendar
+  isToday: boolean;
   onRest: () => void; // refresh handler after rest day created
 }
 
-export default function Fab({ todayISO, onRest }: Props) {
+export default function Fab({ dateISO, isToday, onRest }: Props) {
   const [open, setOpen] = useState(false);
   const nav = useNavigate();
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -26,7 +27,7 @@ export default function Fab({ todayISO, onRest }: Props) {
   async function addRest() {
     const log: WorkoutLog = {
       id: newId(),
-      date: todayISO,
+      date: dateISO,
       createdAt: Date.now(),
       kind: 'rest',
       status: 'logged',
@@ -59,10 +60,12 @@ export default function Fab({ todayISO, onRest }: Props) {
           dividers — opaque so page content can't bleed through. */}
       {open && (
         <div className="absolute right-0 bottom-full mb-3 w-52 bg-panel border border-line rounded-2xl shadow-xl overflow-hidden divide-y divide-line/50">
+          {!isToday && (
+            <div className="px-4 py-2 text-[10px] uppercase tracking-widest text-accent">Add to {dateISO}</div>
+          )}
           <ActionRow icon="📋" label="From plans" onClick={() => { setOpen(false); nav('/plan'); }} />
-          <ActionRow icon="🏃" label="Log a run" onClick={() => { setOpen(false); nav('/run/log'); }} />
-          <ActionRow icon="🛠️" label="New workout" onClick={() => { setOpen(false); nav('/workout/new'); }} />
-          <ActionRow icon="🏀" label="Quick custom" onClick={() => { setOpen(false); nav('/custom/log'); }} />
+          <ActionRow icon="🏃" label="Log a run" onClick={() => { setOpen(false); nav(`/run/log?date=${dateISO}`); }} />
+          <ActionRow icon="🏀" label="Quick custom" onClick={() => { setOpen(false); nav(`/custom/log?date=${dateISO}`); }} />
           <ActionRow icon="🛌" label="Rest day" onClick={addRest} />
         </div>
       )}

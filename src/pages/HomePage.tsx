@@ -163,7 +163,7 @@ export default function HomePage() {
         </section>
       )}
 
-      <Fab todayISO={today} onRest={refresh} />
+      <Fab dateISO={selectedDate ?? today} isToday={(selectedDate ?? today) === today} onRest={refresh} />
       {cadenceSheet && <CadenceLogSheet plan={cadenceSheet} onClose={() => setCadenceSheet(null)} />}
     </div>
   );
