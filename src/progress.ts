@@ -1,13 +1,14 @@
 // Per-workout performance progression: extract one comparable numeric metric
 // from each logged session and group by workout so we can chart "am I getting
-// better" over time. Pace/distance are intentionally out of scope (not stored
-// structurally yet) — that's Phase 3.
+// better" over time. Runs trend by pace, grouped by preset (all Easy runs
+// together, however far each one went).
 
 import { byId } from './plan';
 import { logKind, hasResults } from './logSummary';
+import { keyPace, runPreset } from './runs';
 import type { WorkoutLog } from './types';
 
-export type MetricUnit = 'time' | 'rounds' | 'cal';
+export type MetricUnit = 'time' | 'rounds' | 'cal' | 'pace';
 
 export interface MetricPoint {
   date: string; // ISO yyyy-mm-dd
@@ -26,6 +27,10 @@ export interface WorkoutProgress {
 // The primary comparable metric for a single session, or null if the log has
 // nothing numeric to trend (e.g. only felt-rating or free notes).
 function extractMetric(l: WorkoutLog): { value: number; unit: MetricUnit; lowerBetter: boolean } | null {
+  if (l.run) {
+    const pace = keyPace(l.run, l.totalTimeSec);
+    return pace ? { value: pace, unit: 'pace', lowerBetter: true } : null;
+  }
   if (l.totalTimeSec != null) return { value: l.totalTimeSec, unit: 'time', lowerBetter: true };
   if (l.amrap) {
     if (l.amrap.fullRounds != null || l.amrap.partialReps != null) {
@@ -39,6 +44,7 @@ function extractMetric(l: WorkoutLog): { value: number; unit: MetricUnit; lowerB
 }
 
 function identity(l: WorkoutLog): { key: string; name: string } | null {
+  if (l.run) return { key: `r:${l.run.preset}`, name: runPreset(l.run.preset).name };
   const kind = logKind(l);
   if (kind === 'custom') {
     const key = l.workoutId ?? l.customName;

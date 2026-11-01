@@ -3,11 +3,13 @@ import { Link } from 'react-router-dom';
 import { getAllLogs } from '../db';
 import { formatSec } from '../format';
 import { buildProgress, trend, type MetricUnit, type WorkoutProgress } from '../progress';
+import { formatPace } from '../runs';
 import Sparkline from '../components/Sparkline';
 import type { WorkoutLog } from '../types';
 
 function fmtValue(unit: MetricUnit, v: number): string {
   if (unit === 'time') return formatSec(v);
+  if (unit === 'pace') return formatPace(v);
   if (unit === 'cal') return `${v} cal`;
   return `${v} rounds`;
 }
@@ -16,6 +18,7 @@ function fmtDelta(unit: MetricUnit, delta: number): string {
   const sign = delta > 0 ? '+' : '−';
   const mag = Math.abs(delta);
   if (unit === 'time') return `${sign}${formatSec(mag)}`;
+  if (unit === 'pace') return `${sign}${formatSec(mag)}/km`;
   if (unit === 'cal') return `${sign}${mag} cal`;
   return `${sign}${mag} rounds`;
 }

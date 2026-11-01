@@ -60,6 +60,7 @@ export default function Fab({ todayISO, onRest }: Props) {
       {open && (
         <div className="absolute right-0 bottom-full mb-3 w-52 bg-panel border border-line rounded-2xl shadow-xl overflow-hidden divide-y divide-line/50">
           <ActionRow icon="📋" label="From plans" onClick={() => { setOpen(false); nav('/plan'); }} />
+          <ActionRow icon="🏃" label="Log a run" onClick={() => { setOpen(false); nav('/run/log'); }} />
           <ActionRow icon="🛠️" label="New workout" onClick={() => { setOpen(false); nav('/workout/new'); }} />
           <ActionRow icon="🏀" label="Quick custom" onClick={() => { setOpen(false); nav('/custom/log'); }} />
           <ActionRow icon="🛌" label="Rest day" onClick={addRest} />

@@ -1,5 +1,6 @@
 import { FELT_EMOJI } from './FeltPicker';
 import { formatSec } from '../format';
+import { runDistanceKm, timeAndPace } from '../runs';
 import type { WorkoutLog } from '../types';
 
 interface Props {
@@ -16,7 +17,11 @@ export default function ResultHero({ log, size = 'card' }: Props) {
 
   let headline: React.ReactNode = null;
   let label = 'Result';
-  if (hasTime) {
+  const runKm = log.run ? runDistanceKm(log.run) : undefined;
+  if (log.run && runKm) {
+    headline = <>{runKm}<span className="text-3xl opacity-60 ml-1">km</span></>;
+    label = timeAndPace(log.run, log.totalTimeSec) || 'Distance';
+  } else if (hasTime) {
     headline = formatSec(log.totalTimeSec!);
     label = 'Total time';
   } else if (hasAmrap) {

@@ -13,6 +13,7 @@ import MonthCalendar from '../components/MonthCalendar';
 import { useLogTypeResolver } from '../logTypeColor';
 import { CATEGORIES } from '../tags';
 import { todayISO } from '../dateUtils';
+import { formatKm, runDistanceKm, runStructure, timeAndPace } from '../runs';
 import type { UserPlan, WorkoutLog } from '../types';
 
 const GRADIENT = 'linear-gradient(135deg, #FFD500 0%, #F0E040 35%, #FF9B5C 70%, #FF6B6B 100%)';
@@ -239,7 +240,15 @@ function TodoWorkoutCard({ log }: { log: WorkoutLog }) {
   let title: string;
   let setup: string | undefined;
   let dayMeta: React.ReactNode = null;
-  if (kind === 'custom') {
+  let result = logSummary(log);
+  if (log.run) {
+    // Distance is the headline; time + pace sit on the structure line.
+    const km = runDistanceKm(log.run);
+    chip = <span className="text-xs uppercase tracking-widest text-accent">Run</span>;
+    title = log.customName ?? 'Run';
+    setup = [runStructure(log.run), timeAndPace(log.run, log.totalTimeSec)].filter(Boolean).join(' · ');
+    result = km ? formatKm(km) : timeAndPace(log.run, log.totalTimeSec);
+  } else if (kind === 'custom') {
     chip = <span className="text-xs uppercase tracking-widest text-accent">Custom</span>;
     title = log.customName ?? 'Custom';
     setup = log.workoutSnapshot ? setupSummary(log.workoutSnapshot.setup) : undefined;
@@ -295,7 +304,7 @@ function TodoWorkoutCard({ log }: { log: WorkoutLog }) {
             className="mt-3 font-display text-4xl leading-none tracking-tight bg-clip-text text-transparent"
             style={{ backgroundImage: GRADIENT }}
           >
-            {logSummary(log) || 'Logged'}
+            {result || 'Logged'}
           </div>
         )}
 

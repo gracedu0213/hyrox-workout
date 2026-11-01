@@ -285,6 +285,30 @@ export interface IntervalResult {
   splits: { roundIndex: number; valueSec?: number; cal?: number; reps?: number; note?: string }[];
 }
 
+// --- Runs (preset-driven run logs) ---
+
+export type RunPresetId =
+  | 'easy' | 'long' | 'recovery' | 'progression' | 'time_trial'
+  | 'tempo'
+  | 'intervals' | 'km_repeats'
+  | 'hills' | 'fartlek';
+
+// What was run, as adjusted from its preset. Which fields apply depends on the
+// preset's shape (runs.ts). Distances in km, except rep length in metres.
+export interface RunDetail {
+  preset: RunPresetId;
+  distanceKm?: number;      // total distance (tempo derives it from segments)
+  warmupKm?: number;        // tempo
+  tempoKm?: number;
+  cooldownKm?: number;
+  tempoTimeSec?: number;
+  reps?: number;            // rep-based presets
+  repM?: number;            // distance reps
+  repSec?: number;          // timed reps (hills, fartlek)
+  restSec?: number;
+  repTimesSec?: (number | null)[]; // distance reps: time per rep, by index
+}
+
 export interface WorkoutLog {
   id: string;                       // uuid
   dayId?: string;                   // refs Day.id (library workouts)
@@ -303,6 +327,7 @@ export interface WorkoutLog {
   amrap?: AMRAPResult;
   intervals?: IntervalResult;
   exercises?: ExerciseLogEntry[];
+  run?: RunDetail;                  // preset run logs (kind='custom')
   // Always:
   feltLike?: 'tough' | 'ok' | 'good';  // emoji effort
   notes?: string;

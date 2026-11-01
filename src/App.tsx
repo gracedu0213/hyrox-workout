@@ -8,6 +8,7 @@ import DayPage from './pages/DayPage';
 import ProgressPage from './pages/ProgressPage';
 import LogPage from './pages/LogPage';
 import CustomLogPage from './pages/CustomLogPage';
+import RunLogPage from './pages/RunLogPage';
 import LogDetailPage from './pages/LogDetailPage';
 import WorkoutBuilderPage from './pages/WorkoutBuilderPage';
 import WorkoutDetailPage from './pages/WorkoutDetailPage';
@@ -33,6 +34,7 @@ export default function App() {
             <Route path="/plan/:dayId" element={<DayPage />} />
             <Route path="/plan/:dayId/log" element={<LogPage />} />
             <Route path="/custom/log" element={<CustomLogPage />} />
+            <Route path="/run/log" element={<RunLogPage />} />
             <Route path="/workout/library" element={<WorkoutLibraryPage />} />
             <Route path="/workout/new" element={<WorkoutBuilderPage />} />
             <Route path="/workout/:id/edit" element={<WorkoutBuilderPage />} />

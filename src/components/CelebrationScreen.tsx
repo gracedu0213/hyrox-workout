@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getAllLogs } from '../db';
 import { hasResults } from '../logSummary';
+import { runSummary } from '../runs';
 import { FELT_EMOJI } from './FeltPicker';
 import { formatSec } from '../format';
 import { isoDate as iso, mondayOfWeek } from '../dateUtils';
@@ -31,6 +32,7 @@ function hashCode(s: string): number {
 }
 
 function resultLine(log: WorkoutLog): string | null {
+  if (log.run) return runSummary(log.run, log.totalTimeSec) || null;
   if (log.totalTimeSec != null) return formatSec(log.totalTimeSec);
   if (log.amrap) {
     if (log.amrap.fullRounds != null || log.amrap.partialReps != null) {

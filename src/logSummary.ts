@@ -1,5 +1,6 @@
 import { formatSec } from './format';
 import { FELT_EMOJI } from './components/FeltPicker';
+import { runSummary } from './runs';
 import type { WorkoutLog } from './types';
 
 export function logKind(l: WorkoutLog): 'plan' | 'custom' | 'rest' {
@@ -14,7 +15,10 @@ export function logSummary(l: WorkoutLog): string {
   if (kind === 'rest') return 'Rest day';
   if (l.status === 'planned' && !hasResults(l)) return 'Planned — no results yet';
   const parts: string[] = [];
-  if (l.totalTimeSec != null) parts.push(formatSec(l.totalTimeSec));
+  if (l.run) {
+    const s = runSummary(l.run, l.totalTimeSec);
+    if (s) parts.push(s);
+  } else if (l.totalTimeSec != null) parts.push(formatSec(l.totalTimeSec));
   if (l.amrap) {
     if (l.amrap.fullRounds != null || l.amrap.partialReps != null) {
       const r = l.amrap.fullRounds ?? 0;
@@ -58,6 +62,7 @@ export function hasResults(l: WorkoutLog): boolean {
     !!l.amrap ||
     !!l.intervals?.splits?.length ||
     !!l.exercises?.length ||
+    !!l.run ||
     !!l.notes ||
     !!l.feltLike
   );

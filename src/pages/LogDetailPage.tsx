@@ -10,6 +10,7 @@ import { logKind } from '../logSummary';
 import { useLogTypeResolver } from '../logTypeColor';
 import { useProfile } from '../profile';
 import { celebrate } from '../celebrate';
+import { formatPace, keyPace, paceSecPerKm, repPaces, runStructure } from '../runs';
 import type { WorkoutLog } from '../types';
 
 export default function LogDetailPage() {
@@ -57,7 +58,9 @@ export default function LogDetailPage() {
   const kind = logKind(log);
   const planDay = log.dayId ? byId(log.dayId) : undefined;
   const editPath =
-    kind === 'plan' && planDay
+    log.run
+      ? `/run/log?id=${log.id}`
+      : kind === 'plan' && planDay
       ? `/plan/${planDay.id}/log?id=${log.id}`
       : kind === 'custom'
         ? log.workoutId
@@ -121,6 +124,39 @@ export default function LogDetailPage() {
           <ResultHero log={log} size="page" />
         </div>
       )}
+
+      {/* Run */}
+      {log.run && (() => {
+        const run = log.run;
+        const reps = repPaces(run);
+        const tempoPace = paceSecPerKm(run.tempoTimeSec, run.tempoKm);
+        return (
+          <Section title="Run">
+            <div className="text-sm text-white/90">{runStructure(run)}</div>
+            {tempoPace && (
+              <div className="mt-2 flex justify-between bg-panel rounded px-3 py-1.5 text-sm">
+                <span>Tempo {run.tempoKm} km</span>
+                <span className="font-mono">{formatSec(run.tempoTimeSec!)} · {formatPace(tempoPace)}</span>
+              </div>
+            )}
+            {reps.length > 0 && (
+              <>
+                <ul className="mt-2 space-y-1 text-sm">
+                  {reps.map((r) => (
+                    <li key={r.index} className="flex justify-between bg-panel rounded px-3 py-1.5">
+                      <span>Rep {r.index + 1}</span>
+                      <span className="font-mono">{formatSec(r.timeSec)} · {formatPace(r.pace)}</span>
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-2 text-xs text-muted text-right">
+                  Avg {formatPace(keyPace(run)!)} · Best {formatPace(Math.min(...reps.map((r) => r.pace)))}
+                </div>
+              </>
+            )}
+          </Section>
+        );
+      })()}
 
       {/* Round splits */}
       {log.roundSplits && log.roundSplits.length > 0 && (
